@@ -13,6 +13,8 @@ import numpy as np
 
 # print(data.head())
 
+# def scale(data):
+
 
 def preprocess(data):
     try:
@@ -23,7 +25,7 @@ def preprocess(data):
     return data
 
 def main():
-    data = pd.read_csv('./data_labeled2.csv')
+    data = pd.read_csv('./data/data_labeled.csv')
     data = preprocess(data)
     print(data)
     print(data.describe())
