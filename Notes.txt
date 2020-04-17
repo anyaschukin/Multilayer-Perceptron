@@ -1,0 +1,8 @@
+
+## DATA PREPROCESSING
+It's important to put different variables on a common scale, so that extreme variables 
+don't have more weight than others
+{} scale - change the range of the values. The shape of the distribution doesn't change.
+{} normalize - bringing data points that were extreme before closer to the middle, 
+so that they are less extreme (normal/Gaussian distribution). If you see a large standard deviation,
+then you should probably normalize/standardize the data.
