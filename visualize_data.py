@@ -1,26 +1,11 @@
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-# from sklearn import preprocessing
 import numpy as np
 import tools as tools
+from pair_plot import pair_plot
 
 # data = pd.read_csv('./data 2.csv')
-
-# if isinstance(data, pd.DataFrame):
-#     print("I am a dataframe")
-# else:
-#     print("fuck you")
-
-# print(data.head())
-
-def pairplot(data):
-    radius = data[['radius_mean','radius_se','radius_worst','diagnosis']]
-    sns.pairplot(radius, hue='diagnosis',palette="husl", markers=["o", "s"],height=4)
-    plt.show()
-    # try:
-    # except Exception:
-        # tools.error_exit('Failed to visualize data. Is data valid?')
 
 def scale(data):
     for feature in data:
@@ -53,7 +38,19 @@ def main():
     # print(data)
     # print(data.describe())
     data = preprocess(data)
-    pairplot(data)
+    pair_plot(data)
 
 if __name__ == '__main__':
     main()
+
+
+
+
+#####
+
+# if isinstance(data, pd.DataFrame):
+#     print("I am a dataframe")
+# else:
+#     print("fuck you")
+
+# print(data.head())
