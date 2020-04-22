@@ -1,11 +1,10 @@
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-import numpy as np
+# import numpy as np
 import tools as tools
 import plot as plot
 
-# data = pd.read_csv('./data 2.csv')
 def select_feature(data):
 
     mean = data[['texture_mean','perimeter_mean','area_mean','smoothness_mean','compactness_mean','concavity_mean','concave points_mean','symmetry_mean','fractal_dimension_mean','diagnosis']]
@@ -30,11 +29,9 @@ def scale(data):
     for feature in data:
         value_min = data[feature].min()
         value_max = data[feature].max()
-        # print("min = {}, max = {}".format(value_min, value_max))
         # change to: if mean > 10 ?       
         if value_max > 10:
             for value in data[feature]:
-                # print(value)
                 std_value = (value - value_min) / (value_max - value_min)
                 data[feature].replace(to_replace=value, value=std_value, inplace=True)
     # print(data)
@@ -59,9 +56,9 @@ def main():
 
     data = preprocess(data)
     features = select_feature(data)
-    plot.pair_plot(features)
-    # plot.heat_map(data)
-    # plot.strip_plot(data)
+    plot.pair_plot(features)    # can select by feature for pairplot
+    # plot.heat_map(data)       # only mean
+    # plot.strip_plot(data)     # only mean
 
 if __name__ == '__main__':
     main()
