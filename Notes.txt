@@ -6,3 +6,15 @@ don't have more weight than others
 {} normalize - bringing data points that were extreme before closer to the middle, 
 so that they are less extreme (normal/Gaussian distribution). If you see a large standard deviation,
 then you should probably normalize/standardize the data.
+
+
+{} feedforward, backpropagation
+{} divide dataset into training and validation
+
+## IMPLEMENTATION
+{} at least 2 hidden layers
+{} softmax funciton
+{} display at each epoch the training and validation metrics (model performance)
+{} implement a learning curve graph displayed at the end of the training phase
+{} training program
+{} prediction program - binary cross entropy error function
