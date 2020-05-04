@@ -15,43 +15,68 @@ import matplotlib.pyplot as plt
 # def cost_prime(yHat, y):
 #     return yHat - y
 
-# def backprop(x, y, Wh, Wo, lr):
-#     yHat = feed_forward(x, Wh, Wo)
-
-#     # Layer Error
-#     Eo = (yHat - y) * relu_prime(Zo)
-#     Eh = Eo * Wo * relu_prime(Zh)
-
-#     # Cost derivative for weights
-#     dWo = Eo * H
-#     dWh = Eh * x
-
-#     # Update weights
-#     Wh -= lr * dWh
-#     Wo -= lr * dWo
-
-###
-
 ## binary cross-entropy loss??
 # def entropy_loss(self,y, yhat):
-    # nsample = len(y)
-    # loss = -1/nsample * (np.sum(np.multiply(np.log(yhat), y) + np.multiply((1 - y), np.log(1 - yhat))))
-    # return loss
+#     nsample = len(y)
+#     loss = -1/nsample * (np.sum(np.multiply(np.log(yhat), y) + np.multiply((1 - y), np.log(1 - yhat))))
+#     return loss
 
 NUM_NEURONS = 4
 
-# sigmoid?
-def activation(x):
-    return 1.0/(1+ np.exp(-x))
+# The ReLufunction performs a threshold operation to each input element 
+# where values less than zero are set to zero.
+def ReLU(Z):
+    return np.maximum(0, Z)
 
-def activation_derivative(x):
-    return x * (1.0 - x)
+def ReLU_prime(Z):
+    return 1 * (Z > 0)
+    # return 1 if z > 0 else 0
+
+# leaky_ReLU
+def leaky_ReLU(z, alpha = 0.01):
+	return np.where(z >= 0, 1, z * alpha)
+    # return max(alpha * z, z)
+
+def leaky_ReLU_prime(z, alpha = 0.01):
+    return np.where(z >= 0, 1, alpha)
+	# return 1 if z > 0 else alpha
+
+# sigmoid
+def sigmoid(z):
+    return 1.0/(1+ np.exp(-z))
+
+# sigmoid derivative
+def sigmoid_prime(z):
+  return sigmoid(z) * (1-sigmoid(z))
+
+def softmax(z):
+    e = np.exp(z - np.max(z))
+    return e / e.sum()
+
+    # return np.exp(z) / np.sum(np.exp(z)) 
+
+	# e = np.exp(float(z))
+	# return (e/np.sum(e))
+
+def softmax_prime(z):
+  return softmax(z) * (1-softmax(z))
+
+# derivative for f is f(1-f) for respective cost functions
+# THIS IS CORRECT FOR sigmoid and softmax
+# def activation_derivative(activation):
+    # return activation * (1.0 - activation)
+
+# def activation_derivative(z, f):
+# 	if fn == SIGMOID:
+# 		f = sigmoid
+# 	elif fn == SOFTMAX:
+# 		f = softmax
+# 	return f(z)*(1-f(z))
+
+
 
 def compute_loss(y_hat, y):
     return ((y_hat - y)**2).sum()
-
-# input layer, hidden layers, output layer
-# class layer
 
 
 class NeuralNetwork:
@@ -69,14 +94,15 @@ class NeuralNetwork:
         self.y          = y
         self.output     = np.zeros(self.y.shape)
 
-    def feedforward(self):
-        self.layer1 = activation(np.dot(self.input, self.weights1) + self.bias1)
+    def feedforward(self, activation = softmax):
+        
+        self.layer1 = activation(np.dot(self.input, self.weights1) + self.bias1) 
         self.layer2 = activation(np.dot(self.layer1.T, self.weights2) + self.bias2)
         self.layer3 = activation(np.dot(self.layer2.T, self.weights3) + self.bias3)
-        self.output = activation(np.dot(self.layer3.T, self.weights4) + self.bias4) # (layer - 1)
+        self.output = activation(np.dot(self.layer3.T, self.weights4) + self.bias4) # layer = theta(weight_l * a_l-1 + b_l)
 
     ## application of the chain rule to find derivative of the loss function with respect to weights2 and weights1
-    def backprop(self, learning_rate = 0.1):
+    def backprop(self, activation_derivative = softmax_prime, learning_rate = 0.1):
 
         # output layer
         d_Z4 = self.output - y
@@ -85,15 +111,15 @@ class NeuralNetwork:
 
         # hidden layers
         d_Z3 = np.dot(self.weights3.T, d_Z4) * activation_derivative(self.layer3)
-        d_weights3 = np.dot(self.layer2.T, d_Z3) # multiply previous layer * output error
+        d_weights3 = np.dot(self.layer2.T, d_Z3) # (layer-1) * output error
         d_bias3 = np.sum(d_Z3, axis = 1, keepdims=True)
         
         d_Z2 = np.dot(self.weights2.T, d_Z3) * activation_derivative(self.layer2)
-        d_weights2 = np.dot(self.layer1.T, d_Z2) # multiply previous layer * output error
+        d_weights2 = np.dot(self.layer1.T, d_Z2) # (layer-1) * output error
         d_bias2 = np.sum(d_Z2, axis = 1, keepdims=True)
 
         d_Z1 = np.dot(self.weights2.T, d_Z2) * activation_derivative(self.layer1)
-        d_weights1 = np.dot(self.input.T, d_Z1) # multiply previous layer * output error
+        d_weights1 = np.dot(self.input.T, d_Z1) # (layer-1) * output error
         d_bias1 = np.sum(d_Z2, axis = 1, keepdims=True)
        
         ## update the weights with the derivative (slope) of the loss function
@@ -107,11 +133,6 @@ class NeuralNetwork:
         self.bias3 -= learning_rate * d_bias3
         self.bias4 -= learning_rate * d_bias4
 
-        # d_weights2 = np.dot(self.layer1.T, (2*(self.y - self.output) * activation_derivative(self.output)))
-        # d_weights1 = np.dot(self.input.T,  (np.dot(2*(self.y - self.output) * activation_derivative(self.output), self.weights2.T) * activation_derivative(self.layer1)))
-
-        # self.weights1 += d_weights1
-        # self.weights2 += d_weights2
 
 X = np.array([[0,0,1],
               [0,1,1],
@@ -135,17 +156,12 @@ plt.plot(loss_values)
 plt.show()
 
 
-# The ReLufunction performs a threshold
-# operation to each input element where values less 
-# than zero are set to zero.
-# def relu(self,Z):
-#     return np.maximum(0, Z)
+
 
 
 # # softmax activation layer : compute values for each sets of scores in x
 # # not sure this works
-# def softmax(x):
-#     return np.exp(x) / np.sum(np.exp(x), axis=0) 
+
 
 # a_layer = theta(weight_l * a_l-1 + b_l)
 
