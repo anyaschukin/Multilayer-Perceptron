@@ -59,29 +59,39 @@ class NeuralNetwork:
         self.input      = x
         self.weights1   = np.random.rand(self.input.shape[1], NUM_NEURONS) 
         self.weights2   = np.random.rand(NUM_NEURONS,1)
+        self.weights3   = np.random.rand(NUM_NEURONS,1)
+        self.weights4   = np.random.rand(NUM_NEURONS,1)
         # self.bias1       = np.zeros((self.input.shape[0], NUM_NEURONS))
         self.bias1       = np.zeros((NUM_NEURONS, 1))
         self.bias2       = np.zeros((y.shape[0], 1))
+        self.bias3       = np.zeros((y.shape[0], 1))
+        self.bias4       = np.zeros((y.shape[0], 1))
         self.y          = y
         self.output     = np.zeros(self.y.shape)
 
     def feedforward(self):
         self.layer1 = activation(np.dot(self.input, self.weights1) + self.bias1)
-        self.output = activation(np.dot(self.layer1, self.weights2) + self.bias2) # (layer - 1)
+        self.layer2 = activation(np.dot(self.layer1, self.weights2) + self.bias2)
+        self.layer3 = activation(np.dot(self.layer2.T, self.weights3) + self.bias3)
+        self.output = activation(np.dot(self.layer3.T, self.weights4) + self.bias4) # (layer - 1)
 
     ## application of the chain rule to find derivative of the loss function with respect to weights2 and weights1
     def backprop(self, learning_rate = 0.1):
-        m = self.input.shape[1]
 
         # output layer
-        d_Z2 = self.output - y
-        d_weights2 = np.dot(self.layer1, d_Z2)
+        d_Z4 = self.output - y
+        d_weights4 = np.dot(self.layer3.T, d_Z4)
+        d_bias4 = np.sum(d_Z4, axis = 1, keepdims=True)
+
+        # hidden layers
+        d_Z3 = np.dot(self.weights3.T, d_Z4) * activation_derivative(self.layer3)
+        d_weights3 = np.dot(self.layer2.T, d_Z3) # multiply previous layer * output error
+        d_bias3 = np.sum(d_Z3, axis = 1, keepdims=True)
+        
+        d_Z2 = np.dot(self.weights2.T, d_Z3) * activation_derivative(self.layer2)
+        d_weights2 = np.dot(self.layer1.T, d_Z2) # multiply previous layer * output error
         d_bias2 = np.sum(d_Z2, axis = 1, keepdims=True)
 
-        # hidden layer
-
-
-        # input / hidden layer
         d_Z1 = np.dot(self.weights2.T, d_Z2) * activation_derivative(self.layer1)
         d_weights1 = np.dot(self.input.T, d_Z1) # multiply previous layer * output error
         d_bias1 = np.sum(d_Z2, axis = 1, keepdims=True)
@@ -89,9 +99,13 @@ class NeuralNetwork:
         ## update the weights with the derivative (slope) of the loss function
         self.weights1 -= learning_rate * d_weights1
         self.weights2 -= learning_rate * d_weights2
+        self.weights3 -= learning_rate * d_weights3
+        self.weights4 -= learning_rate * d_weights4
 
         self.bias1 -= learning_rate * d_bias1
         self.bias2 -= learning_rate * d_bias2
+        self.bias3 -= learning_rate * d_bias3
+        self.bias4 -= learning_rate * d_bias4
 
         # d_weights2 = np.dot(self.layer1.T, (2*(self.y - self.output) * activation_derivative(self.output)))
         # d_weights1 = np.dot(self.input.T,  (np.dot(2*(self.y - self.output) * activation_derivative(self.output), self.weights2.T) * activation_derivative(self.layer1)))
