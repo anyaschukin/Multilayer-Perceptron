@@ -71,7 +71,7 @@ class NeuralNetwork:
 
     def feedforward(self):
         self.layer1 = activation(np.dot(self.input, self.weights1) + self.bias1)
-        self.layer2 = activation(np.dot(self.layer1, self.weights2) + self.bias2)
+        self.layer2 = activation(np.dot(self.layer1.T, self.weights2) + self.bias2)
         self.layer3 = activation(np.dot(self.layer2.T, self.weights3) + self.bias3)
         self.output = activation(np.dot(self.layer3.T, self.weights4) + self.bias4) # (layer - 1)
 
