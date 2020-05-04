@@ -50,6 +50,10 @@ def activation_derivative(x):
 def compute_loss(y_hat, y):
     return ((y_hat - y)**2).sum()
 
+# input layer, hidden layers, output layer
+# class layer
+
+
 class NeuralNetwork:
     def __init__(self, x, y):
         self.input      = x
@@ -66,27 +70,28 @@ class NeuralNetwork:
         self.output = activation(np.dot(self.layer1, self.weights2) + self.bias2) # (layer - 1)
 
     ## application of the chain rule to find derivative of the loss function with respect to weights2 and weights1
-    def backprop(self, alpha = 0.1):
+    def backprop(self, learning_rate = 0.1):
         m = self.input.shape[1]
 
         # output layer
         d_Z2 = self.output - y
         d_weights2 = np.dot(self.layer1, d_Z2)
-        # d_weights2 = np.dot(self.layer1.T, (2*(self.y - self.output) * activation_derivative(self.output)))
-        d_bias2 = np.sum(d_Z2, axis = 1, keepdims=True) / m
+        d_bias2 = np.sum(d_Z2, axis = 1, keepdims=True)
 
         # hidden layer
+
+
+        # input / hidden layer
         d_Z1 = np.dot(self.weights2.T, d_Z2) * activation_derivative(self.layer1)
-        d_weights1 = np.dot(self.input.T, d_Z1) 
-        # d_weights1 = np.dot(self.input.T,  (np.dot(2*(self.y - self.output) * activation_derivative(self.output), self.weights2.T) * activation_derivative(self.layer1)))
-        d_bias1 = np.sum(d_Z2, axis = 1, keepdims=True) / m
+        d_weights1 = np.dot(self.input.T, d_Z1) # multiply previous layer * output error
+        d_bias1 = np.sum(d_Z2, axis = 1, keepdims=True)
        
         ## update the weights with the derivative (slope) of the loss function
-        self.weights1 = self.weights1 - alpha * d_weights1
-        self.weights2 = self.weights2 - alpha * d_weights2
+        self.weights1 -= learning_rate * d_weights1
+        self.weights2 -= learning_rate * d_weights2
 
-        self.bias1 = self.bias1 - alpha * d_bias1
-        self.bias2 = self.bias2 - alpha * d_bias2
+        self.bias1 -= learning_rate * d_bias1
+        self.bias2 -= learning_rate * d_bias2
 
         # d_weights2 = np.dot(self.layer1.T, (2*(self.y - self.output) * activation_derivative(self.output)))
         # d_weights1 = np.dot(self.input.T,  (np.dot(2*(self.y - self.output) * activation_derivative(self.output), self.weights2.T) * activation_derivative(self.layer1)))
