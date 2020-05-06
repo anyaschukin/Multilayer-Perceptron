@@ -4,13 +4,13 @@ import tools as tools
 # import plot as plot
 # import visualize as visualize
 
-def scale(data, scaling='min_max_normalization'):
+def scale(data, scaling='min_max_normalize'):
     print(data)
     normed = data
-    if scaling == 'min_max_normalization':
+    if scaling == 'min_max_normalize':
         # all data values are adjusted to lie on a bell curve btwn 0 and 10, starting at zero
         normed = (normed - normed.min())/(normed.max()-normed.min())*10
-    if scaling == 'standardization':
+    if scaling == 'standardize':
         # all data values are centered around the mean (zero) with a unit standard deviation (min, max)
         normed=(normed-normed.mean())/normed.std()*10
     normed["diagnosis"] = data["diagnosis"]
