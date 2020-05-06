@@ -8,13 +8,34 @@ so that they are less extreme (normal/Gaussian distribution). If you see a large
 then you should probably normalize/standardize the data.
 
 
-{} feedforward, backpropagation
-{} divide dataset into training and validation
-
-## IMPLEMENTATION
-{} at least 2 hidden layers
-{} softmax funciton
+## IMPLEMENTATION (required by subject)
+{} split data into train set and validation set
+{x} at least 2 hidden layers
+{} softmax activation function
 {} display at each epoch the training and validation metrics (model performance)
-{} implement a learning curve graph displayed at the end of the training phase
+{x} implement a learning curve graph displayed at the end of the training phase
 {} training program
-{} prediction program - binary cross entropy error function
+{} prediction program - binary cross-entropy error function
+
+## BASIC STRUCTURE
+{x} activation function
+{x} Define the NN architecture
+{x} initialise the parameters
+{x} forward propagation
+{x} back propagation
+{x} cost
+
+## TO DO
+{} incorporate N hidden layers
+{} restructure NN architecture
+{} change sigmoid -> ReLU (intermediary layers) and softmax (output layer)
+{} add loss functions
+{} gradient checking
+{} optimization?
+{} regularization?
+{} batch size
+
+
+
+{} make a prediction after __ epochs, then refine our parameters (gradient descent/learning)
+{} create function which calculates cost after each iteration
