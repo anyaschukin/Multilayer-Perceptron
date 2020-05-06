@@ -4,6 +4,18 @@ import tools as tools
 # import plot as plot
 # import visualize as visualize
 
+def split(data):
+    shuffled_data = data.sample(frac=1)
+    i = int(0.7 * len(data))
+    train_set = shuffled_data[:i]
+    test_set = shuffled_data[i:]
+    return train_set, test_set
+
+    # X = numpy_array[:, 1:26]
+    # y = numpy_array[:, 0]
+    # X_train, X_test = X[:index], X[index:]
+    # y_train, y_test = y[:index], y[index:]
+
 def scale(data, scaling='min_max_normalize'):
     print(data)
     normed = data
@@ -16,7 +28,7 @@ def scale(data, scaling='min_max_normalize'):
     normed["diagnosis"] = data["diagnosis"]
     return normed
     
-# remove [unnecessary columns] and [columns with NaN]
+# remove [unnecessary columns] and [columns with NaN] and scale data
 def preprocess(data):
     # see if there are any columns with missing/null data
     # print(data.isnull().sum())
@@ -28,7 +40,6 @@ def preprocess(data):
     data = scale(data)
     return data
 
-
 ## To use, add the following to your main:
 data = pd.read_csv('./data/data_labeled.csv')
 
@@ -37,5 +48,7 @@ data = pd.read_csv('./data/data_labeled.csv')
 # print(data.describe())
 
 data = preprocess(data)
+train_set, test_set = split(data)
+print(train_set)
 # features = visualize.select_feature(data)
 # visualize.pair_plot(features)
