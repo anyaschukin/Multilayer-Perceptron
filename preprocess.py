@@ -1,23 +1,20 @@
 import pandas as pd
-# import seaborn as sns
-# import matplotlib.pyplot as plt
 # import numpy as np
 import tools as tools
 # import plot as plot
+# import visualize as visualize
 
-def scale(data):
+def scale(data, scaling='min_max_normalization'):
     print(data)
     normed = data
-    # all data values are adjusted to lie on a bell curve btwn 0 and 10 (that's the * by 10)
-    normed = (normed - normed.min())/(normed.max()-normed.min())*10
-
-    # put data on a bell curve, centered on zero (with max and min on either side)
-    # normed=(normed-normed.mean())/normed.std()*10
+    if scaling == 'min_max_normalization':
+        # all data values are adjusted to lie on a bell curve btwn 0 and 10, starting at zero
+        normed = (normed - normed.min())/(normed.max()-normed.min())*10
+    if scaling == 'standardization':
+        # all data values are centered around the mean (zero) with a unit standard deviation (min, max)
+        normed=(normed-normed.mean())/normed.std()*10
     normed["diagnosis"] = data["diagnosis"]
-
-    # normed = normed.apply(lambda x:(x.astype(float) - min(x))/(max(x)-min(x))*10, axis = 0)
-
-    print(normed)
+    return normed
     
 # remove [unnecessary columns] and [columns with NaN]
 def preprocess(data):
@@ -29,7 +26,6 @@ def preprocess(data):
     except Exception:
         tools.error_exit('Failed to preprocess data. Is data valid?')
     data = scale(data)
-    # normalize here?
     return data
 
 
@@ -41,6 +37,5 @@ data = pd.read_csv('./data/data_labeled.csv')
 # print(data.describe())
 
 data = preprocess(data)
-# print(data)
-
-# frame.apply(f, axis=1) where f is a function that does something with a row
+# features = visualize.select_feature(data)
+# visualize.pair_plot(features)
