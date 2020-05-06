@@ -5,6 +5,10 @@ import matplotlib.pyplot as plt
 import tools as tools
 import plot as plot
 
+
+## this file is DEPRECATED and has been REPLACED by preprocess.py and visualize.py
+
+
 def select_feature(data):
 
     mean = data[['texture_mean','perimeter_mean','area_mean','smoothness_mean','compactness_mean','concavity_mean','concave points_mean','symmetry_mean','fractal_dimension_mean','diagnosis']]
@@ -55,6 +59,8 @@ def main():
     # print(data.describe())
 
     data = preprocess(data)
+
+    ## for visualizing data
     features = select_feature(data)
     plot.pair_plot(features)    # can select by feature for pairplot
     # plot.heat_map(data)       # only mean
