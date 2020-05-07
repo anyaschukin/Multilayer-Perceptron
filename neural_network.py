@@ -104,7 +104,6 @@ class NeuralNetwork:
         self.layer2 = activation_hidden(np.dot(self.layer1, self.weights2) + self.bias2)
         # print(self.layer2.shape, self.weights2.shape)
         self.layer3 = activation_hidden(np.dot(self.layer2, self.weights3) + self.bias3)
-        print(self.layer3.shape)
         self.output = activation(np.dot(self.layer3, self.weights4) + self.bias4) # layer = theta(weight_l * a_l-1 + b_l)
         # print(self.output.shape, self.weights4.shape)
 
@@ -113,13 +112,12 @@ class NeuralNetwork:
 
         # output layer
         d_Z4 = self.output - self.y
-        print(d_Z4.shape)
+        # print(d_Z4.shape)
         d_weights4 = np.dot(self.layer3.T, d_Z4)
         d_bias4 = np.sum(d_Z4, axis = 1, keepdims=True)
 
         # hidden layers
-        print(self.weights3.shape, d_Z4.shape)
-        d_Z3 = np.dot(self.weights3, d_Z4.T) * activation_derivative(self.layer3)
+        d_Z3 = np.dot(np.dot(self.weights3, d_Z4.T), activation_derivative(self.layer3))
         d_weights3 = np.dot(self.layer2, d_Z3.T) # (layer-1) * output error
         d_bias3 = np.sum(d_Z3, axis = 1, keepdims=True)
         
@@ -127,7 +125,11 @@ class NeuralNetwork:
         d_weights2 = np.dot(self.layer1.T, d_Z2) # (layer-1) * output error
         d_bias2 = np.sum(d_Z2, axis = 1, keepdims=True)
 
-        d_Z1 = np.dot(self.weights2.T, d_Z2) * activation_derivative(self.layer1)
+        print(self.weights2.shape, d_Z2.shape)
+        print(np.dot(self.weights2.T, d_Z2.T).shape)
+        print(activation_derivative(self.layer1).shape)
+        d_Z1 = np.dot(np.dot(self.weights2.T, d_Z2.T), activation_derivative(self.layer1))
+        print(d_Z1.shape)
         d_weights1 = np.dot(self.input.T, d_Z1) # (layer-1) * output error
         d_bias1 = np.sum(d_Z2, axis = 1, keepdims=True)
        
