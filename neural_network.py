@@ -95,8 +95,11 @@ class NeuralNetwork:
         self.bias2       = np.random.rand(1, LAYER2_NEURONS)
         self.bias3       = np.random.rand(1, LAYER3_NEURONS)
         self.bias4       = np.random.rand(1, 1) # (1, num_of_classes)... maybe last layer shouldn't have bias
-        # self.y          = y
-        self.y          = np.zeros((y.shape[0], 1))
+       
+        self.y           = y.to_numpy().reshape(y.shape[0], 1)
+        # self.y          = y.to_numpy() # need to turn this to a numpy array
+        # self.y          = y.to_numpy() # need to turn this to a numpy array
+        # self.output     = np.zeros((self.y.shape[0], 1))
         self.output     = np.zeros((self.y.shape[0], 1))
 
     def feedforward(self, activation = softmax, activation_hidden = sigmoid):
@@ -114,7 +117,7 @@ class NeuralNetwork:
         print("output {0}, layer3 {1}, weights4 {2}, bias {3}".format( self.output.shape, self.layer3.shape, self.weights4.shape, self.bias4.shape))
 
     ## application of the chain rule to find derivative of the loss function with respect to weights2 and weights1
-    def backprop(self, activation_derivative = sigmoid_prime, activation_derivative_output = softmax_prime, learning_rate = 0.1):
+    def backprop(self, activation_derivative = sigmoid_prime, activation_derivative_output = softmax_prime, learning_rate = 0.01):
         m = self.input.shape[0] # num examples
         # weights and d_weights should have the same dimensions
 
@@ -129,7 +132,7 @@ class NeuralNetwork:
         print("weights3 {} - d_Z4 {} - d_layer3 {}".format(self.weights3.shape, d_Z4.T.shape, activation_derivative(self.layer3).shape))
         print("d_A3 {}".format(d_A3.shape))
         d_Z3 = d_A3 * activation_derivative(self.layer3)
-        d_weights3 = np.dot(self.layer2, d_Z3.T) # (layer-1) * output error
+        d_weights3 = np.dot(self.layer2.T, d_Z3) # (layer-1) * output error
         d_bias3 = np.sum(d_Z3, axis = 0, keepdims=True) / m
         d_A2 = np.dot(d_Z3, self.weights3.T)
         print("d_Z3 {0} - layer2 {1} - d_weights3 {2} - d_bias3 {3}".format(d_Z3.shape, self.layer2.shape, d_weights3.shape, d_bias3.shape))
@@ -137,7 +140,7 @@ class NeuralNetwork:
 
         print("weights2 {} - d_Z3.T {} - d_layer2 {}".format(self.weights2.shape, d_Z3.T.shape, activation_derivative(self.layer2).shape))
         d_Z2 = d_A2 *  activation_derivative(self.layer2)
-        d_weights2 = np.dot(self.layer1, d_Z2.T) # (layer-1) * output error
+        d_weights2 = np.dot(self.layer1.T, d_Z2) # (layer-1) * output error
         d_bias2 = np.sum(d_Z2, axis = 0, keepdims=True) / m 
         d_A1 = np.dot(d_Z2, self.weights2.T)
         # print("d_Z2 {0} - layer2 {1} - d_weights2 {2} - d_bias2 {3}".format(d_Z2.shape, self.layer1.shape, d_weights2.shape, d_bias2.shape))
@@ -147,10 +150,13 @@ class NeuralNetwork:
         d_Z1 = d_A1 * activation_derivative(self.layer1)
         print("d_Z1 {0}".format(d_Z1.shape))
         # print("input {0}".format(self.input.shape))
-        d_weights1 = np.dot(self.input, d_Z1) # (layer-1) * output error
-        d_bias1 = np.sum(d_Z2, axis = 1, keepdims=True) / m
+        d_weights1 = np.dot(self.input.T, d_Z1) # (layer-1) * output error
+        d_bias1 = np.sum(d_Z2, axis = 0, keepdims=True) / m
         # print("d_Z1 {0} - input {1} - d_weights1 {2} - d_bias1 {3}".format(d_Z1.shape, self.input.shape, d_weights1.shape, d_bias1.shape))
        
+        print("d_weights1 {} - d_weights2 {} - d_weights3 {} - d_weights4 {}".format(d_weights1.shape, d_weights2.shape, d_weights3.shape, d_weights4.shape))
+        print("self.weights1 {} - self.weights2 {} - self.weights3 {} - self.weights4 {}".format(self.weights1.shape, self.weights2.shape, self.weights3.shape, self.weights4.shape))
+
 
         ## update the weights with the derivative (slope) of the loss function
         self.weights1 -= learning_rate * d_weights1
@@ -177,6 +183,8 @@ def main():
     train_set, test_set = prep.split(data)
 
     X, y = train_set.iloc[:, 1:], train_set.iloc[:, 0]
+    # y = y.reshape(y.shape[0], 1)
+    # y = y.to_numpy().shape[0]
 
     # X = numpy_array[:, 1:26]
     # y = numpy_array[:, 0]
@@ -188,7 +196,7 @@ def main():
     for i in range(1500):
         nn.feedforward()
         nn.backprop()
-        loss = compute_loss(nn.output, y)
+        loss = compute_loss(nn.output, nn.y)
         loss_values.append(loss)
 
     print(nn.output)
