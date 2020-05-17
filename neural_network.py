@@ -22,7 +22,10 @@ import preprocess as prep
 #     loss = -1/nsample * (np.sum(np.multiply(np.log(yhat), y) + np.multiply((1 - y), np.log(1 - yhat))))
 #     return loss
 
-NUM_NEURONS = 4
+LAYER1_NEURONS = 4
+LAYER2_NEURONS = 4
+LAYER3_NEURONS = 4
+LAYER4_NEURONS = 4
 
 # The ReLufunction performs a threshold operation to each input element 
 # where values less than zero are set to zero.
@@ -83,14 +86,14 @@ def compute_loss(y_hat, y):
 class NeuralNetwork:
     def __init__(self, x, y):
         self.input      = x
-        self.weights1   = np.random.rand(self.input.shape[1], NUM_NEURONS) * 0.01 # self.input.shape[1] is num_features
-        self.weights2   = np.random.rand(NUM_NEURONS,NUM_NEURONS) * 0.01
-        self.weights3   = np.random.rand(NUM_NEURONS,NUM_NEURONS) * 0.01
-        self.weights4   = np.random.rand(NUM_NEURONS, 1) * 0.01  # if multiple classification, it should (NUM_NEURONS, output_size(# of classes))
+        self.weights1   = np.random.rand(self.input.shape[1], LAYER1_NEURONS) * 0.01 # self.input.shape[1] is num_features
+        self.weights2   = np.random.rand(LAYER2_NEURONS, LAYER2_NEURONS) * 0.01
+        self.weights3   = np.random.rand(LAYER3_NEURONS, LAYER3_NEURONS) * 0.01
+        self.weights4   = np.random.rand(LAYER4_NEURONS, 1) * 0.01  # if multiple classification, it should (NUM_NEURONS, output_size(# of classes))
 
-        self.bias1       = np.random.rand(1, NUM_NEURONS) # 4 x 1
-        self.bias2       = np.random.rand(1, NUM_NEURONS)
-        self.bias3       = np.random.rand(1, NUM_NEURONS)
+        self.bias1       = np.random.rand(1, LAYER1_NEURONS) # 4 x 1
+        self.bias2       = np.random.rand(1, LAYER2_NEURONS)
+        self.bias3       = np.random.rand(1, LAYER3_NEURONS)
         self.bias4       = np.random.rand(1, 1) # (1, num_of_classes)... maybe last layer shouldn't have bias
         # self.y          = y
         self.y          = np.zeros((y.shape[0], 1))
@@ -120,11 +123,10 @@ class NeuralNetwork:
         d_weights4 = np.dot(self.layer3.T, d_Z4)
         d_bias4 = np.sum(d_Z4, axis = 0, keepdims=True) / m
         print("d_Z4 {0} - layer3 {1} - d_weights4 {2} - d_bias4 {3}".format(d_Z4.shape, self.layer3.shape, d_weights4.shape, d_bias4.shape))
-        d_A3 = np.dot(d_Z4, self.weights4.T)
 
         # hidden layers
         print("weights3 {} - d_Z4 {} - d_layer3 {}".format(self.weights3.shape, d_Z4.T.shape, activation_derivative(self.layer3).shape))
-        # d_Z3 = np.dot(np.dot(self.weights3, d_Z4.T), activation_derivative(self.layer3))
+        d_A3 = np.dot(d_Z4, self.weights4.T)
         d_Z3 = np.dot(np.dot(self.weights3, d_A3.T), activation_derivative(self.layer3))
         d_weights3 = np.dot(self.layer2, d_Z3) # (layer-1) * output error
         d_bias3 = np.sum(d_Z3, axis = 0, keepdims=True) / m
