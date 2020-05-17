@@ -122,28 +122,29 @@ class NeuralNetwork:
         d_Z4 = activation_derivative_output(self.output - self.y) # not sure if we need activation derivative on output
         d_weights4 = np.dot(self.layer3.T, d_Z4)
         d_bias4 = np.sum(d_Z4, axis = 0, keepdims=True) / m # should be either axis 0 or 1, should create shape of 1,1 
+        d_A3 = np.dot(d_Z4, self.weights4.T)
         print("d_Z4 {0} - layer3 {1} - d_weights4 {2} - d_bias4 {3}".format(d_Z4.shape, self.layer3.shape, d_weights4.shape, d_bias4.shape))
 
         # hidden layers
         print("weights3 {} - d_Z4 {} - d_layer3 {}".format(self.weights3.shape, d_Z4.T.shape, activation_derivative(self.layer3).shape))
-        d_A3 = np.dot(d_Z4, self.weights4.T)
         print("d_A3 {}".format(d_A3.shape))
         d_Z3 = d_A3 * activation_derivative(self.layer3)
         d_weights3 = np.dot(self.layer2, d_Z3.T) # (layer-1) * output error
         d_bias3 = np.sum(d_Z3, axis = 0, keepdims=True) / m
+        d_A2 = np.dot(d_Z3, self.weights3.T)
         print("d_Z3 {0} - layer2 {1} - d_weights3 {2} - d_bias3 {3}".format(d_Z3.shape, self.layer2.shape, d_weights3.shape, d_bias3.shape))
         print("layer2 {} - d_Z3 {}".format(self.layer2.shape, d_Z3.shape))
 
         print("weights2 {} - d_Z3.T {} - d_layer2 {}".format(self.weights2.shape, d_Z3.T.shape, activation_derivative(self.layer2).shape))
-        d_A2 = np.dot(d_Z3, self.weights3.T)
         d_Z2 = d_A2 *  activation_derivative(self.layer2)
         d_weights2 = np.dot(self.layer1, d_Z2.T) # (layer-1) * output error
         d_bias2 = np.sum(d_Z2, axis = 0, keepdims=True) / m 
+        d_A1 = np.dot(d_Z2, self.weights2.T)
         # print("d_Z2 {0} - layer2 {1} - d_weights2 {2} - d_bias2 {3}".format(d_Z2.shape, self.layer1.shape, d_weights2.shape, d_bias2.shape))
 
         print("weights4 {} - d_weights4 {} - weights3 {} - d_weights3{}".format(self.weights4.shape, d_weights4.shape, self.weights3.shape, d_weights3.shape))
 
-        d_Z1 = np.dot(np.dot(self.weights1, d_Z2), activation_derivative(self.layer1))
+        d_Z1 = d_A1 * activation_derivative(self.layer1)
         print("d_Z1 {0}".format(d_Z1.shape))
         # print("input {0}".format(self.input.shape))
         d_weights1 = np.dot(self.input, d_Z1) # (layer-1) * output error
