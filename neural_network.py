@@ -139,10 +139,10 @@ class NeuralNetwork:
         # print("weights2.T * d_Z2.T – {0} ".format(np.dot(self.weights2.T, d_Z2.T).shape))
         # print("activation")
         # print("activation {0} ".format(activation_derivative(self.layer1).shape))
-        d_Z1 = np.dot(np.dot(self.weights2.T, d_Z2), activation_derivative(self.layer1))
+        d_Z1 = np.dot(np.dot(self.weights1, d_Z2), activation_derivative(self.layer1))
         print("d_Z1 {0}".format(d_Z1.shape))
         # print("input {0}".format(self.input.shape))
-        d_weights1 = np.dot(self.input.T, d_Z1) # (layer-1) * output error
+        d_weights1 = np.dot(self.input, d_Z1) # (layer-1) * output error
         d_bias1 = np.sum(d_Z2, axis = 1, keepdims=True)
         # print("d_Z1 {0} - input {1} - d_weights1 {2} - d_bias1 {3}".format(d_Z1.shape, self.input.shape, d_weights1.shape, d_bias1.shape))
        
