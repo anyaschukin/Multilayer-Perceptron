@@ -111,39 +111,39 @@ class NeuralNetwork:
         print("output {0}, layer3 {1}, weights4 {2}, bias {3}".format( self.output.shape, self.layer3.shape, self.weights4.shape, self.bias4.shape))
 
     ## application of the chain rule to find derivative of the loss function with respect to weights2 and weights1
-    def backprop(self, activation_derivative = sigmoid_prime, learning_rate = 0.1):
+    def backprop(self, activation_derivative = sigmoid_prime, activation_derivative_output = softmax_prime, learning_rate = 0.1):
+        m = self.input.shape[0] # num examples
+        # weights and d_weights should have the same dimensions
 
         # output layer
-        d_Z4 = self.output - self.y
+        d_Z4 = activation_derivative_output(self.output - self.y) # not sure if we need activation derivative on output
         d_weights4 = np.dot(self.layer3.T, d_Z4)
-        d_bias4 = np.sum(d_Z4, axis = 0, keepdims=True)
+        d_bias4 = np.sum(d_Z4, axis = 0, keepdims=True) / m
         print("d_Z4 {0} - layer3 {1} - d_weights4 {2} - d_bias4 {3}".format(d_Z4.shape, self.layer3.shape, d_weights4.shape, d_bias4.shape))
-        error = np.dot(d_Z4, d_weights4.T)
+        d_A3 = np.dot(d_Z4, self.weights4.T)
 
         # hidden layers
         print("weights3 {} - d_Z4 {} - d_layer3 {}".format(self.weights3.shape, d_Z4.T.shape, activation_derivative(self.layer3).shape))
         # d_Z3 = np.dot(np.dot(self.weights3, d_Z4.T), activation_derivative(self.layer3))
-        d_Z3 = np.dot(np.dot(self.weights3, error.T), activation_derivative(self.layer3))
-        d_weights3 = np.dot(self.layer2, d_Z3.T) # (layer-1) * output error
-        d_bias3 = np.sum(d_Z3, axis = 0, keepdims=True)
+        d_Z3 = np.dot(np.dot(self.weights3, d_A3.T), activation_derivative(self.layer3))
+        d_weights3 = np.dot(self.layer2, d_Z3) # (layer-1) * output error
+        d_bias3 = np.sum(d_Z3, axis = 0, keepdims=True) / m
         print("d_Z3 {0} - layer2 {1} - d_weights3 {2} - d_bias3 {3}".format(d_Z3.shape, self.layer2.shape, d_weights3.shape, d_bias3.shape))
+        print("layer2 {} - d_Z3 {}".format(self.layer2.shape, d_Z3.shape))
 
         print("weights2 {} - d_Z3.T {} - d_layer2 {}".format(self.weights2.shape, d_Z3.T.shape, activation_derivative(self.layer2).shape))
         d_Z2 = np.dot(np.dot(self.weights2, d_Z3), activation_derivative(self.layer2).T)
         d_weights2 = np.dot(self.layer1, d_Z2) # (layer-1) * output error
-        d_bias2 = np.sum(d_Z2, axis = 0, keepdims=True)
-        print("d_Z2 {0} - layer2 {1} - d_weights2 {2} - d_bias2 {3}".format(d_Z2.shape, self.layer1.shape, d_weights2.shape, d_bias2.shape))
+        d_bias2 = np.sum(d_Z2, axis = 0, keepdims=True) / m 
+        # print("d_Z2 {0} - layer2 {1} - d_weights2 {2} - d_bias2 {3}".format(d_Z2.shape, self.layer1.shape, d_weights2.shape, d_bias2.shape))
 
+        print("weights4 {} - d_weights4 {} - weights3 {} - d_weights3{}".format(self.weights4.shape, d_weights4.shape, self.weights3.shape, d_weights3.shape))
 
-        # print("weights2 {0} – d_Z2 {1}".format(self.weights2.shape, d_Z2.shape))
-        # print("weights2.T * d_Z2.T – {0} ".format(np.dot(self.weights2.T, d_Z2.T).shape))
-        # print("activation")
-        # print("activation {0} ".format(activation_derivative(self.layer1).shape))
         d_Z1 = np.dot(np.dot(self.weights1, d_Z2), activation_derivative(self.layer1))
         print("d_Z1 {0}".format(d_Z1.shape))
         # print("input {0}".format(self.input.shape))
         d_weights1 = np.dot(self.input, d_Z1) # (layer-1) * output error
-        d_bias1 = np.sum(d_Z2, axis = 1, keepdims=True)
+        d_bias1 = np.sum(d_Z2, axis = 1, keepdims=True) / m
         # print("d_Z1 {0} - input {1} - d_weights1 {2} - d_bias1 {3}".format(d_Z1.shape, self.input.shape, d_weights1.shape, d_bias1.shape))
        
 
