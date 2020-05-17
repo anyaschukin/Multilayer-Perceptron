@@ -86,12 +86,12 @@ class NeuralNetwork:
         self.weights1   = np.random.rand(self.input.shape[1], NUM_NEURONS) * 0.01 # self.input.shape[1] is num_features
         self.weights2   = np.random.rand(NUM_NEURONS,NUM_NEURONS) * 0.01
         self.weights3   = np.random.rand(NUM_NEURONS,NUM_NEURONS) * 0.01
-        self.weights4   = np.random.rand(NUM_NEURONS, 1) * 0.01
-        # self.weights4   = np.random.rand(NUM_NEURONS, y.shape[0])
-        self.bias1       = np.random.rand(self.input.shape[0], 1)
+        self.weights4   = np.random.rand(NUM_NEURONS, 1) * 0.01  # if multiple classification, it should (NUM_NEURONS, output_size(# of classes))
+
+        self.bias1       = np.random.rand(1, NUM_NEURONS) # 4 x 1
         self.bias2       = np.random.rand(1, NUM_NEURONS)
         self.bias3       = np.random.rand(1, NUM_NEURONS)
-        self.bias4       = np.random.rand(y.shape[0], 1)
+        self.bias4       = np.random.rand(1, 1) # (1, num_of_classes)... maybe last layer shouldn't have bias
         # self.y          = y
         self.y          = np.zeros((y.shape[0], 1))
         self.output     = np.zeros((self.y.shape[0], 1))
@@ -116,19 +116,22 @@ class NeuralNetwork:
         # output layer
         d_Z4 = self.output - self.y
         d_weights4 = np.dot(self.layer3.T, d_Z4)
-        d_bias4 = np.sum(d_Z4, axis = 1, keepdims=True)
+        d_bias4 = np.sum(d_Z4, axis = 0, keepdims=True)
         print("d_Z4 {0} - layer3 {1} - d_weights4 {2} - d_bias4 {3}".format(d_Z4.shape, self.layer3.shape, d_weights4.shape, d_bias4.shape))
+        error = np.dot(d_Z4, d_weights4.T)
 
         # hidden layers
-        d_Z3 = np.dot(np.dot(self.weights3, d_Z4.T), activation_derivative(self.layer3))
+        print("weights3 {} - d_Z4 {} - d_layer3 {}".format(self.weights3.shape, d_Z4.T.shape, activation_derivative(self.layer3).shape))
+        # d_Z3 = np.dot(np.dot(self.weights3, d_Z4.T), activation_derivative(self.layer3))
+        d_Z3 = np.dot(np.dot(self.weights3, error.T), activation_derivative(self.layer3))
         d_weights3 = np.dot(self.layer2, d_Z3.T) # (layer-1) * output error
-        d_bias3 = np.sum(d_Z3, axis = 1, keepdims=True)
+        d_bias3 = np.sum(d_Z3, axis = 0, keepdims=True)
         print("d_Z3 {0} - layer2 {1} - d_weights3 {2} - d_bias3 {3}".format(d_Z3.shape, self.layer2.shape, d_weights3.shape, d_bias3.shape))
 
-        
-        d_Z2 = np.dot(self.weights2.T, d_Z3) * activation_derivative(self.layer2)
-        d_weights2 = np.dot(self.layer1.T, d_Z2) # (layer-1) * output error
-        d_bias2 = np.sum(d_Z2, axis = 1, keepdims=True)
+        print("weights2 {} - d_Z3.T {} - d_layer2 {}".format(self.weights2.shape, d_Z3.T.shape, activation_derivative(self.layer2).shape))
+        d_Z2 = np.dot(np.dot(self.weights2, d_Z3), activation_derivative(self.layer2).T)
+        d_weights2 = np.dot(self.layer1, d_Z2) # (layer-1) * output error
+        d_bias2 = np.sum(d_Z2, axis = 0, keepdims=True)
         print("d_Z2 {0} - layer2 {1} - d_weights2 {2} - d_bias2 {3}".format(d_Z2.shape, self.layer1.shape, d_weights2.shape, d_bias2.shape))
 
 
@@ -136,7 +139,7 @@ class NeuralNetwork:
         # print("weights2.T * d_Z2.T – {0} ".format(np.dot(self.weights2.T, d_Z2.T).shape))
         # print("activation")
         # print("activation {0} ".format(activation_derivative(self.layer1).shape))
-        d_Z1 = np.dot(np.dot(self.weights2.T, d_Z2.T), activation_derivative(self.layer1))
+        d_Z1 = np.dot(np.dot(self.weights2.T, d_Z2), activation_derivative(self.layer1))
         print("d_Z1 {0}".format(d_Z1.shape))
         # print("input {0}".format(self.input.shape))
         d_weights1 = np.dot(self.input.T, d_Z1) # (layer-1) * output error
