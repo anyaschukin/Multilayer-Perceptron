@@ -87,9 +87,9 @@ class NeuralNetwork:
     def __init__(self, x, y):
         self.input      = x
         self.weights1   = np.random.rand(self.input.shape[1], LAYER1_NEURONS) * 0.01 # self.input.shape[1] is num_features
-        self.weights2   = np.random.rand(LAYER2_NEURONS, LAYER2_NEURONS) * 0.01
-        self.weights3   = np.random.rand(LAYER3_NEURONS, LAYER3_NEURONS) * 0.01
-        self.weights4   = np.random.rand(LAYER4_NEURONS, 1) * 0.01  # if multiple classification, it should (NUM_NEURONS, output_size(# of classes))
+        self.weights2   = np.random.rand(LAYER1_NEURONS, LAYER2_NEURONS) * 0.01
+        self.weights3   = np.random.rand(LAYER2_NEURONS, LAYER3_NEURONS) * 0.01
+        self.weights4   = np.random.rand(LAYER3_NEURONS, 1) * 0.01  # if multiple classification, it should (NUM_NEURONS, output_size(# of classes))
 
         self.bias1       = np.random.rand(1, LAYER1_NEURONS) # 4 x 1
         self.bias2       = np.random.rand(1, LAYER2_NEURONS)
