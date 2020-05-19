@@ -2,14 +2,14 @@
 ## DATA PREPROCESSING
 It's important to put different variables on a common scale, so that extreme variables 
 don't have more weight than others
-{} scale - change the range of the values. The shape of the distribution doesn't change.
-{} normalize - bringing data points that were extreme before closer to the middle, 
+{x} scale - change the range of the values. The shape of the distribution doesn't change.
+{x} normalize - bringing data points that were extreme before closer to the middle, 
 so that they are less extreme (normal/Gaussian distribution). If you see a large standard deviation,
 then you should probably normalize/standardize the data.
 
 
 ## IMPLEMENTATION (required by subject)
-{} split data into train set and validation set
+{x} split data into train set and validation set
 {x} at least 2 hidden layers
 {} softmax activation function
 {} display at each epoch the training and validation metrics (model performance)
@@ -39,3 +39,13 @@ then you should probably normalize/standardize the data.
 
 {} make a prediction after __ epochs, then refine our parameters (gradient descent/learning)
 {} create function which calculates cost after each iteration
+
+
+DEBUG - NN gives same output for every example
+{x} check X, y
+{x} check self.y.shape, self.output.shape are same
+{x} check loss function correct
+{x} try different activation functions
+{x} try different number of neurons
+{x} try different learning rate
+{x} try different number of iterations
