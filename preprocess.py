@@ -23,7 +23,7 @@ def split(data):
 
     return train_set, test_set
 
-def scale(data, scaling='min_max_normalize'):
+def scale(data, scaling='standardize'):
     normed = data
     if scaling == 'min_max_normalize':
         # all data values are adjusted to lie on a bell curve btwn 0 and 10, starting at zero
