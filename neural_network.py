@@ -41,18 +41,18 @@ import preprocess as prep
 # def compute_loss(y_hat, y):
     # return ((y_hat - y)**2).sum()
 
-LAYER1_NEURONS = 5
-LAYER2_NEURONS = 5
-LAYER3_NEURONS = 5
-LAYER4_NEURONS = 5
+LAYER1_NEURONS = 15
+LAYER2_NEURONS = 15
+LAYER3_NEURONS = 15
+LAYER4_NEURONS = 15
 
 # The ReLufunction performs a threshold operation to each input element 
 # where values less than zero are set to zero.
-def ReLU(Z):
-    return np.maximum(0, Z)
+def ReLU(z):
+    return np.maximum(0, z)
 
-def ReLU_prime(Z):
-    return 1 * (Z > 0)
+def ReLU_prime(z):
+    return 1 * (z > 0)
     # return 1 if z > 0 else 0
 
 # leaky_ReLU
@@ -66,12 +66,21 @@ def leaky_ReLU_prime(z, alpha = 0.01):
 
 # sigmoid
 def sigmoid(z):
-    return 1.0/(1+ np.exp(-z))
+    return 1/(1+np.exp(-z))
 
 # sigmoid derivative
 def sigmoid_prime(z):
   return sigmoid(z) * (1-sigmoid(z))
 
+
+# def softmax(x):
+#     z = np.exp(x) / np.exp(x).sum(axis=1) [:,None]
+#     return z
+
+# def softmax_prime(self,grad):
+    # return self.old_y * (grad -(grad * self.old_y).sum(axis=1)[:,None])
+
+# what I was using when the NN wasn't learning
 def softmax(z):
     e = np.exp(z - np.max(z))
     return e / e.sum()
@@ -96,27 +105,39 @@ def softmax_prime(z):
 # 		f = softmax
 # 	return f(z)*(1-f(z))
 
+# def accuracy(Y_hat, Y):
+    # Y_hat_ = convert_prob_into_class(Y_hat)
+    # return (Y_hat_ == Y).all(axis=0).mean()
+
+epsilon = 1e-5  
+
 # binary cross-entropy loss
 def compute_loss(yhat, y):
-    nsample = len(y)
-    loss = -1/nsample * (np.sum(np.dot(np.log(yhat).T, y) + np.dot((1 - y), np.log(1 - yhat).T)))
+    # m = yhat.shape[1]
+    # print("y shape {}, yhat shape {}".format(y.shape, yhat.shape))
+    m = len(y)
+    loss = -1/m * (np.sum(np.dot(np.log(yhat + epsilon).T, y) + np.dot((1 - y), np.log(1 - yhat + epsilon).T)))
     return loss
 
 class NeuralNetwork:
     def __init__(self, x, y):
         self.input      = x
-        self.weights1   = np.random.rand(self.input.shape[1], LAYER1_NEURONS) * 0.01 # self.input.shape[1] is num_features
-        self.weights2   = np.random.rand(LAYER1_NEURONS, LAYER2_NEURONS) * 0.01
-        self.weights3   = np.random.rand(LAYER2_NEURONS, LAYER3_NEURONS) * 0.01
-        self.weights4   = np.random.rand(LAYER3_NEURONS, 1) * 0.01  # if multiple classification, it should (NUM_NEURONS, output_size(# of classes))
+        self.weights1   = np.random.rand(self.input.shape[1], LAYER1_NEURONS) # * 0.01 # self.input.shape[1] is num_features
+        self.weights2   = np.random.rand(LAYER1_NEURONS, LAYER2_NEURONS) # * 0.01
+        self.weights3   = np.random.rand(LAYER2_NEURONS, LAYER3_NEURONS) # * 0.01
+        self.weights4   = np.random.rand(LAYER3_NEURONS, 1) # * 0.01  # if multiple classification, it should (NUM_NEURONS, output_size(# of classes))
 
-        self.bias1       = np.random.rand(1, LAYER1_NEURONS) # 4 x 1
-        self.bias2       = np.random.rand(1, LAYER2_NEURONS)
-        self.bias3       = np.random.rand(1, LAYER3_NEURONS)
-        self.bias4       = np.random.rand(1, 1) # (1, num_of_classes)... maybe last layer shouldn't have bias
+        self.bias1       = np.zeros((1, LAYER1_NEURONS)) # 4 x 1
+        self.bias2       = np.zeros((1, LAYER2_NEURONS))
+        self.bias3       = np.zeros((1, LAYER3_NEURONS))
+        self.bias4       = np.zeros((1, 1)) # (1, num_of_classes)... maybe last layer shouldn't have bias
        
         self.y           = y.to_numpy().reshape(y.shape[0], 1)
         self.output     = np.zeros((self.y.shape[0], 1))
+
+        print("y {}".format(self.y))
+        print("output {}".format(self.output))
+        # print("weights 1 {}".format(self.weights1))
 
     def feedforward(self, activation = softmax, activation_hidden = leaky_ReLU):
         
@@ -170,16 +191,16 @@ class NeuralNetwork:
         self.weights3 -= learning_rate * d_weights3
         self.weights4 -= learning_rate * d_weights4
 
-        # print
-        # print("weights1 {}".format(self.weights1))
-        # print("weights2 {}".format(self.weights2))
-        # print("weights3 {}".format(self.weights3))
-        # print("weights4{}".format(self.weights4))
-
         self.bias1 -= learning_rate * d_bias1
         self.bias2 -= learning_rate * d_bias2
         self.bias3 -= learning_rate * d_bias3
         self.bias4 -= learning_rate * d_bias4
+
+        # print
+        print("d_weights1 {}".format(d_weights1))
+        print("d_weights2 {}".format(d_weights2))
+        print("d_weights3 {}".format(d_weights3))
+        print("d_weights4 {}".format(d_weights4))
 
         # print
         # print("bias1 {}".format(self.bias1))
@@ -197,7 +218,6 @@ class NeuralNetwork:
         # print("d_weights1 {} - d_weights2 {} - d_weights3 {} - d_weights4 {}".format(d_weights1.shape, d_weights2.shape, d_weights3.shape, d_weights4.shape))
         # print("self.weights1 {} - self.weights2 {} - self.weights3 {} - self.weights4 {}".format(self.weights1.shape, self.weights2.shape, self.weights3.shape, self.weights4.shape))
 
-
 def main():
     # X = np.array([[0,0,1],
     #               [0,1,1],
@@ -210,7 +230,13 @@ def main():
     # visualize(data)
     train_set, test_set = prep.split(data)
 
-    X, y = train_set.iloc[:, 1:], train_set.iloc[:, 0]
+    # X, y = train_set.iloc[:, 1:], train_set.iloc[:, 0]
+    X, y = train_set.iloc[:5, 1:], train_set.iloc[:5, 0]
+    print("X {}".format(X))
+    print("y {}".format(y))
+
+    # X = tmp_X[:2]
+    
     # y = y.reshape(y.shape[0], 1)
     # y = y.to_numpy().shape[0]
 
@@ -221,10 +247,12 @@ def main():
 
     nn = NeuralNetwork(X, y)
     loss_values = []
+
     for i in range(1500):
         nn.feedforward()
         nn.backprop()
         loss = compute_loss(nn.output, nn.y)
+        print("output = {}".format(nn.output))
         print("loss = {}".format(loss))
         loss_values.append(loss)
 
@@ -234,8 +262,8 @@ def main():
     # print(nn.output)
     print(f" final loss : {loss}")
 
-    # plt.plot(loss_values)
-    # plt.show()
+    plt.plot(loss_values)
+    plt.show()
 
 if __name__ == '__main__':
     main()

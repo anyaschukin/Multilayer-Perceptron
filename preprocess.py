@@ -27,10 +27,10 @@ def scale(data, scaling='standardize'):
     normed = data
     if scaling == 'min_max_normalize':
         # all data values are adjusted to lie on a bell curve btwn 0 and 10, starting at zero
-        normed = (normed - normed.min())/(normed.max()-normed.min())*10
+        normed = (normed - normed.min())/(normed.max()-normed.min())
     if scaling == 'standardize':
         # all data values are centered around the mean (zero) with a unit standard deviation (min, max)
-        normed=(normed-normed.mean())/normed.std()*10
+        normed=(normed-normed.mean())/normed.std()
     normed["diagnosis"] = data["diagnosis"]
     return normed
     
