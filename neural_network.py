@@ -44,7 +44,7 @@ import preprocess as prep
 LAYER1_NEURONS = 15
 LAYER2_NEURONS = 15
 LAYER3_NEURONS = 15
-LAYER4_NEURONS = 15
+LAYER4_NEURONS = 2
 
 # The ReLufunction performs a threshold operation to each input element 
 # where values less than zero are set to zero.
@@ -114,9 +114,8 @@ epsilon = 1e-5
 # binary cross-entropy loss
 def compute_loss(yhat, y):
     # m = yhat.shape[1]
-    # print("y shape {}, yhat shape {}".format(y.shape, yhat.shape))
     m = len(y)
-    loss = -1/m * (np.sum(np.dot(np.log(yhat + epsilon).T, y) + np.dot((1 - y), np.log(1 - yhat + epsilon).T)))
+    loss = -1/m * (np.sum(np.dot(np.log(yhat + epsilon).T, y) + np.dot((1 - y).T, np.log(1 - yhat + epsilon))))
     return loss
 
 class NeuralNetwork:
@@ -125,15 +124,15 @@ class NeuralNetwork:
         self.weights1   = np.random.rand(self.input.shape[1], LAYER1_NEURONS) # * 0.01 # self.input.shape[1] is num_features
         self.weights2   = np.random.rand(LAYER1_NEURONS, LAYER2_NEURONS) # * 0.01
         self.weights3   = np.random.rand(LAYER2_NEURONS, LAYER3_NEURONS) # * 0.01
-        self.weights4   = np.random.rand(LAYER3_NEURONS, 1) # * 0.01  # if multiple classification, it should (NUM_NEURONS, output_size(# of classes))
+        self.weights4   = np.random.rand(LAYER3_NEURONS, 2) # * 0.01  # if multiple classification, it should (NUM_NEURONS, output_size(# of classes))
 
         self.bias1       = np.zeros((1, LAYER1_NEURONS)) # 4 x 1
         self.bias2       = np.zeros((1, LAYER2_NEURONS))
         self.bias3       = np.zeros((1, LAYER3_NEURONS))
-        self.bias4       = np.zeros((1, 1)) # (1, num_of_classes)... maybe last layer shouldn't have bias
+        self.bias4       = np.zeros((1, 2)) # (1, num_of_classes)... maybe last layer shouldn't have bias
        
         self.y           = y.to_numpy().reshape(y.shape[0], 1)
-        self.output     = np.zeros((self.y.shape[0], 1))
+        self.output     = np.zeros((self.y.shape[0], 2))
 
         print("y {}".format(self.y))
         print("output {}".format(self.output))
@@ -166,23 +165,23 @@ class NeuralNetwork:
 
         # output layer
         d_Z4 = d_activation(self.output - self.y) # not sure if we need activation derivative on output
-        d_weights4 = np.dot(self.layer3.T, d_Z4)
+        d_weights4 = np.dot(self.layer3.T, d_Z4) / m
         d_bias4 = np.sum(d_Z4, axis = 0, keepdims=True) / m # should be either axis 0 or 1, should create shape of 1,1 
         d_A3 = np.dot(d_Z4, self.weights4.T)
 
         # hidden layers
         d_Z3 = d_A3 * d_activation_hidden(self.layer3)
-        d_weights3 = np.dot(self.layer2.T, d_Z3) # (layer-1) * output error
+        d_weights3 = np.dot(self.layer2.T, d_Z3) / m  # (layer-1) * output error
         d_bias3 = np.sum(d_Z3, axis = 0, keepdims=True) / m
         d_A2 = np.dot(d_Z3, self.weights3.T)
 
         d_Z2 = d_A2 *  d_activation_hidden(self.layer2)
-        d_weights2 = np.dot(self.layer1.T, d_Z2) # (layer-1) * output error
+        d_weights2 = np.dot(self.layer1.T, d_Z2) / m # (layer-1) * output error
         d_bias2 = np.sum(d_Z2, axis = 0, keepdims=True) / m 
         d_A1 = np.dot(d_Z2, self.weights2.T)
 
         d_Z1 = d_A1 * d_activation_hidden(self.layer1)
-        d_weights1 = np.dot(self.input.T, d_Z1) # (layer-1) * output error
+        d_weights1 = np.dot(self.input.T, d_Z1) / m # (layer-1) * output error
         d_bias1 = np.sum(d_Z2, axis = 0, keepdims=True) / m
        
         ## update the weights with the derivative (slope) of the loss function
