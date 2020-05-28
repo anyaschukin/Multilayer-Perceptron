@@ -41,9 +41,9 @@ import preprocess as prep
 # def compute_loss(y_hat, y):
     # return ((y_hat - y)**2).sum()
 
-LAYER1_NEURONS = 15
-LAYER2_NEURONS = 15
-LAYER3_NEURONS = 15
+LAYER1_NEURONS = 16
+LAYER2_NEURONS = 16
+LAYER3_NEURONS = 16
 LAYER4_NEURONS = 2
 
 # The ReLufunction performs a threshold operation to each input element 
@@ -159,47 +159,47 @@ class NeuralNetwork:
         # print("output {0}, layer3 {1}, weights4 {2}, bias {3}".format( self.output.shape, self.layer3.shape, self.weights4.shape, self.bias4.shape))
 
     ## application of the chain rule to find derivative of the loss function with respect to weights2 and weights1
-    def backprop(self, d_activation = softmax_prime, d_activation_hidden = leaky_ReLU_prime, learning_rate = 0.01):
-        m = self.input.shape[0] # num examples
+    def backprop(self, d_activation = softmax_prime, d_activation_hidden = leaky_ReLU_prime, learning_rate = 0.1):
+        m = self.input.shape[0] # num examples or batch size
         # weights and d_weights should have the same dimensions
 
         # output layer
         d_Z4 = d_activation(self.output - self.y) # not sure if we need activation derivative on output
-        d_weights4 = np.dot(self.layer3.T, d_Z4) / m
-        d_bias4 = np.sum(d_Z4, axis = 0, keepdims=True) / m # should be either axis 0 or 1, should create shape of 1,1 
+        d_weights4 = np.dot(self.layer3.T, d_Z4)
+        d_bias4 = np.sum(d_Z4, axis = 0, keepdims=True) # should be either axis 0 or 1, should create shape of 1,1 
         d_A3 = np.dot(d_Z4, self.weights4.T)
 
         # hidden layers
         d_Z3 = d_A3 * d_activation_hidden(self.layer3)
-        d_weights3 = np.dot(self.layer2.T, d_Z3) / m  # (layer-1) * output error
-        d_bias3 = np.sum(d_Z3, axis = 0, keepdims=True) / m
+        d_weights3 = np.dot(self.layer2.T, d_Z3)  # (layer-1) * output error
+        d_bias3 = np.sum(d_Z3, axis = 0, keepdims=True)
         d_A2 = np.dot(d_Z3, self.weights3.T)
 
         d_Z2 = d_A2 *  d_activation_hidden(self.layer2)
-        d_weights2 = np.dot(self.layer1.T, d_Z2) / m # (layer-1) * output error
-        d_bias2 = np.sum(d_Z2, axis = 0, keepdims=True) / m 
+        d_weights2 = np.dot(self.layer1.T, d_Z2) # (layer-1) * output error
+        d_bias2 = np.sum(d_Z2, axis = 0, keepdims=True) 
         d_A1 = np.dot(d_Z2, self.weights2.T)
 
         d_Z1 = d_A1 * d_activation_hidden(self.layer1)
-        d_weights1 = np.dot(self.input.T, d_Z1) / m # (layer-1) * output error
-        d_bias1 = np.sum(d_Z2, axis = 0, keepdims=True) / m
+        d_weights1 = np.dot(self.input.T, d_Z1) # (layer-1) * output error
+        d_bias1 = np.sum(d_Z2, axis = 0, keepdims=True)
        
         ## update the weights with the derivative (slope) of the loss function
-        self.weights1 -= learning_rate * d_weights1
-        self.weights2 -= learning_rate * d_weights2
-        self.weights3 -= learning_rate * d_weights3
-        self.weights4 -= learning_rate * d_weights4
+        self.weights1 -= learning_rate * (d_weights1 / m) 
+        self.weights2 -= learning_rate * (d_weights2 / m)
+        self.weights3 -= learning_rate * (d_weights3 / m)
+        self.weights4 -= learning_rate * (d_weights4 / m)
 
-        self.bias1 -= learning_rate * d_bias1
-        self.bias2 -= learning_rate * d_bias2
-        self.bias3 -= learning_rate * d_bias3
-        self.bias4 -= learning_rate * d_bias4
+        self.bias1 -= learning_rate * (d_bias1 / m)
+        self.bias2 -= learning_rate * (d_bias2 / m)
+        self.bias3 -= learning_rate * (d_bias3 / m)
+        self.bias4 -= learning_rate * (d_bias4 / m)
 
         # print
-        print("d_weights1 {}".format(d_weights1))
-        print("d_weights2 {}".format(d_weights2))
-        print("d_weights3 {}".format(d_weights3))
-        print("d_weights4 {}".format(d_weights4))
+        # print("d_weights1 {}".format(d_weights1))
+        # print("d_weights2 {}".format(d_weights2))
+        # print("d_weights3 {}".format(d_weights3))
+        # print("d_weights4 {}".format(d_weights4))
 
         # print
         # print("bias1 {}".format(self.bias1))
@@ -230,9 +230,9 @@ def main():
     train_set, test_set = prep.split(data)
 
     # X, y = train_set.iloc[:, 1:], train_set.iloc[:, 0]
-    X, y = train_set.iloc[:5, 1:], train_set.iloc[:5, 0]
-    print("X {}".format(X))
-    print("y {}".format(y))
+    X, y = train_set.iloc[:, 1:], train_set.iloc[:, 0]
+    # print("X {}".format(X))
+    # print("y {}".format(y))
 
     # X = tmp_X[:2]
     
