@@ -159,12 +159,13 @@ class NeuralNetwork:
         # print("output {0}, layer3 {1}, weights4 {2}, bias {3}".format( self.output.shape, self.layer3.shape, self.weights4.shape, self.bias4.shape))
 
     ## application of the chain rule to find derivative of the loss function with respect to weights2 and weights1
-    def backprop(self, d_activation = softmax_prime, d_activation_hidden = leaky_ReLU_prime, learning_rate = 0.00001):
+    def backprop(self, d_activation = softmax_prime, d_activation_hidden = leaky_ReLU_prime, learning_rate = 0.0001):
         m = self.input.shape[0] # num examples or batch size
         # weights and d_weights should have the same dimensions
 
         # output layer
-        d_Z4 = d_activation(self.output - self.y) # not sure if we need activation derivative on output
+        # d_Z4 = d_activation(self.output - self.y) # not sure if we need activation derivative on output
+        d_Z4 = self.output - self.y # not sure if we need activation derivative on output
         d_weights4 = np.dot(self.layer3.T, d_Z4)
         d_bias4 = np.sum(d_Z4, axis = 0, keepdims=True) # should be either axis 0 or 1, should create shape of 1,1 
         d_A3 = np.dot(d_Z4, self.weights4.T)
