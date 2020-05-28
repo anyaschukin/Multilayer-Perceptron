@@ -41,10 +41,9 @@ then you should probably normalize/standardize the data.
 {} create function which calculates cost after each iteration
 
 TO FIX
-{} output is always almost the same / NN gives same output for every example
+{} NN gives same output for every example / NN doesn't learn
 {} vanishing/exloding gradients
 {} weights go to NaN after _ iterations
-{} NN doesn't learn
 {x} compute_loss - RuntimeWarning: divide by zero encountered in log
     ^ I think due to log(0) -> nan
 {} softmax -  RuntimeWarning: invalid value encountered in subtract
@@ -61,6 +60,6 @@ DEBUG - vanishing/exploding gradients
 {x} try different learning rate
 {x} try different number of iterations
 {x} try a dataset of just 2, then 5 examples
-{x} add He weight initization (for ReLU) – * np.sqrt(2/N_in), where N_in = input_neurons (from previous layer)
-{} add Xavier weight initization (for Tanh) – * np.sqrt(1/N_in)
-{} add Xavier/Bengio weight initization – * np.sqrt(2/N_avg), where N_avg = (N_in+N_out/2)
+{x} add He weight initization (for ReLU) – * np.sqrt(2/N_in), where N_in = input_neurons (or fan_in, neurons from previous layer)
+{} add Xavier weight initization (for Tanh) – * np.sqrt(2 / (N_in + N_out))     source: keras https://github.com/keras-team/keras/blob/998efc04eefa0c14057c1fa87cab71df5b24bf7e/keras/initializations.py
+{x} add Lecun weight initization (for efficient backprop?) – * np.sqrt(3/N_in)
