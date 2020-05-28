@@ -121,10 +121,10 @@ def compute_loss(yhat, y):
 class NeuralNetwork:
     def __init__(self, x, y):
         self.input      = x
-        self.weights1   = np.random.rand(self.input.shape[1], LAYER1_NEURONS) # * 0.01 # self.input.shape[1] is num_features
-        self.weights2   = np.random.rand(LAYER1_NEURONS, LAYER2_NEURONS) # * 0.01
-        self.weights3   = np.random.rand(LAYER2_NEURONS, LAYER3_NEURONS) # * 0.01
-        self.weights4   = np.random.rand(LAYER3_NEURONS, 2) # * 0.01  # if multiple classification, it should (NUM_NEURONS, output_size(# of classes))
+        self.weights1   = np.random.rand(self.input.shape[1], LAYER1_NEURONS) * np.sqrt(2/self.input.shape[1]) ## * 0.01 # self.input.shape[1] is num_features
+        self.weights2   = np.random.rand(LAYER1_NEURONS, LAYER2_NEURONS) * np.sqrt(2/LAYER1_NEURONS) ## * 0.01
+        self.weights3   = np.random.rand(LAYER2_NEURONS, LAYER3_NEURONS) * np.sqrt(2/LAYER2_NEURONS) ## * 0.01
+        self.weights4   = np.random.rand(LAYER3_NEURONS, 2) * np.sqrt(2/LAYER3_NEURONS) ## * 0.01  # if multiple classification, it should (NUM_NEURONS, output_size(# of classes))
 
         self.bias1       = np.zeros((1, LAYER1_NEURONS)) # 4 x 1
         self.bias2       = np.zeros((1, LAYER2_NEURONS))
@@ -134,8 +134,8 @@ class NeuralNetwork:
         self.y           = y.to_numpy().reshape(y.shape[0], 1)
         self.output     = np.zeros((self.y.shape[0], 2))
 
-        print("y {}".format(self.y))
-        print("output {}".format(self.output))
+        # print("y {}".format(self.y))
+        # print("output {}".format(self.output))
         # print("weights 1 {}".format(self.weights1))
 
     def feedforward(self, activation = softmax, activation_hidden = leaky_ReLU):
@@ -159,7 +159,7 @@ class NeuralNetwork:
         # print("output {0}, layer3 {1}, weights4 {2}, bias {3}".format( self.output.shape, self.layer3.shape, self.weights4.shape, self.bias4.shape))
 
     ## application of the chain rule to find derivative of the loss function with respect to weights2 and weights1
-    def backprop(self, d_activation = softmax_prime, d_activation_hidden = leaky_ReLU_prime, learning_rate = 0.1):
+    def backprop(self, d_activation = softmax_prime, d_activation_hidden = leaky_ReLU_prime, learning_rate = 0.01):
         m = self.input.shape[0] # num examples or batch size
         # weights and d_weights should have the same dimensions
 
@@ -230,7 +230,7 @@ def main():
     train_set, test_set = prep.split(data)
 
     # X, y = train_set.iloc[:, 1:], train_set.iloc[:, 0]
-    X, y = train_set.iloc[:, 1:], train_set.iloc[:, 0]
+    X, y = train_set.iloc[:5, 1:], train_set.iloc[:5, 0]
     # print("X {}".format(X))
     # print("y {}".format(y))
 
@@ -247,11 +247,11 @@ def main():
     nn = NeuralNetwork(X, y)
     loss_values = []
 
-    for i in range(1500):
+    for i in range(150000):
         nn.feedforward()
         nn.backprop()
         loss = compute_loss(nn.output, nn.y)
-        print("output = {}".format(nn.output))
+        # print("output = {}".format(nn.output))
         print("loss = {}".format(loss))
         loss_values.append(loss)
 

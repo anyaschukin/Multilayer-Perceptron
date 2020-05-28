@@ -40,12 +40,25 @@ then you should probably normalize/standardize the data.
 {} make a prediction after __ epochs, then refine our parameters (gradient descent/learning)
 {} create function which calculates cost after each iteration
 
+TO FIX
+{} output is always almost the same / NN gives same output for every example
+{} vanishing/exloding gradients
+{} weights go to NaN after _ iterations
+{} NN doesn't learn
+{x} compute_loss - RuntimeWarning: divide by zero encountered in log
+    ^ I think due to log(0) -> nan
+{} softmax -  RuntimeWarning: invalid value encountered in subtract
+{} leaky_ReLU and prime - RuntimeWarning: invalid value encountered in greater_equal
 
-DEBUG - NN gives same output for every example
+
+DEBUG - vanishing/exploding gradients
 {x} check X, y
 {x} check self.y.shape, self.output.shape are same
 {x} check loss function correct
+{x} check activation functions are correct
 {x} try different activation functions
 {x} try different number of neurons
 {x} try different learning rate
 {x} try different number of iterations
+{x} try a dataset of just 2, then 5 examples
+{x} add He weight initization – * np.sqrt(2/previous_layer_inputs)
