@@ -55,6 +55,11 @@ def ReLU_prime(z):
     return 1 * (z > 0)
     # return 1 if z > 0 else 0
 
+# def relu_backward(dA, Z):
+#     dZ = np.array(dA, copy = True)
+#     dZ[Z <= 0] = 0;
+#     return dZ;
+
 # leaky_ReLU
 def leaky_ReLU(z, alpha = 0.01):
 	return np.where(z >= 0, z, z * alpha)
@@ -118,6 +123,10 @@ def compute_loss(yhat, y):
     loss = -1/m * (np.sum(np.dot(np.log(yhat + epsilon).T, y) + np.dot((1 - y).T, np.log(1 - yhat + epsilon))))
     return loss
 
+def compute_loss_prime(yhat, y):
+    d_loss = - (np.divide(y, yhat) - np.divide(1 - y, 1 - yhat))
+    return d_loss
+
 class NeuralNetwork:
     def __init__(self, x, y):
         self.input      = x
@@ -140,11 +149,20 @@ class NeuralNetwork:
 
     def feedforward(self, activation = softmax, activation_hidden = leaky_ReLU):
         
-        self.layer1 = activation_hidden(np.dot(self.input, self.weights1) + self.bias1) 
-        self.layer2 = activation_hidden(np.dot(self.layer1, self.weights2) + self.bias2)
-        self.layer3 = activation_hidden(np.dot(self.layer2, self.weights3) + self.bias3)
-        self.output = activation(np.dot(self.layer3, self.weights4) + self.bias4) # layer = theta(weight_l * a_l-1 + b_l)
+        self.Z1 = np.dot(self.input, self.weights1) + self.bias1
+        self.layer1 = activation_hidden(self.Z1) 
+        self.Z2 = np.dot(self.layer1, self.weights2) + self.bias2
+        self.layer2 = activation_hidden(self.Z2)
+        self.Z3 = np.dot(self.layer2, self.weights3) + self.bias3
+        self.layer3 = activation_hidden(self.Z3)
+        self.Z4 = np.dot(self.layer3, self.weights4) + self.bias4 # layer = theta(weight_l * a_l-1 + b_l)
+        self.output = activation(self.Z4) # layer = theta(weight_l * a_l-1 + b_l)
         
+        # self.layer1 = activation_hidden(np.dot(self.input, self.weights1) + self.bias1) 
+        # self.layer2 = activation_hidden(np.dot(self.layer1, self.weights2) + self.bias2)
+        # self.layer3 = activation_hidden(np.dot(self.layer2, self.weights3) + self.bias3)
+        # self.output = activation(np.dot(self.layer3, self.weights4) + self.bias4) # layer = theta(weight_l * a_l-1 + b_l)
+
         # print("activation layer 1{}".format(activation_hidden(np.dot(self.input, self.weights1) + self.bias1)))
         # print("activation layer 2{}".format(activation_hidden(np.dot(self.layer1, self.weights2) + self.bias2)))
 # 
@@ -163,27 +181,72 @@ class NeuralNetwork:
         m = self.input.shape[0] # num examples or batch size
         # weights and d_weights should have the same dimensions
 
+        d_A4 = compute_loss_prime(self.output, self.y)
+
         # output layer
-        # d_Z4 = d_activation(self.output - self.y) # not sure if we need activation derivative on output
-        d_Z4 = self.output - self.y # not sure if we need activation derivative on output
+        # d_Z4 = d_A4 * d_activation(self.output) # not sure if we need activation derivative on output
+        d_Z4 = d_A4 * d_activation(self.Z4) # not sure if we need activation derivative on output
         d_weights4 = np.dot(self.layer3.T, d_Z4)
         d_bias4 = np.sum(d_Z4, axis = 0, keepdims=True) # should be either axis 0 or 1, should create shape of 1,1 
         d_A3 = np.dot(d_Z4, self.weights4.T)
 
         # hidden layers
-        d_Z3 = d_A3 * d_activation_hidden(self.layer3)
+        # d_Z3 = d_A3 * d_activation_hidden(self.layer3)
+        d_Z3 = d_A3 * d_activation_hidden(self.Z3)
         d_weights3 = np.dot(self.layer2.T, d_Z3)  # (layer-1) * output error
         d_bias3 = np.sum(d_Z3, axis = 0, keepdims=True)
         d_A2 = np.dot(d_Z3, self.weights3.T)
-
-        d_Z2 = d_A2 * d_activation_hidden(self.layer2)
+ 
+        # d_Z2 = d_A2 * d_activation_hidden(self.layer2)
+        d_Z2 = d_A2 * d_activation_hidden(self.Z2)
         d_weights2 = np.dot(self.layer1.T, d_Z2) # (layer-1) * output error
         d_bias2 = np.sum(d_Z2, axis = 0, keepdims=True) 
         d_A1 = np.dot(d_Z2, self.weights2.T)
 
-        d_Z1 = d_A1 * d_activation_hidden(self.layer1)
+        # d_Z1 = d_A1 * d_activation_hidden(self.layer1)
+        d_Z1 = d_A1 * d_activation_hidden(self.Z1)
         d_weights1 = np.dot(self.input.T, d_Z1) # (layer-1) * output error
         d_bias1 = np.sum(d_Z2, axis = 0, keepdims=True)
+
+        ######
+        # error = self.output - self.y
+
+        # d_z4 = self.output - self.y
+        # d4 = np.multiply(d_z4, d_activation(self.output))
+        # dW4 = np.dot(self.layer3.T, d4)
+        # db4 = np.sum(d4, axis = 0, keepdims=True)
+
+        # d2 = np.multiply(np.dot(d4, self.weights4.T),  d_activation_hidden(z2))
+        # dW2 = np.dot(a1.T, d2)
+        # db2 = np.sum(d2, axis = 0, keepdims=True)
+
+        # d1 = np.multiply(np.dot(d2, W2.T), dtanh(z1))
+        # dW1 = np.dot(X.T, d1)
+        # db1 = np.sum(d1, axis = 0, keepdims=True)
+        ######
+
+
+        # output layer
+        # d_Z4 = d_activation(self.output - self.y) # not sure if we need activation derivative on output
+        # d_Z4 = self.output - self.y # not sure if we need activation derivative on output
+        # d_A3 = np.dot(d_Z4, self.weights4.T)
+        # d_weights4 = np.dot(self.layer3.T, d_Z4)
+        # d_bias4 = np.sum(d_Z4, axis = 0, keepdims=True) # should be either axis 0 or 1, should create shape of 1,1 
+
+        # hidden layers
+        # d_Z3 = d_A3 * d_activation_hidden(self.layer3)
+        # d_weights3 = np.dot(self.layer2.T, d_Z3)  # (layer-1) * output error
+        # d_bias3 = np.sum(d_Z3, axis = 0, keepdims=True)
+        # d_A2 = np.dot(d_Z3, self.weights3.T)
+# 
+        # d_Z2 = d_A2 * d_activation_hidden(self.layer2)
+        # d_weights2 = np.dot(self.layer1.T, d_Z2) # (layer-1) * output error
+        # d_bias2 = np.sum(d_Z2, axis = 0, keepdims=True) 
+        # d_A1 = np.dot(d_Z2, self.weights2.T)
+# 
+        # d_Z1 = d_A1 * d_activation_hidden(self.layer1)
+        # d_weights1 = np.dot(self.input.T, d_Z1) # (layer-1) * output error
+        # d_bias1 = np.sum(d_Z2, axis = 0, keepdims=True)
        
         ## update the weights with the derivative (slope) of the loss function
         self.weights1 -= learning_rate * (d_weights1 / m) 
@@ -231,7 +294,7 @@ def main():
     train_set, test_set = prep.split(data)
 
     # X, y = train_set.iloc[:, 1:], train_set.iloc[:, 0]
-    X, y = train_set.iloc[:5, 1:], train_set.iloc[:5, 0]
+    X, y = train_set.iloc[:10, 1:], train_set.iloc[:10, 0]
     # print("X {}".format(X))
     # print("y {}".format(y))
 
@@ -248,7 +311,7 @@ def main():
     nn = NeuralNetwork(X, y)
     loss_values = []
 
-    for i in range(15000):
+    for i in range(2000):
         nn.feedforward()
         nn.backprop()
         loss = compute_loss(nn.output, nn.y)
