@@ -119,12 +119,16 @@ epsilon = 1e-5
 # binary cross-entropy loss
 def compute_loss(yhat, y):
     # m = yhat.shape[1]
+    print("yhat {}, y {}".format(yhat, y))
     m = len(y)
+    # return np.sum(np.nan_to_num(-y*np.log(a)-(1-y)*np.log(1-a)))
+    # loss = -1/m * (np.sum(np.nan_to_num((np.dot(np.log(yhat + epsilon).T, y) + np.dot((1 - y).T, np.log(1 - yhat + epsilon))))))
     loss = -1/m * (np.sum(np.dot(np.log(yhat + epsilon).T, y) + np.dot((1 - y).T, np.log(1 - yhat + epsilon))))
     return loss
 
 def compute_loss_prime(yhat, y):
     d_loss = - (np.divide(y, yhat) - np.divide(1 - y, 1 - yhat))
+    # print("d_loss = {}".format(d_loss))
     return d_loss
 
 class NeuralNetwork:
@@ -143,11 +147,11 @@ class NeuralNetwork:
         self.y           = y.to_numpy().reshape(y.shape[0], 1)
         self.output     = np.zeros((self.y.shape[0], 2))
 
-        # print("y {}".format(self.y))
+        # print("self.y {}".format(self.y))
         # print("output {}".format(self.output))
         # print("weights 1 {}".format(self.weights1))
 
-    def feedforward(self, activation = softmax, activation_hidden = leaky_ReLU):
+    def feedforward(self, activation = softmax, activation_hidden = ReLU):
         
         self.Z1 = np.dot(self.input, self.weights1) + self.bias1
         self.layer1 = activation_hidden(self.Z1) 
@@ -177,7 +181,7 @@ class NeuralNetwork:
         # print("output {0}, layer3 {1}, weights4 {2}, bias {3}".format( self.output.shape, self.layer3.shape, self.weights4.shape, self.bias4.shape))
 
     ## application of the chain rule to find derivative of the loss function with respect to weights2 and weights1
-    def backprop(self, d_activation = softmax_prime, d_activation_hidden = leaky_ReLU_prime, learning_rate = 0.0001):
+    def backprop(self, d_activation = softmax_prime, d_activation_hidden = ReLU_prime, learning_rate = 0.0001):
         m = self.input.shape[0] # num examples or batch size
         # weights and d_weights should have the same dimensions
 
@@ -295,8 +299,8 @@ def main():
 
     # X, y = train_set.iloc[:, 1:], train_set.iloc[:, 0]
     X, y = train_set.iloc[:10, 1:], train_set.iloc[:10, 0]
-    # print("X {}".format(X))
-    # print("y {}".format(y))
+    print("X {}".format(X))
+    print("y {}".format(y))
 
     # X = tmp_X[:2]
     
