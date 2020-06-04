@@ -87,8 +87,10 @@ def sigmoid_prime(z):
 
 # what I was using when the NN wasn't learning
 def softmax(z):
+    z -= np.max(z)  # Numerical Stability: shift the values of f so that the highest number is 0... [1, 3, 5] -> [-4, -2, 0]
     e = np.exp(z - np.max(z))
     return e / e.sum()
+    # return z
 
     # return np.exp(z) / np.sum(np.exp(z)) 
 
@@ -119,7 +121,7 @@ epsilon = 1e-5
 # binary cross-entropy loss
 def compute_loss(yhat, y):
     # m = yhat.shape[1]
-    print("yhat {}, y {}".format(yhat, y))
+    # print("yhat {}, y {}".format(yhat, y))
     m = len(y)
     # return np.sum(np.nan_to_num(-y*np.log(a)-(1-y)*np.log(1-a)))
     # loss = -1/m * (np.sum(np.nan_to_num((np.dot(np.log(yhat + epsilon).T, y) + np.dot((1 - y).T, np.log(1 - yhat + epsilon))))))
@@ -161,6 +163,8 @@ class NeuralNetwork:
         self.layer3 = activation_hidden(self.Z3)
         self.Z4 = np.dot(self.layer3, self.weights4) + self.bias4 # layer = theta(weight_l * a_l-1 + b_l)
         self.output = activation(self.Z4) # layer = theta(weight_l * a_l-1 + b_l)
+        print("output =  \n{}\n target = \n{}".format(self.output, self.y))
+
         
         # self.layer1 = activation_hidden(np.dot(self.input, self.weights1) + self.bias1) 
         # self.layer2 = activation_hidden(np.dot(self.layer1, self.weights2) + self.bias2)
@@ -186,9 +190,11 @@ class NeuralNetwork:
         # weights and d_weights should have the same dimensions
 
         d_A4 = compute_loss_prime(self.output, self.y)
+        
+        # d_A4 = -self.y/self.output + (1-self.y)/(1-self.output) # from Kaggle dataset
+        # d_Z4 = d_A4 * d_activation(self.output) # not sure if we need activation derivative on output
 
         # output layer
-        # d_Z4 = d_A4 * d_activation(self.output) # not sure if we need activation derivative on output
         d_Z4 = d_A4 * d_activation(self.Z4) # not sure if we need activation derivative on output
         d_weights4 = np.dot(self.layer3.T, d_Z4)
         d_bias4 = np.sum(d_Z4, axis = 0, keepdims=True) # should be either axis 0 or 1, should create shape of 1,1 
@@ -299,8 +305,8 @@ def main():
 
     # X, y = train_set.iloc[:, 1:], train_set.iloc[:, 0]
     X, y = train_set.iloc[:10, 1:], train_set.iloc[:10, 0]
-    print("X {}".format(X))
-    print("y {}".format(y))
+    # print("X {}".format(X))
+    # print("y {}".format(y))
 
     # X = tmp_X[:2]
     
@@ -317,6 +323,9 @@ def main():
 
     for i in range(2000):
         nn.feedforward()
+        # if i == 1000:
+            # plt.scatter(nn.y, nn.output)
+            # plt.show()
         nn.backprop()
         loss = compute_loss(nn.output, nn.y)
         # print("output = {}".format(nn.output))
