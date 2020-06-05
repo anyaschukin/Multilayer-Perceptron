@@ -122,7 +122,7 @@ def sigmoid_prime(z):
 def softmax(z):
     # Numerically Stable: (z - np.max(z) shifts the values of z so that the highest number is 0... [1, 3, 5] -> [-4, -2, 0]
     e = np.exp(z - np.max(z))
-    return e / e.sum(axis=1)
+    return e / e.sum(axis=1, keepdims=True)
     # return z
 
 def softmax_prime(z):
