@@ -15,7 +15,7 @@ def probability_to_class(yhat):
 
 def get_accuracy(Y_hat, Y):
     Y_hat_ = probability_to_class(Y_hat)
-    return (Y_hat_ == Y).all(axis=0).mean()
+    return (Y_hat_ == Y).all(axis=1).mean()
 
 # def relu_prime(z):
 #     if z > 0:
@@ -339,12 +339,12 @@ def main():
         # print("output = {}".format(nn.output))
         # print("loss = {}, i = {}".format(loss, i))
         loss_values.append(loss)
-        # print("accuracy = {}".format(get_accuracy(nn.output, nn.y)))
 
     # print(nn.output.shape)
     # print(nn.y.shape)
 
     print(nn.output)
+    print("accuracy = {}".format(get_accuracy(nn.output, nn.y)))
     # print(f" final loss : {loss}")
 
     # plt.plot(loss_values)
