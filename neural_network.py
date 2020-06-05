@@ -117,16 +117,16 @@ def sigmoid(z):
 def sigmoid_prime(z):
   return sigmoid(z) * (1-sigmoid(z))
 
-
-# what I was using when the NN wasn't learning
 def softmax(z):
     # Numerically Stable: (z - np.max(z) shifts the values of z so that the highest number is 0... [1, 3, 5] -> [-4, -2, 0]
-    e = np.exp(z - np.max(z))
+    z_max = np.max(z, axis=1, keepdims=True)
+    e = np.exp(z - z_max)
+    # e = np.exp(z - np.max(z, axis=1, keepdims=True))
     return e / e.sum(axis=1, keepdims=True)
     # return z
 
 def softmax_prime(z):
-  return softmax(z) * (1-softmax(z))
+    return softmax(z) * (1-softmax(z))
 
 epsilon = 1e-2  
 
@@ -170,8 +170,9 @@ class NeuralNetwork:
         self.Z3 = np.dot(self.layer2, self.weights3) + self.bias3
         self.layer3 = activation_hidden(self.Z3)
         self.Z4 = np.dot(self.layer3, self.weights4) + self.bias4 # layer = theta(weight_l * a_l-1 + b_l)
+        # print("Z4 \n{}".format(self.Z4))
         self.output = activation(self.Z4) # layer = theta(weight_l * a_l-1 + b_l)
-        print("output =  \n{}\n target = \n{}".format(self.output, self.y))
+        # print("output =  \n{}\n target = \n{}".format(self.output, self.y))
 
 
     ## application of the chain rule to find derivative of the loss function with respect to weights2 and weights1
@@ -295,7 +296,9 @@ def main():
     train_set, test_set = prep.split(data)
 
     # X, y = train_set.iloc[:, 1:], train_set.iloc[:, 0]
-    X, y = train_set.iloc[:2, 1:], train_set.iloc[:2, 0]
+    X, y = train_set.iloc[:10, 1:], train_set.iloc[:10, 0]
+
+    print("y \n{}\n".format(y))
 
     target = np.zeros((y.shape[0], 2))
     target[np.arange(y.size),y] = 1     # transform into one-hot encoding vector
@@ -308,7 +311,7 @@ def main():
         # if row == 0: #if benign (can only be labeled 'B' or 'M')
             # target[row] = [1,0]
     
-    print("y \n{}\n target \n{}\n".format(y, target))
+    print("target \n{}\n".format(target))
 
     # print("X {}".format(X))
     # print("y {}".format(y))
@@ -334,18 +337,18 @@ def main():
         nn.backprop()
         loss = compute_loss(nn.output, nn.y)
         # print("output = {}".format(nn.output))
-        print("loss = {}, i = {}".format(loss, i))
+        # print("loss = {}, i = {}".format(loss, i))
         loss_values.append(loss)
-        print("accuracy = {}".format(get_accuracy(nn.output, nn.y)))
+        # print("accuracy = {}".format(get_accuracy(nn.output, nn.y)))
 
     # print(nn.output.shape)
     # print(nn.y.shape)
 
-    # print(nn.output)
-    print(f" final loss : {loss}")
+    print(nn.output)
+    # print(f" final loss : {loss}")
 
-    plt.plot(loss_values)
-    plt.show()
+    # plt.plot(loss_values)
+    # plt.show()
 
 if __name__ == '__main__':
     main()
