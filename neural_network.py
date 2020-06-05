@@ -5,6 +5,18 @@ import matplotlib.pyplot as plt
 import preprocess as prep
 
 
+
+# an auxiliary function that converts probability into class
+def probability_to_class(yhat):
+    probs = np.copy(yhat)
+    probs[probs > 0.5] = 1
+    probs[probs <= 0.5] = 0
+    return probs
+
+def get_accuracy(Y_hat, Y):
+    Y_hat_ = probability_to_class(Y_hat)
+    return (Y_hat_ == Y).all(axis=0).mean()
+
 # def relu_prime(z):
 #     if z > 0:
 #         return 1
@@ -87,7 +99,7 @@ def sigmoid_prime(z):
 
 # what I was using when the NN wasn't learning
 def softmax(z):
-    z -= np.max(z)  # Numerical Stability: shift the values of f so that the highest number is 0... [1, 3, 5] -> [-4, -2, 0]
+    # Numerically Stable: (z - np.max(z) shifts the values of z so that the highest number is 0... [1, 3, 5] -> [-4, -2, 0]
     e = np.exp(z - np.max(z))
     return e / e.sum()
     # return z
@@ -153,7 +165,7 @@ class NeuralNetwork:
         # print("output {}".format(self.output))
         # print("weights 1 {}".format(self.weights1))
 
-    def feedforward(self, activation = softmax, activation_hidden = ReLU):
+    def feedforward(self, activation = softmax, activation_hidden = sigmoid):
         
         self.Z1 = np.dot(self.input, self.weights1) + self.bias1
         self.layer1 = activation_hidden(self.Z1) 
@@ -185,7 +197,7 @@ class NeuralNetwork:
         # print("output {0}, layer3 {1}, weights4 {2}, bias {3}".format( self.output.shape, self.layer3.shape, self.weights4.shape, self.bias4.shape))
 
     ## application of the chain rule to find derivative of the loss function with respect to weights2 and weights1
-    def backprop(self, d_activation = softmax_prime, d_activation_hidden = ReLU_prime, learning_rate = 0.0001):
+    def backprop(self, d_activation = softmax_prime, d_activation_hidden = sigmoid_prime, learning_rate = 0.1):
         m = self.input.shape[0] # num examples or batch size
         # weights and d_weights should have the same dimensions
 
@@ -305,6 +317,7 @@ def main():
 
     # X, y = train_set.iloc[:, 1:], train_set.iloc[:, 0]
     X, y = train_set.iloc[:10, 1:], train_set.iloc[:10, 0]
+
     # print("X {}".format(X))
     # print("y {}".format(y))
 
@@ -321,7 +334,7 @@ def main():
     nn = NeuralNetwork(X, y)
     loss_values = []
 
-    for i in range(2000):
+    for i in range(20000):
         nn.feedforward()
         # if i == 1000:
             # plt.scatter(nn.y, nn.output)
@@ -331,6 +344,7 @@ def main():
         # print("output = {}".format(nn.output))
         print("loss = {}, i = {}".format(loss, i))
         loss_values.append(loss)
+        print("accuracy = {}".format(get_accuracy(nn.output, nn.y)))
 
     # print(nn.output.shape)
     # print(nn.y.shape)
