@@ -17,8 +17,6 @@ def get_accuracy(Y_hat, Y):
     Y_hat_ = probability_to_class(Y_hat)
     return (Y_hat_ == Y).all(axis=0).mean()
 
-# def softmax_prime(self,grad):
-    # return self.old_y * (grad -(grad * self.old_y).sum(axis=1)[:,None])
 
 LAYER1_NEURONS = 16
 LAYER2_NEURONS = 16
@@ -34,12 +32,6 @@ def ReLU_prime(z):
     return 1 * (z > 0)
     # return 1 if z > 0 else 0
 
-# def relu_backward(dA, Z):
-#     dZ = np.array(dA, copy = True)
-#     dZ[Z <= 0] = 0;
-#     return dZ;
-
-# leaky_ReLU
 def leaky_ReLU(z, alpha = 0.01):
 	return np.where(z >= 0, z, z * alpha)
     # return max(alpha * z, z)
@@ -48,22 +40,18 @@ def leaky_ReLU_prime(z, alpha = 0.01):
     return np.where(z >= 0, 1, alpha)
 	# return 1 if x > 0 else alpha
 
-# sigmoid
 def sigmoid(z):
     return 1/(1+np.exp(-z))
 
-# sigmoid derivative
 def sigmoid_prime(z):
   return sigmoid(z) * (1-sigmoid(z))
 
 def softmax(z):
     # Numerically Stable: (z - np.max(z) shifts the values of z so that the highest number is 0... [1, 3, 5] -> [-4, -2, 0]
-    # z_max = np.max(z, axis=0, keepdims=True)
     z_max = np.max(z, axis=0, keepdims=True)
     e = np.exp(z - z_max)
     # e = np.exp(z - np.max(z, axis=1, keepdims=True))
     return e / e.sum(axis=0, keepdims=True)
-    # return z
 
 def softmax_prime(z):
     return softmax(z) * (1-softmax(z))
@@ -73,12 +61,8 @@ epsilon = 1e-2
 # binary cross-entropy loss
 def compute_loss(yhat, y):
     m = len(y)
-    # loss = -1/m * (np.sum(np.dot(np.log(yhat + epsilon).T, y) + np.dot((1 - y).T, np.log(1 - yhat + epsilon))))
     loss = -1/m * (np.sum(np.dot(np.log(yhat).T, y) + np.dot((1 - y).T, np.log(1 - yhat))))
     return loss
-
-    # return np.sum(np.nan_to_num(-y*np.log(yhat)-(1-y)*np.log(1-yhat)))
-    # loss = -1/m * (np.sum(np.nan_to_num((np.dot(np.log(yhat + epsilon).T, y) + np.dot((1 - y).T, np.log(1 - yhat + epsilon))))))    
 
 def compute_loss_prime(yhat, y):
     d_loss = - (np.divide(y, yhat) - np.divide(1 - y, 1 - yhat)) ## not sure if this should be - or +, according to Kaggle example
@@ -175,9 +159,9 @@ def main():
 
     # print("y \n{}\n".format(y))
 
+    # transform y into one-hot encoding vector
     target = np.zeros((y.shape[0], 2))
-    target[np.arange(y.size),y] = 1     # transform into one-hot encoding vector
-
+    target[np.arange(y.size),y] = 1
     y = target.T
 
     # for row in y:
@@ -188,11 +172,6 @@ def main():
     
     print("target \n{}\n".format(target))
 
-    # print("X {}".format(X))
-    # print("y {}".format(y))
-
-    # X = tmp_X[:2]
-    
     # y = y.reshape(y.shape[0], 1)
     # y = y.to_numpy().shape[0]
 
