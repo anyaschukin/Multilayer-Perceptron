@@ -32,11 +32,11 @@ def ReLU_prime(z):
     return 1 * (z > 0)
     # return 1 if z > 0 else 0
 
-def leaky_ReLU(z, alpha = 0.01):
+def leaky_ReLU(z, alpha = 0.1):
 	return np.where(z >= 0, z, z * alpha)
     # return max(alpha * z, z)
 
-def leaky_ReLU_prime(z, alpha = 0.01):
+def leaky_ReLU_prime(z, alpha = 0.1):
     return np.where(z >= 0, 1, alpha)
 	# return 1 if x > 0 else alpha
 
