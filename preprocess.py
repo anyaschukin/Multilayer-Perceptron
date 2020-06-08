@@ -10,7 +10,7 @@ def split(data):
     data = data[1:]
     data.columns = new_header
 
-    # split data into train and test sets
+    # shuffle and split data into train and test sets
     shuffled_data = data.sample(frac=1)
     i = int(0.7 * len(data))
     train_set = shuffled_data[:i]
@@ -25,12 +25,16 @@ def split(data):
 
 def scale(data, scaling='standardize'):
     normed = data
+    if scaling == 'normalize':
+        # forcing the mean of each measurement to 0, and dividing each measurement by the maximum value of that measurement in the dataset
+        normed =(normed-normed.mean())/normed.max()
     if scaling == 'min_max_normalize':
         # all data values are adjusted to lie on a bell curve btwn 0 and 10, starting at zero
         normed = (normed - normed.min())/(normed.max()-normed.min())
     if scaling == 'standardize':
         # all data values are centered around the mean (zero) with a unit standard deviation (min, max)
-        normed=(normed-normed.mean())/normed.std()
+        normed = (normed-normed.mean())/normed.std()
+        # normed=(normed-normed.mean())/(normed.max()-normed.mean()) # for numbers btwn 1 and -1
     normed["diagnosis"] = data["diagnosis"]
     return normed
     
@@ -40,6 +44,7 @@ def preprocess(data):
     # print(data.isnull().sum())
     try:
         data = data.drop(columns=['id', 'Unnamed: 32'])
+        data = data.dropna()
         data['diagnosis'] = data['diagnosis'].map({'M':1, 'B':0})
     except Exception:
         tools.error_exit('Failed to preprocess data. Is data valid?')
