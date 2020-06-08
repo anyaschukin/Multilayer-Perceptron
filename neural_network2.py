@@ -18,10 +18,6 @@ def get_accuracy(Y_hat, Y):
     return (Y_hat_ == Y).all(axis=0).mean()
 
 
-LAYER1_NEURONS = 16
-LAYER2_NEURONS = 16
-LAYER3_NEURONS = 16
-LAYER4_NEURONS = 2
 
 # The ReLufunction performs a threshold operation to each input element 
 # where values less than zero are set to zero.
@@ -68,6 +64,12 @@ def compute_loss_prime(yhat, y):
     d_loss = - (np.divide(y, yhat) - np.divide(1 - y, 1 - yhat)) ## not sure if this should be - or +, according to Kaggle example
     return d_loss
 
+
+LAYER1_NEURONS = 16
+LAYER2_NEURONS = 16
+LAYER3_NEURONS = 16
+LAYER4_NEURONS = 2
+
 class NeuralNetwork:
     def __init__(self, x, y):
         self.input      = x
@@ -81,7 +83,6 @@ class NeuralNetwork:
         self.bias3       = np.zeros((LAYER3_NEURONS, 1))
         self.bias4       = np.zeros((2, 1)) # (1, num_of_classes)... maybe last layer shouldn't have bias
        
-        # self.y           = y.to_numpy().reshape(y.shape[0], 1)
         self.y           = y
         self.output     = np.zeros((2, self.y.shape[0]))
 
@@ -89,15 +90,15 @@ class NeuralNetwork:
         
         self.Z1 = np.dot(self.weights1, self.input.T) + self.bias1
         self.layer1 = activation_hidden(self.Z1) 
+
         self.Z2 = np.dot(self.weights2, self.layer1) + self.bias2
         self.layer2 = activation_hidden(self.Z2)
+        
         self.Z3 = np.dot(self.weights3, self.layer2) + self.bias3
         self.layer3 = activation_hidden(self.Z3)
+        
         self.Z4 = np.dot(self.weights4, self.layer3) + self.bias4 # layer = theta(weight_l * a_l-1 + b_l)
-        # print("Z4 \n{}".format(self.Z4))
         self.output = activation(self.Z4) # layer = theta(weight_l * a_l-1 + b_l)
-        # print("output =  \n{}\n target = \n{}".format(self.output, self.y))
-
 
     ## application of the chain rule to find derivative of the loss function with respect to weights2 and weights1
     def backprop(self, d_activation = softmax_prime, d_activation_hidden = sigmoid_prime, learning_rate = 0.01):
@@ -117,19 +118,16 @@ class NeuralNetwork:
         d_A3 = np.dot(self.weights4.T, d_Z4)
 
         # hidden layers
-        # d_Z3 = d_A3 * d_activation_hidden(self.layer3)
         d_Z3 = d_A3 * d_activation_hidden(self.Z3)
         d_weights3 = np.dot(d_Z3, self.layer2.T)  # (layer-1) * output error
         d_bias3 = np.sum(d_Z3, axis = 1, keepdims=True)
         d_A2 = np.dot(self.weights3.T, d_Z3)
  
-        # d_Z2 = d_A2 * d_activation_hidden(self.layer2)
         d_Z2 = d_A2 * d_activation_hidden(self.Z2)
         d_weights2 = np.dot(d_Z2, self.layer1.T) # (layer-1) * output error
         d_bias2 = np.sum(d_Z2, axis = 1, keepdims=True) 
         d_A1 = np.dot(self.weights2.T, d_Z2)
 
-        # d_Z1 = d_A1 * d_activation_hidden(self.layer1)
         d_Z1 = d_A1 * d_activation_hidden(self.Z1)
         d_weights1 = np.dot(d_Z1, self.input) # (layer-1) * output error
         d_bias1 = np.sum(d_Z2, axis = 1, keepdims=True)
@@ -157,28 +155,14 @@ def main():
     # X, y = train_set.iloc[:, 1:], train_set.iloc[:, 0]
     X, y = train_set.iloc[:, 1:], train_set.iloc[:, 0]
 
-    # print("y \n{}\n".format(y))
-
     # transform y into one-hot encoding vector
     target = np.zeros((y.shape[0], 2))
     target[np.arange(y.size),y] = 1
     y = target.T
 
-    # for row in y:
-        # if row == 1: #if malignant
-            # target[row] = [0,1]
-        # if row == 0: #if benign (can only be labeled 'B' or 'M')
-            # target[row] = [1,0]
-    
     print("target \n{}\n".format(target))
 
-    # y = y.reshape(y.shape[0], 1)
-    # y = y.to_numpy().shape[0]
 
-    # X = numpy_array[:, 1:26]
-    # y = numpy_array[:, 0]
-    # X_train, X_test = X[:index], X[index:]
-    # y_train, y_test = y[:index], y[index:]
 
     nn = NeuralNetwork(X, y)
     loss_values = []
@@ -208,5 +192,9 @@ if __name__ == '__main__':
     main()
 
 
-# # softmax activation layer : compute values for each sets of scores in x
-# # not sure this works
+# y = y.reshape(y.shape[0], 1)
+# y = y.to_numpy().shape[0]
+# X = numpy_array[:, 1:26]
+# y = numpy_array[:, 0]
+# X_train, X_test = X[:index], X[index:]
+# y_train, y_test = y[:index], y[index:]
