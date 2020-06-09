@@ -2,22 +2,8 @@ import pandas as pd
 import numpy as np
 import tools as tools
 import matplotlib.pyplot as plt
+from sklearn.utils import shuffle
 import preprocess as prep
-
-
-
-# an auxiliary function that converts probability into class
-def probability_to_class(yhat):
-    probs = np.copy(yhat)
-    probs[probs > 0.5] = 1
-    probs[probs <= 0.5] = 0
-    return probs
-
-def get_accuracy(Y_hat, Y):
-    Y_hat_ = probability_to_class(Y_hat)
-    return (Y_hat_ == Y).all(axis=0).mean()
-
-
 
 # The ReLufunction performs a threshold operation to each input element 
 # where values less than zero are set to zero.
@@ -52,7 +38,7 @@ def softmax(z):
 def softmax_prime(z):
     return softmax(z) * (1-softmax(z))
 
-epsilon = 1e-2  
+# epsilon = 1e-2  
 
 # binary cross-entropy loss
 def compute_loss(yhat, y):
@@ -63,6 +49,17 @@ def compute_loss(yhat, y):
 def compute_loss_prime(yhat, y):
     d_loss = - (np.divide(y, yhat) - np.divide(1 - y, 1 - yhat)) ## not sure if this should be - or +, according to Kaggle example
     return d_loss
+
+# an auxiliary function that converts probability into class
+def probability_to_class(yhat):
+    probs = np.copy(yhat)
+    probs[probs > 0.5] = 1
+    probs[probs <= 0.5] = 0
+    return probs
+
+def get_accuracy(Y_hat, Y):
+    Y_hat_ = probability_to_class(Y_hat)
+    return (Y_hat_ == Y).all(axis=0).mean()
 
 
 LAYER1_NEURONS = 16
@@ -100,7 +97,7 @@ class NeuralNetwork:
         self.Z4 = np.dot(self.weights4, self.layer3) + self.bias4 # layer = theta(weight_l * a_l-1 + b_l)
         self.output = activation(self.Z4) # layer = theta(weight_l * a_l-1 + b_l)
 
-    ## application of the chain rule to find derivative of the loss function with respect to weights2 and weights1
+    ## application of the chain rule to find derivative of the loss function with respect to weights and bias
     def backprop(self, d_activation = softmax_prime, d_activation_hidden = sigmoid_prime, learning_rate = 0.01):
         m = self.input.shape[0] # num examples or batch size
         # weights and d_weights should have the same dimensions
@@ -152,7 +149,6 @@ def main():
     # visualize(data)
     train_set, test_set = prep.split(data)
 
-    # X, y = train_set.iloc[:, 1:], train_set.iloc[:, 0]
     X, y = train_set.iloc[:, 1:], train_set.iloc[:, 0]
 
     # transform y into one-hot encoding vector
@@ -162,21 +158,45 @@ def main():
 
     print("target \n{}\n".format(target))
 
-
-
     nn = NeuralNetwork(X, y)
     loss_values = []
 
-    for i in range(20000):
-        nn.feedforward()
+    # batch size btwn 2 - 32
+    # mini_batches = []
+    # num_batches = X.shape[0] / batch_size
+
+    # cut X, y into n batches
+    # generate a batch per function call
+
+    # for i in range(0, X.shape[0], batch_size):
+        # batch_x, batch_y = X[i:i+batch_size], y[i:i+batch_size]
+        # yield batch_x, batch_y
+
+    print("x = {}, y = {}".format(X.shape, y.shape))
+
+    batch_size = 32
+    for epoch in range(1500):
+        X = shuffle(X)
+        y = shuffle(y)
+        for i in range(0, X.shape[0], batch_size):
+            batch_x, batch_y = X[i:i+batch_size], y[i:i+batch_size]
+
+            nn.feedforward()
+            nn.backprop()
+            loss = compute_loss(nn.output, nn.y)
+            loss_values.append(loss)
+
+
+    # for i in range(20000):
+        # nn.feedforward()
         # if i == 1000:
             # plt.scatter(nn.y, nn.output)
             # plt.show()
-        nn.backprop()
-        loss = compute_loss(nn.output, nn.y)
+        # nn.backprop()
+        # loss = compute_loss(nn.output, nn.y)
         # print("output = {}".format(nn.output))
         # print("loss = {}, i = {}".format(loss, i))
-        loss_values.append(loss)
+        # loss_values.append(loss)
 
     # print(nn.output.shape)
     # print(nn.y.shape)
