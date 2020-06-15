@@ -13,7 +13,7 @@ then you should probably normalize/standardize the data.
 {x} at least 2 hidden layers
 {x} softmax activation function
 {x} binary cross-entropy error function
-{ } display at each epoch the training and validation metrics (model performance)
+{x} display at each epoch the training and validation metrics (model performance)
 {x} implement a learning curve graph displayed at the end of the training phase
 { } training program
 { } prediction program
@@ -31,11 +31,13 @@ then you should probably normalize/standardize the data.
 {x} restructure NN architecture
 {x} change sigmoid -> ReLU (intermediary layers) and softmax (output layer)
 {x} add loss functions
-{ } batch size
+{x} batch size
 { } gradient checking
 { } optimization?
 { } regularization?
 { } confusion matrix
+{x} accuracy, precision, recall, specificity, F1 Score
+{ } PCA and Tsne? https://www.kaggle.com/djokester/visualising-the-breast-cancer-wisconsin-data-set
 
 { } make a prediction after __ epochs, then refine our parameters (gradient descent/learning)
 { } create function which calculates cost after each iteration
