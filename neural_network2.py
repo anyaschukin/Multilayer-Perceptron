@@ -3,6 +3,11 @@ import numpy as np
 import tools as tools
 import matplotlib.pyplot as plt
 from sklearn.utils import shuffle
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import recall_score
+from sklearn.metrics import precision_score
+
 import preprocess as prep
 
 # The ReLufunction performs a threshold operation to each input element 
@@ -32,7 +37,6 @@ def softmax(z):
     # Numerically Stable: (z - np.max(z) shifts the values of z so that the highest number is 0... [1, 3, 5] -> [-4, -2, 0]
     z_max = np.max(z, axis=0, keepdims=True)
     e = np.exp(z - z_max)
-    # e = np.exp(z - np.max(z, axis=1, keepdims=True))
     return e / e.sum(axis=0, keepdims=True)
 
 def softmax_prime(z):
@@ -61,6 +65,34 @@ def get_accuracy(Y_hat, Y):
     Y_hat_ = probability_to_class(Y_hat)
     return (Y_hat_ == Y).all(axis=0).mean()
 
+def get_validation_metrics(y_pred, y_true):
+    # fpr = []
+    # tpr = []
+    # print("y_pred = {}\n y_true = {}".format(y_pred,y_true))
+    print("y_true = {}".format(y_true))
+    # print("y_true = {}".format(y_true))
+    print("y_pred = {}".format(y_pred))
+    # print("y_pred = {}".format(y_pred))
+    # print(y_true.shape, y_pred.shape)
+
+    # false positives and true positives
+    fp = np.sum((y_pred == 1) & (y_true == 0))  # summing the number of examples which fit that particular criteria
+    tp = np.sum((y_pred == 1) & (y_true == 1))
+    print("fp = {}, tp = {}".format(fp,tp))
+
+    #false negatives and true negatives
+    fn = np.sum((y_pred == 0) & (y_true == 1))
+    tn = np.sum((y_pred == 0) & (y_true == 0))
+    print("fn = {}, tn = {}".format(fn,tn))
+
+    accuracy = (y_pred == y_true).all(axis=0).mean()
+    precision = tp / (tp + fp)
+    recall = tp / (tp + fn)
+    specificity = tn / (tn + fp)
+    F1_score = (2 * (precision * recall)) / (precision + recall)
+
+    print("accuracy = {}\n precision = {}\n recall = {}\n specificity = {}\n F1_score = {}".format(accuracy, precision, recall, specificity, F1_score))
+
 
 LAYER1_NEURONS = 16
 LAYER2_NEURONS = 16
@@ -68,19 +100,22 @@ LAYER3_NEURONS = 16
 LAYER4_NEURONS = 2
 
 class NeuralNetwork:
-    def __init__(self, x, y):
+    def __init__(self, x, y, batch_size, epochs):
+        self.batch_size = batch_size
+        print("batch_size = {}".format(self.batch_size))
+        self.epochs     = epochs
         self.input      = x
         self.weights1   = np.random.rand(LAYER1_NEURONS, self.input.shape[1]) * np.sqrt(2/self.input.shape[1]) ## * 0.01 # self.input.shape[1] is num_features
         self.weights2   = np.random.rand(LAYER2_NEURONS, LAYER1_NEURONS) * np.sqrt(2/LAYER1_NEURONS) ## * 0.01
         self.weights3   = np.random.rand(LAYER3_NEURONS, LAYER2_NEURONS) * np.sqrt(2/LAYER2_NEURONS) ## * 0.01
         self.weights4   = np.random.rand(2, LAYER3_NEURONS) * np.sqrt(2/LAYER3_NEURONS) ## * 0.01  # if multiple classification, it should (NUM_NEURONS, output_size(# of classes))
 
-        self.bias1       = np.zeros((LAYER1_NEURONS, 1)) # 4 x 1
-        self.bias2       = np.zeros((LAYER2_NEURONS, 1))
-        self.bias3       = np.zeros((LAYER3_NEURONS, 1))
-        self.bias4       = np.zeros((2, 1)) # (1, num_of_classes)... maybe last layer shouldn't have bias
+        self.bias1      = np.zeros((LAYER1_NEURONS, 1)) # 4 x 1
+        self.bias2      = np.zeros((LAYER2_NEURONS, 1))
+        self.bias3      = np.zeros((LAYER3_NEURONS, 1))
+        self.bias4      = np.zeros((2, 1)) # (1, num_of_classes)... maybe last layer shouldn't have bias
        
-        self.y           = y
+        self.y          = y
         self.output     = np.zeros((2, self.y.shape[0]))
 
     def feedforward(self, activation = softmax, activation_hidden = sigmoid):
@@ -151,57 +186,66 @@ def main():
 
     X, y = train_set.iloc[:, 1:], train_set.iloc[:, 0]
 
+    # print(y)
     # transform y into one-hot encoding vector
     target = np.zeros((y.shape[0], 2))
     target[np.arange(y.size),y] = 1
     y = target.T
 
-    print("target \n{}\n".format(target))
+    # print("y one hot \n{}\n".format(y.T))
 
-    nn = NeuralNetwork(X, y)
+    batches = 'mini_batch'
+
+    if batches == 'SGD':
+        batch_size = 1
+        epochs = 40000
+    elif batches == 'mini_batch':
+        batch_size = 32
+        epochs = 1500
+    elif batches == 'whole_batch':         
+        batch_size = X.shape[0]
+        epochs = 20000
+    else:
+        batch_size = X.shape[0]
+        epochs = 20000
+
+
+
+    nn = NeuralNetwork(X, y, batch_size, epochs)
     loss_values = []
 
-    # batch size btwn 2 - 32
-    # mini_batches = []
     # num_batches = X.shape[0] / batch_size
-
-    # cut X, y into n batches
-    # generate a batch per function call
 
     # for i in range(0, X.shape[0], batch_size):
         # batch_x, batch_y = X[i:i+batch_size], y[i:i+batch_size]
         # yield batch_x, batch_y
 
-    print("x = {}, y = {}".format(X.shape, y.shape))
+    # batch_size = 32 # default 32, btwn 2 - 32, read from command line arguments
 
-    batch_size = 32
-    for epoch in range(1500):
+    for epoch in range(nn.epochs):
         X = shuffle(X)
         y = shuffle(y)
-        for i in range(0, X.shape[0], batch_size):
+        for i in range(0, X.shape[0], nn.batch_size):
+            # print("iterations = {}", format(i))
             batch_x, batch_y = X[i:i+batch_size], y[i:i+batch_size]
 
             nn.feedforward()
             nn.backprop()
             loss = compute_loss(nn.output, nn.y)
             loss_values.append(loss)
+       
+    # plt.scatter(nn.y, nn.output)
+    # plt.show()
 
+    # print("y = {}".format(y))
+    # print("nn.y = {}".format(nn.y[1,:]))
+    
+    # print("nn.y = {}".format(nn.y.T))
+    # print("output = {}".format(nn.output.T))
 
-    # for i in range(20000):
-        # nn.feedforward()
-        # if i == 1000:
-            # plt.scatter(nn.y, nn.output)
-            # plt.show()
-        # nn.backprop()
-        # loss = compute_loss(nn.output, nn.y)
-        # print("output = {}".format(nn.output))
-        # print("loss = {}, i = {}".format(loss, i))
-        # loss_values.append(loss)
+    y_pred = probability_to_class(nn.output.T)
+    get_validation_metrics(y_pred[:6, 0], y.T[:6, 0])
 
-    # print(nn.output.shape)
-    # print(nn.y.shape)
-
-    print(nn.output.T)
     print("accuracy = {}".format(get_accuracy(nn.output, nn.y)))
     # print(f" final loss : {loss}")
 
@@ -210,6 +254,16 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+    # Confusion Matrix
+    # confusion_matrix(y_true, y_pred,  labels=['malignant', 'benign'])
+    # Accuracy
+    # accuracy_score(y_true, y_pred, labels)
+    # Recall
+    # recall_score(y_true, y_pred, average=None)
+    # Precision
+    # precision_score(y_true, y_pred, average=None)
 
 
 # y = y.reshape(y.shape[0], 1)
