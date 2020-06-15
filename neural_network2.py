@@ -69,11 +69,6 @@ def get_validation_metrics(y_pred, y_true):
     # fpr = []
     # tpr = []
     # print("y_pred = {}\n y_true = {}".format(y_pred,y_true))
-    print("y_true = {}".format(y_true))
-    # print("y_true = {}".format(y_true))
-    print("y_pred = {}".format(y_pred))
-    # print("y_pred = {}".format(y_pred))
-    # print(y_true.shape, y_pred.shape)
 
     # false positives and true positives
     fp = np.sum((y_pred == 1) & (y_true == 0))  # summing the number of examples which fit that particular criteria
@@ -237,14 +232,14 @@ def main():
     # plt.scatter(nn.y, nn.output)
     # plt.show()
 
-    # print("y = {}".format(y))
-    # print("nn.y = {}".format(nn.y[1,:]))
+    # print("nn.y = {}".format(nn.y.T[:6, 0]))
+    # print("output = {}".format(nn.output.T[:6, 0]))
     
     # print("nn.y = {}".format(nn.y.T))
-    # print("output = {}".format(nn.output.T))
 
     y_pred = probability_to_class(nn.output.T)
-    get_validation_metrics(y_pred[:6, 0], y.T[:6, 0])
+    get_validation_metrics(y_pred[:, 0], nn.y.T[:, 0])
+    # get_validation_metrics(y_pred[:6, 0], nn.y.T[:6, 0])
 
     print("accuracy = {}".format(get_accuracy(nn.output, nn.y)))
     # print(f" final loss : {loss}")
