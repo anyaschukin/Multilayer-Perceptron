@@ -42,8 +42,6 @@ def softmax(z):
 def softmax_prime(z):
     return softmax(z) * (1-softmax(z))
 
-# epsilon = 1e-2  
-
 # binary cross-entropy loss
 def compute_loss(yhat, y):
     m = len(y)
@@ -66,27 +64,24 @@ def get_accuracy(Y_hat, Y):
     return (Y_hat_ == Y).all(axis=0).mean()
 
 def get_validation_metrics(y_pred, y_true):
-    # fpr = []
-    # tpr = []
-    # print("y_pred = {}\n y_true = {}".format(y_pred,y_true))
-
     # false positives and true positives
     fp = np.sum((y_pred == 1) & (y_true == 0))  # summing the number of examples which fit that particular criteria
     tp = np.sum((y_pred == 1) & (y_true == 1))
-    print("fp = {}, tp = {}".format(fp,tp))
+    print("false positives = {}, true positives = {}".format(fp,tp))
 
     #false negatives and true negatives
     fn = np.sum((y_pred == 0) & (y_true == 1))
     tn = np.sum((y_pred == 0) & (y_true == 0))
-    print("fn = {}, tn = {}".format(fn,tn))
+    print("false negatives = {}, true negatives = {}".format(fn,tn))
 
-    accuracy = (y_pred == y_true).all(axis=0).mean()
+    # accuracy = (y_pred == y_true).all(axis=0).mean()
     precision = tp / (tp + fp)
     recall = tp / (tp + fn)
     specificity = tn / (tn + fp)
     F1_score = (2 * (precision * recall)) / (precision + recall)
 
-    print("accuracy = {}\n precision = {}\n recall = {}\n specificity = {}\n F1_score = {}".format(accuracy, precision, recall, specificity, F1_score))
+    return precision, recall, specificity, F1_score
+    # print("precision = {}\nrecall = {}\nspecificity = {}\nF1_score = {}".format(precision, recall, specificity, F1_score))
 
 
 LAYER1_NEURONS = 16
@@ -97,7 +92,6 @@ LAYER4_NEURONS = 2
 class NeuralNetwork:
     def __init__(self, x, y, batch_size, epochs):
         self.batch_size = batch_size
-        print("batch_size = {}".format(self.batch_size))
         self.epochs     = epochs
         self.input      = x
         self.weights1   = np.random.rand(LAYER1_NEURONS, self.input.shape[1]) * np.sqrt(2/self.input.shape[1]) ## * 0.01 # self.input.shape[1] is num_features
@@ -132,11 +126,7 @@ class NeuralNetwork:
         m = self.input.shape[0] # num examples or batch size
         # weights and d_weights should have the same dimensions
 
-        # d_Z4 = d_A4 * d_activation(self.output) # not sure if we need activation derivative on output
-        # d_A4 = -self.y/self.output + (1-self.y)/(1-self.output) # from Kaggle dataset
-
         d_A4 = compute_loss_prime(self.output, self.y)
-        # d_A4 = self.output - self.y
 
         # output layer
         d_Z4 = d_A4 * d_activation(self.Z4) # not sure if we need activation derivative on output
@@ -158,7 +148,6 @@ class NeuralNetwork:
         d_Z1 = d_A1 * d_activation_hidden(self.Z1)
         d_weights1 = np.dot(d_Z1, self.input) # (layer-1) * output error
         d_bias1 = np.sum(d_Z2, axis = 1, keepdims=True)
-
        
         ## update the weights with the derivative (slope) of the loss function (SGD)
         self.weights1 -= learning_rate * (d_weights1 / m) 
@@ -181,13 +170,10 @@ def main():
 
     X, y = train_set.iloc[:, 1:], train_set.iloc[:, 0]
 
-    # print(y)
     # transform y into one-hot encoding vector
     target = np.zeros((y.shape[0], 2))
     target[np.arange(y.size),y] = 1
     y = target.T
-
-    # print("y one hot \n{}\n".format(y.T))
 
     batches = 'mini_batch'
 
@@ -203,8 +189,6 @@ def main():
     else:
         batch_size = X.shape[0]
         epochs = 20000
-
-
 
     nn = NeuralNetwork(X, y, batch_size, epochs)
     loss_values = []
@@ -223,27 +207,19 @@ def main():
         for i in range(0, X.shape[0], nn.batch_size):
             # print("iterations = {}", format(i))
             batch_x, batch_y = X[i:i+batch_size], y[i:i+batch_size]
-
             nn.feedforward()
             nn.backprop()
             loss = compute_loss(nn.output, nn.y)
             loss_values.append(loss)
-       
-    # plt.scatter(nn.y, nn.output)
-    # plt.show()
+        accuracy = get_accuracy(nn.output, nn.y)
+        y_pred = probability_to_class(nn.output.T)
+        precision, recall, specificity, F1_score = get_validation_metrics(y_pred[:, 0], nn.y.T[:, 0])
+        print("accuracy = {}\nprecision = {}\nrecall = {}\nspecificity = {}\nF1_score = {}".format(accuracy, precision, recall, specificity, F1_score))
 
-    # print("nn.y = {}".format(nn.y.T[:6, 0]))
-    # print("output = {}".format(nn.output.T[:6, 0]))
-    
-    # print("nn.y = {}".format(nn.y.T))
-
-    y_pred = probability_to_class(nn.output.T)
-    get_validation_metrics(y_pred[:, 0], nn.y.T[:, 0])
-    # get_validation_metrics(y_pred[:6, 0], nn.y.T[:6, 0])
-
-    print("accuracy = {}".format(get_accuracy(nn.output, nn.y)))
     # print(f" final loss : {loss}")
 
+    # plt.scatter(nn.y, nn.output)
+    # plt.show()
     # plt.plot(loss_values)
     # plt.show()
 
