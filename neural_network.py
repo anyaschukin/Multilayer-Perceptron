@@ -67,12 +67,12 @@ def get_validation_metrics(y_pred, y_true):
     # false positives and true positives
     fp = np.sum((y_pred == 1) & (y_true == 0))  # summing the number of examples which fit that particular criteria
     tp = np.sum((y_pred == 1) & (y_true == 1))
-    print("false positives = {}, true positives = {}".format(fp,tp))
+    # print("false positives = {}, true positives = {}".format(fp,tp))
 
     #false negatives and true negatives
     fn = np.sum((y_pred == 0) & (y_true == 1))
     tn = np.sum((y_pred == 0) & (y_true == 0))
-    print("false negatives = {}, true negatives = {}".format(fn,tn))
+    # print("false negatives = {}, true negatives = {}".format(fn,tn))
 
     # accuracy = (y_pred == y_true).all(axis=0).mean()
     precision = tp / (tp + fp)
@@ -175,7 +175,8 @@ def main():
     target[np.arange(y.size),y] = 1
     y = target.T
 
-    batches = 'mini_batch'
+    batches = 'whole_batch'
+    # batches = 'whole_batch'
 
     if batches == 'SGD':
         batch_size = 1
@@ -209,19 +210,22 @@ def main():
             batch_x, batch_y = X[i:i+batch_size], y[i:i+batch_size]
             nn.feedforward()
             nn.backprop()
-            loss = compute_loss(nn.output, nn.y)
+            # loss = compute_loss(nn.output.T, nn.y.T)
+            loss = compute_loss(nn.output.T[:, 0], nn.y.T[:, 0])
+            # print("loss = {}". format(loss))
             loss_values.append(loss)
+        print("y_true = {}\ny_pred = {}". format(nn.y.T[:10, 0], nn.output.T[:10, 0]))
         accuracy = get_accuracy(nn.output, nn.y)
         y_pred = probability_to_class(nn.output.T)
         precision, recall, specificity, F1_score = get_validation_metrics(y_pred[:, 0], nn.y.T[:, 0])
-        print("accuracy = {}\nprecision = {}\nrecall = {}\nspecificity = {}\nF1_score = {}".format(accuracy, precision, recall, specificity, F1_score))
+        # print("accuracy = {}\nprecision = {}\nrecall = {}\nspecificity = {}\nF1_score = {}".format(accuracy, precision, recall, specificity, F1_score))
 
     # print(f" final loss : {loss}")
 
     # plt.scatter(nn.y, nn.output)
     # plt.show()
-    # plt.plot(loss_values)
-    # plt.show()
+    plt.plot(loss_values)
+    plt.show()
 
 if __name__ == '__main__':
     main()
