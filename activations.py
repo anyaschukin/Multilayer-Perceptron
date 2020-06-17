@@ -40,5 +40,5 @@ def compute_loss(yhat, y):
     return loss
 
 def compute_loss_prime(yhat, y):
-    d_loss = - (np.divide(y, yhat) - np.divide(1 - y, 1 - yhat)) ## not sure if this should be - or +, according to Kaggle example
+    d_loss = - (np.divide(y, yhat) - np.divide(1 - y, 1 - yhat))
     return d_loss
