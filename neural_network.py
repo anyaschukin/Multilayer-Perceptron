@@ -173,10 +173,12 @@ class NeuralNetwork:
 
 def split_x_y(data):
     X, y = data.iloc[:, 1:], data.iloc[:, 0]
+    
     # transform y into one-hot encoding vector
     target = np.zeros((y.shape[0], 2))
     target[np.arange(y.size),y] = 1
     y = target.T
+    
     return X, y
 
 def main():
@@ -189,11 +191,6 @@ def main():
     num_examples = train_set.shape[0]
     num_features = train_set.shape[1] - 1
     
-    # X, y = split_x_y(train_set)
-
-    # print("train_set = {} x = {}".format(train_set.shape[1] - 1, X.shape[1]))
-    # print("train_set = {} x = {}".format(train_set.shape[0], X.shape[0]))
-
     batches = 'mini_batch'
     # batches = 'whole_batch'
 
@@ -209,9 +206,6 @@ def main():
     else:
         batch_size = num_examples
         epochs = 20000
-
-    # batch_x, batch_y = X[:batch_size], y[:batch_size]
-    # num_features = X.shape[1]
 
     nn = NeuralNetwork(num_features, batch_size)
     loss_values = []
