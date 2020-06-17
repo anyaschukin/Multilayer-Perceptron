@@ -99,9 +99,8 @@ LAYER3_NEURONS = 16
 LAYER4_NEURONS = 2
 
 class NeuralNetwork:
-    def __init__(self, x, y, num_features, batch_size, epochs):
+    def __init__(self, x, y, num_features, batch_size):
         self.batch_size = batch_size
-        self.epochs     = epochs
         self.input      = x
         self.weights1   = np.random.rand(LAYER1_NEURONS, num_features) * np.sqrt(2/num_features) ## * 0.01 # self.input.shape[1] is num_features
         self.weights2   = np.random.rand(LAYER2_NEURONS, LAYER1_NEURONS) * np.sqrt(2/LAYER1_NEURONS) ## * 0.01
@@ -185,7 +184,8 @@ def main():
     # transform y into one-hot encoding vector
     target = np.zeros((y.shape[0], 2))
     target[np.arange(y.size),y] = 1
-    y = target.T
+    # y = target.T
+    y = target
 
     batches = 'mini_batch'
     # batches = 'whole_batch'
@@ -194,8 +194,8 @@ def main():
         batch_size = 1
         epochs = 40000
     elif batches == 'mini_batch':
-        batch_size = 32
-        epochs = 1500
+        batch_size = 32 #64
+        epochs = 1200
     elif batches == 'whole_batch':         
         batch_size = X.shape[0]
         epochs = 20000
@@ -203,18 +203,30 @@ def main():
         batch_size = X.shape[0]
         epochs = 20000
 
+
+# def generate_batches(X, y):
+#     X, y = train_set.iloc[:, 1:], train_set.iloc[:, 0]
+#     # transform y into one-hot encoding vector
+#     target = np.zeros((y.shape[0], 2))
+#     target[np.arange(y.size),y] = 1
+#     # y = target.T
+#     y = target
+#     for i in range(0, X.shape[0], nn.batch_size):
+#         batch_x, batch_y = X[i:i+batch_size], y[i:i+batch_size]
+#         yield batch_x, batch_y
+
+
     num_features = X.shape[1]
     # batch_x, batch_y = X[:batch_size], y[:batch_size]
-    nn = NeuralNetwork(X, y, num_features, batch_size, epochs)
+    nn = NeuralNetwork(X, y, num_features, batch_size)
     loss_values = []
 
-    for epoch in range(nn.epochs):
-        X = shuffle(X)
-        y = shuffle(y)
+    for epoch in range(epochs):
+        # X = shuffle(X)
+        # y = shuffle(y)
         # print("X ={}\ny= {}".format(X, y))
         for i in range(0, X.shape[0], nn.batch_size):
-            # print("iterations = {}", format(i))
-            batch_x, batch_y = X[i:i+batch_size], y.T[i:i+batch_size]
+            batch_x, batch_y = X[i:i+batch_size], y[i:i+batch_size]
             nn.input, nn.y = batch_x, batch_y.T
             nn.feedforward()
             nn.backprop()
