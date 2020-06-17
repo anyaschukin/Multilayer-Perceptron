@@ -102,15 +102,15 @@ class NeuralNetwork:
     def __init__(self, x, y, num_features, batch_size):
         self.batch_size = batch_size
         self.input      = x
-        self.weights1   = np.random.rand(LAYER1_NEURONS, num_features) * np.sqrt(2/num_features) ## * 0.01 # self.input.shape[1] is num_features
+        self.weights1   = np.random.rand(LAYER1_NEURONS, num_features) * np.sqrt(2/num_features) ## * 0.01
         self.weights2   = np.random.rand(LAYER2_NEURONS, LAYER1_NEURONS) * np.sqrt(2/LAYER1_NEURONS) ## * 0.01
         self.weights3   = np.random.rand(LAYER3_NEURONS, LAYER2_NEURONS) * np.sqrt(2/LAYER2_NEURONS) ## * 0.01
         self.weights4   = np.random.rand(2, LAYER3_NEURONS) * np.sqrt(2/LAYER3_NEURONS) ## * 0.01  # if multiple classification, it should (NUM_NEURONS, output_size(# of classes))
 
-        self.bias1      = np.zeros((LAYER1_NEURONS, 1)) # 4 x 1
+        self.bias1      = np.zeros((LAYER1_NEURONS, 1))
         self.bias2      = np.zeros((LAYER2_NEURONS, 1))
         self.bias3      = np.zeros((LAYER3_NEURONS, 1))
-        self.bias4      = np.zeros((2, 1)) # (1, num_of_classes)... maybe last layer shouldn't have bias
+        self.bias4      = np.zeros((2, 1)) # (num_of_classes, 1)... maybe last layer shouldn't have bias
        
         self.y          = y
         # self.output     = np.zeros((2, self.y.shape[0]))
@@ -171,6 +171,13 @@ class NeuralNetwork:
         self.bias3 -= learning_rate * (d_bias3 / m)
         self.bias4 -= learning_rate * (d_bias4 / m)
 
+def split_x_y(data):
+    X, y = data.iloc[:, 1:], data.iloc[:, 0]
+    # transform y into one-hot encoding vector
+    target = np.zeros((y.shape[0], 2))
+    target[np.arange(y.size),y] = 1
+    y = target.T
+    return X, y
 
 def main():
 
@@ -178,17 +185,18 @@ def main():
     data = prep.preprocess(data)
     # visualize(data)
     train_set, test_set = prep.split(data)
+    X, y = split_x_y(train_set)
 
-    X, y = train_set.iloc[:, 1:], train_set.iloc[:, 0]
+    # X, y = train_set.iloc[:, 1:], train_set.iloc[:, 0]
 
-    # transform y into one-hot encoding vector
-    target = np.zeros((y.shape[0], 2))
-    target[np.arange(y.size),y] = 1
-    # y = target.T
-    y = target
+    # # transform y into one-hot encoding vector
+    # target = np.zeros((y.shape[0], 2))
+    # target[np.arange(y.size),y] = 1
+    # # y = target.T
+    # y = target
 
-    batches = 'mini_batch'
-    # batches = 'whole_batch'
+    # batches = 'mini_batch'
+    batches = 'whole_batch'
 
     if batches == 'SGD':
         batch_size = 1
@@ -203,38 +211,41 @@ def main():
         batch_size = X.shape[0]
         epochs = 20000
 
-
-# def generate_batches(X, y):
-#     X, y = train_set.iloc[:, 1:], train_set.iloc[:, 0]
-#     # transform y into one-hot encoding vector
-#     target = np.zeros((y.shape[0], 2))
-#     target[np.arange(y.size),y] = 1
-#     # y = target.T
-#     y = target
-#     for i in range(0, X.shape[0], nn.batch_size):
-#         batch_x, batch_y = X[i:i+batch_size], y[i:i+batch_size]
-#         yield batch_x, batch_y
-
-
     num_features = X.shape[1]
     # batch_x, batch_y = X[:batch_size], y[:batch_size]
     nn = NeuralNetwork(X, y, num_features, batch_size)
     loss_values = []
 
     for epoch in range(epochs):
-        # X = shuffle(X)
-        # y = shuffle(y)
-        # print("X ={}\ny= {}".format(X, y))
+        shuffle(train_set)
         for i in range(0, X.shape[0], nn.batch_size):
-            batch_x, batch_y = X[i:i+batch_size], y[i:i+batch_size]
-            nn.input, nn.y = batch_x, batch_y.T
+            nn.input, nn.y = split_x_y(train_set[i:i+batch_size])
+            
             nn.feedforward()
             nn.backprop()
             loss = compute_loss(nn.output[:, 0], nn.y[:, 0])
             loss_values.append(loss)
-        accuracy = get_accuracy(nn.output, nn.y)
         y_pred = probability_to_class(nn.output.T)
+        accuracy = get_accuracy(nn.output, nn.y)
         precision, recall, specificity, F1_score = get_validation_metrics(y_pred[:, 0], nn.y.T[:, 0])
+
+
+
+
+    # for epoch in range(epochs):
+    #     # X = shuffle(X)
+    #     # y = shuffle(y)
+    #     # print("X ={}\ny= {}".format(X, y))
+    #     for i in range(0, X.shape[0], nn.batch_size):
+    #         batch_x, batch_y = X[i:i+batch_size], y[i:i+batch_size]
+    #         nn.input, nn.y = batch_x, batch_y.T
+    #         nn.feedforward()
+    #         nn.backprop()
+    #         loss = compute_loss(nn.output[:, 0], nn.y[:, 0])
+    #         loss_values.append(loss)
+    #     accuracy = get_accuracy(nn.output, nn.y)
+    #     y_pred = probability_to_class(nn.output.T)
+    #     precision, recall, specificity, F1_score = get_validation_metrics(y_pred[:, 0], nn.y.T[:, 0])
         
     print("accuracy = {}\nprecision = {}\nrecall = {}\nspecificity = {}\nF1_score = {}\n\n".format(accuracy, precision, recall, specificity, F1_score))
 
