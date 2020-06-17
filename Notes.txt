@@ -15,8 +15,8 @@ then you should probably normalize/standardize the data.
 {x} binary cross-entropy error function
 {x} display at each epoch the training and validation metrics (model performance)
 {x} implement a learning curve graph displayed at the end of the training phase
-{ } training program
-{ } prediction program
+{x} training program
+{x} prediction program
 
 ## BASIC STRUCTURE
 {x} activation function
@@ -78,7 +78,7 @@ DEBUG - vanishing/exploding gradients
 { } threshhold hyperparameter
 
 OBSERVATIONS
-- At 0.01 learning rate and 20000 iterations...
+- At 0.01 learning rate and 20000 iterations, and whole batch...
 a NN of this architecture:
 - weights are features x neurons 
 - biases are 1 x neurons
