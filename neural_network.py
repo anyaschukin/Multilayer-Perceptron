@@ -34,7 +34,6 @@ class NeuralNetwork:
         self.bias4          = np.zeros((2, 1)) # (num_of_classes, 1)... maybe last layer shouldn't have bias
        
         self.y              = None
-        # self.output     = np.zeros((2, self.y.shape[0]))
         self.output         = np.zeros((2, batch_size))
 
     def feedforward(self, activation = softmax, activation_hidden = sigmoid):
@@ -101,7 +100,7 @@ class NeuralNetwork:
         # replicate feedforward for testing
         self.feedforward()
         accuracy = get_accuracy(self.output, self.y)
-        print(accuracy)
+        # print(accuracy)
         # return self.output.T
 
 def main():
@@ -134,31 +133,34 @@ def main():
     training_program = True
 
     nn = NeuralNetwork(num_features, batch_size, learning_rate)
-    loss_values = []
+    # loss_values = []
 
     for epoch in range(epochs):
         shuffle(train_set)
         for i in range(0, num_examples, nn.batch_size):
             nn.input, nn.y = split_x_y(train_set[i:i+batch_size])
-            
             nn.feedforward()
             nn.backprop()
-            loss = compute_loss(nn.output[:, 0], nn.y[:, 0])
-            loss_values.append(loss)
+            train_loss = compute_loss(nn.output[:, 0], nn.y[:, 0])
 
-    if training_program == True:
-        y_pred = probability_to_class(nn.output.T)
-        accuracy = get_accuracy(nn.output, nn.y)
-        print("accuracy = {}".format(accuracy))
-        get_validation_metrics(y_pred[:, 0], nn.y.T[:, 0])
-    if prediction_program == True:
-        nn.predict(test_set)
+            nn.predict(test_set)
+            test_loss = compute_loss(nn.output[:, 0], nn.y[:, 0])
 
+        print("epoch {}/{}: train loss = {}, test loss = {}".format(epoch, epochs, round(train_loss, 4), round(test_loss, 4)))
+        # if training_program == True:
+        # if prediction_program == True:
+    
+    # plt.plot(loss_values)
+    # plt.show()       
+
+    y_pred = probability_to_class(nn.output.T)
+    accuracy = get_accuracy(nn.output, nn.y)
+    print("accuracy = {}".format(accuracy))
+    get_validation_metrics(y_pred[:, 0], nn.y.T[:, 0])
 
     # print(bcolors.OKGREEN + "final loss = {}".format(loss) + bcolors.ENDC)
 
-    # plt.plot(loss_values)
-    # plt.show()
+ 
 
 if __name__ == '__main__':
     main()
