@@ -4,7 +4,7 @@ import tools as tools
 import matplotlib.pyplot as plt
 from sklearn.utils import shuffle
 
-import preprocess as prep
+from preprocess import *
 from activations import *
 from validation_metrics import *
 
@@ -90,22 +90,45 @@ class NeuralNetwork:
         self.bias3 -= learning_rate * (d_bias3 / m)
         self.bias4 -= learning_rate * (d_bias4 / m)
 
-def split_x_y(data):
-    X, y = data.iloc[:, 1:], data.iloc[:, 0]
-    
-    # transform y into one-hot encoding vector
-    target = np.zeros((y.shape[0], 2))
-    target[np.arange(y.size),y] = 1
-    y = target.T
-    
-    return X, y
+    def predict(self, test_set):
+        num_examples = test_set.shape[0]
+        self.input, self.y = split_x_y(test_set)
+        self.output = np.zeros((2, num_examples))
+
+        # replicate feedforward for testing
+        self.feedforward()
+        accuracy = get_accuracy(self.output, self.y)
+        print(accuracy)
+        # return self.output.T
+
+        # y_pred = probability_to_class(y_pred)
+        # accuracy = get_accuracy(Y_pred, nn.y)
+
+# def predict(w,b,X):
+#     """
+#     :param w:
+#     :param b:
+#     :param X:
+#     :return:
+#     """
+#     m=X.shape[1]
+#     y_pred=np.zeros(shape=(1,m))
+#     w=w.reshape(X.shape[0],1)
+
+#     A=sigmoid(np.dot(w.T,X)+b)
+
+#     for i in range(A.shape[1]):
+#         y_pred[0,i]=1 if A[0,i]>0.5 else 0
+
+#     assert (y_pred.shape==(1,m))
+#     return y_pred
 
 def main():
 
     data = pd.read_csv('./data/data_labeled.csv')
-    data = prep.preprocess(data)
+    data = preprocess(data)
     # visualize(data)
-    train_set, test_set = prep.split(data)
+    train_set, test_set = split(data)
     
     num_examples = train_set.shape[0]
     num_features = train_set.shape[1] - 1
@@ -143,6 +166,11 @@ def main():
         precision, recall, specificity, F1_score = get_validation_metrics(y_pred[:, 0], nn.y.T[:, 0])
 
     print("accuracy = {}\nprecision = {}\nrecall = {}\nspecificity = {}\nF1_score = {}\n\n".format(accuracy, precision, recall, specificity, F1_score))
+
+    # test_x, test_y = split_x_y(test_set)
+    # nn.input, nn.y = split_x_y(test_set)
+    nn.predict(test_set)
+    # print(predictions)
 
     # print(bcolors.OKGREEN + "final loss = {}".format(loss) + bcolors.ENDC)
 
