@@ -3,95 +3,15 @@ import numpy as np
 import tools as tools
 import matplotlib.pyplot as plt
 from sklearn.utils import shuffle
+
+import preprocess as prep
+from activations import *
+from validation_metrics import *
+
 # from sklearn.metrics import confusion_matrix
 # from sklearn.metrics import accuracy_score
 # from sklearn.metrics import recall_score
 # from sklearn.metrics import precision_score
-
-import preprocess as prep
-
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-
-# The ReLufunction performs a threshold operation to each input element 
-# where values less than zero are set to zero.
-def ReLU(z):
-    return np.maximum(0, z)
-
-def ReLU_prime(z):
-    return 1 * (z > 0)
-    # return 1 if z > 0 else 0
-
-def leaky_ReLU(z, alpha = 0.1):
-	return np.where(z >= 0, z, z * alpha)
-    # return max(alpha * z, z)
-
-def leaky_ReLU_prime(z, alpha = 0.1):
-    return np.where(z >= 0, 1, alpha)
-	# return 1 if x > 0 else alpha
-
-def sigmoid(z):
-    return 1/(1+np.exp(-z))
-
-def sigmoid_prime(z):
-  return sigmoid(z) * (1-sigmoid(z))
-
-def softmax(z):
-    # Numerically Stable: (z - np.max(z) shifts the values of z so that the highest number is 0... [1, 3, 5] -> [-4, -2, 0]
-    z_max = np.max(z, axis=0, keepdims=True)
-    e = np.exp(z - z_max)
-    return e / e.sum(axis=0, keepdims=True)
-
-def softmax_prime(z):
-    return softmax(z) * (1-softmax(z))
-
-# binary cross-entropy loss
-def compute_loss(yhat, y):
-    m = len(y)
-    loss = -1/m * (np.sum(np.dot(np.log(yhat).T, y) + np.dot((1 - y).T, np.log(1 - yhat))))
-    return loss
-
-def compute_loss_prime(yhat, y):
-    d_loss = - (np.divide(y, yhat) - np.divide(1 - y, 1 - yhat)) ## not sure if this should be - or +, according to Kaggle example
-    return d_loss
-
-# an auxiliary function that converts probability into class
-def probability_to_class(yhat):
-    probs = np.copy(yhat)
-    probs[probs > 0.5] = 1
-    probs[probs <= 0.5] = 0
-    return probs
-
-def get_accuracy(Y_hat, Y):
-    Y_hat_ = probability_to_class(Y_hat)
-    return (Y_hat_ == Y).all(axis=0).mean()
-
-def get_validation_metrics(y_pred, y_true):
-    # false positives and true positives
-    fp = np.sum((y_pred == 1) & (y_true == 0))  # summing the number of examples which fit that particular criteria
-    tp = np.sum((y_pred == 1) & (y_true == 1))
-    # print("false positives = {}, true positives = {}".format(fp,tp))
-
-    #false negatives and true negatives
-    fn = np.sum((y_pred == 0) & (y_true == 1))
-    tn = np.sum((y_pred == 0) & (y_true == 0))
-    # print("false negatives = {}, true negatives = {}".format(fn,tn))
-
-    # accuracy = (y_pred == y_true).all(axis=0).mean()
-    precision = tp / (tp + fp)
-    recall = tp / (tp + fn)
-    specificity = tn / (tn + fp)
-    F1_score = (2 * (precision * recall)) / (precision + recall)
-
-    return precision, recall, specificity, F1_score
-
 
 LAYER1_NEURONS = 16
 LAYER2_NEURONS = 16
@@ -133,16 +53,15 @@ class NeuralNetwork:
 
     ## application of the chain rule to find derivative of the loss function with respect to weights and bias
     def backprop(self, d_activation = softmax_prime, d_activation_hidden = sigmoid_prime, learning_rate = 0.01):
-        # m = self.input.shape[0] # num examples or batch size
+
         m = self.batch_size # num examples or batch size
-        # weights and d_weights should have the same dimensions
 
         d_A4 = compute_loss_prime(self.output, self.y)
 
         # output layer
-        d_Z4 = d_A4 * d_activation(self.Z4) # not sure if we need activation derivative on output
-        d_weights4 = np.dot(d_Z4, self.layer3.T)
-        d_bias4 = np.sum(d_Z4, axis = 1, keepdims=True) # should be either axis 0 or 1, should create shape of 1,1 
+        d_Z4 = d_A4 * d_activation(self.Z4)
+        d_weights4 = np.dot(d_Z4, self.layer3.T) # weights and d_weights should have the same dimensions
+        d_bias4 = np.sum(d_Z4, axis = 1, keepdims=True)
         d_A3 = np.dot(self.weights4.T, d_Z4)
 
         # hidden layers
@@ -233,24 +152,24 @@ def main():
 if __name__ == '__main__':
     main()
 
+# class bcolors:
+    # HEADER = '\033[95m'
+    # OKBLUE = '\033[94m'
+    # OKGREEN = '\033[92m'
+    # WARNING = '\033[93m'
+    # FAIL = '\033[91m'
+    # ENDC = '\033[0m'
+    # BOLD = '\033[1m'
+    # UNDERLINE = '\033[4m'
 
-    # num_batches = X.shape[0] / batch_size
-
-    # for i in range(0, X.shape[0], batch_size):
-        # batch_x, batch_y = X[i:i+batch_size], y[i:i+batch_size]
-        # yield batch_x, batch_y
-
-    # batch_size = 32 # default 32, btwn 2 - 32, read from command line arguments
-
-    # Confusion Matrix
-    # confusion_matrix(y_true, y_pred,  labels=['malignant', 'benign'])
-    # Accuracy
-    # accuracy_score(y_true, y_pred, labels)
-    # Recall
-    # recall_score(y_true, y_pred, average=None)
-    # Precision
-    # precision_score(y_true, y_pred, average=None)
-
+# Confusion Matrix
+# confusion_matrix(y_true, y_pred,  labels=['malignant', 'benign'])
+# Accuracy
+# accuracy_score(y_true, y_pred, labels)
+# Recall
+# recall_score(y_true, y_pred, average=None)
+# Precision
+# precision_score(y_true, y_pred, average=None)
 
 # y = y.reshape(y.shape[0], 1)
 # y = y.to_numpy().shape[0]
