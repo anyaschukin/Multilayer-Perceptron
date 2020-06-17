@@ -99,7 +99,7 @@ class NeuralNetwork:
 
         # replicate feedforward for testing
         self.feedforward()
-        accuracy = get_accuracy(self.output, self.y)
+        # accuracy = get_accuracy(self.output, self.y)
         # print(accuracy)
         # return self.output.T
 
@@ -133,7 +133,7 @@ def main():
     training_program = True
 
     nn = NeuralNetwork(num_features, batch_size, learning_rate)
-    # loss_values = []
+    test_losses, train_losses = [], []
 
     for epoch in range(epochs):
         shuffle(train_set)
@@ -141,22 +141,30 @@ def main():
             nn.input, nn.y = split_x_y(train_set[i:i+batch_size])
             nn.feedforward()
             nn.backprop()
+            
             train_loss = compute_loss(nn.output[:, 0], nn.y[:, 0])
+            train_losses.append(train_loss)
 
             nn.predict(test_set)
+            
             test_loss = compute_loss(nn.output[:, 0], nn.y[:, 0])
+            test_losses.append(test_loss)
 
-        print("epoch {}/{}: train loss = {}, test loss = {}".format(epoch, epochs, round(train_loss, 4), round(test_loss, 4)))
-        # if training_program == True:
-        # if prediction_program == True:
+        # print("epoch {}/{}: train loss = {}, test loss = {}".format(epoch, epochs, round(train_loss, 4), round(test_loss, 4)))
     
+    if training_program == True:
+        # save network params
+        print("hello\n")
+    if prediction_program == True:
+        print("Final loss on validation set = {}\n".format(test_loss))
+    
+    # plot both train and test loss
     # plt.plot(loss_values)
     # plt.show()       
 
     y_pred = probability_to_class(nn.output.T)
-    accuracy = get_accuracy(nn.output, nn.y)
-    print("accuracy = {}".format(accuracy))
     get_validation_metrics(y_pred[:, 0], nn.y.T[:, 0])
+    define_validation_metrics()
 
     # print(bcolors.OKGREEN + "final loss = {}".format(loss) + bcolors.ENDC)
 
