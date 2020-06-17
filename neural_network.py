@@ -99,9 +99,9 @@ LAYER3_NEURONS = 16
 LAYER4_NEURONS = 2
 
 class NeuralNetwork:
-    def __init__(self, x, y, num_features, batch_size):
+    def __init__(self, num_features, batch_size):
         self.batch_size = batch_size
-        self.input      = x
+        self.input      = None
         self.weights1   = np.random.rand(LAYER1_NEURONS, num_features) * np.sqrt(2/num_features) ## * 0.01
         self.weights2   = np.random.rand(LAYER2_NEURONS, LAYER1_NEURONS) * np.sqrt(2/LAYER1_NEURONS) ## * 0.01
         self.weights3   = np.random.rand(LAYER3_NEURONS, LAYER2_NEURONS) * np.sqrt(2/LAYER2_NEURONS) ## * 0.01
@@ -112,7 +112,7 @@ class NeuralNetwork:
         self.bias3      = np.zeros((LAYER3_NEURONS, 1))
         self.bias4      = np.zeros((2, 1)) # (num_of_classes, 1)... maybe last layer shouldn't have bias
        
-        self.y          = y
+        self.y          = None
         # self.output     = np.zeros((2, self.y.shape[0]))
         self.output     = np.zeros((2, batch_size))
 
@@ -185,32 +185,40 @@ def main():
     data = prep.preprocess(data)
     # visualize(data)
     train_set, test_set = prep.split(data)
-    X, y = split_x_y(train_set)
+    
+    num_examples = train_set.shape[0]
+    num_features = train_set.shape[1] - 1
+    
+    # X, y = split_x_y(train_set)
 
-    # batches = 'mini_batch'
-    batches = 'whole_batch'
+    # print("train_set = {} x = {}".format(train_set.shape[1] - 1, X.shape[1]))
+    # print("train_set = {} x = {}".format(train_set.shape[0], X.shape[0]))
+
+    batches = 'mini_batch'
+    # batches = 'whole_batch'
 
     if batches == 'SGD':
         batch_size = 1
         epochs = 40000
     elif batches == 'mini_batch':
         batch_size = 32 #64
-        epochs = 1200
+        epochs = 1100
     elif batches == 'whole_batch':         
-        batch_size = X.shape[0]
+        batch_size = num_examples
         epochs = 20000
     else:
-        batch_size = X.shape[0]
+        batch_size = num_examples
         epochs = 20000
 
-    num_features = X.shape[1]
     # batch_x, batch_y = X[:batch_size], y[:batch_size]
-    nn = NeuralNetwork(X, y, num_features, batch_size)
+    # num_features = X.shape[1]
+
+    nn = NeuralNetwork(num_features, batch_size)
     loss_values = []
 
     for epoch in range(epochs):
         shuffle(train_set)
-        for i in range(0, X.shape[0], nn.batch_size):
+        for i in range(0, num_examples, nn.batch_size):
             nn.input, nn.y = split_x_y(train_set[i:i+batch_size])
             
             nn.feedforward()
