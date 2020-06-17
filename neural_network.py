@@ -156,7 +156,7 @@ def main():
         # save network params
         print("hello\n")
     if prediction_program == True:
-        print("Final loss on validation set = {}\n".format(test_loss))
+        print("colors.OKGREEN + Final loss on validation set = {}\n".format(test_loss) + colors.ENDC)
     
     # plot both train and test loss
     # plt.plot(loss_values)
@@ -165,10 +165,6 @@ def main():
     y_pred = probability_to_class(nn.output.T)
     get_validation_metrics(y_pred[:, 0], nn.y.T[:, 0])
     define_validation_metrics()
-
-    # print(bcolors.OKGREEN + "final loss = {}".format(loss) + bcolors.ENDC)
-
- 
 
 if __name__ == '__main__':
     main()
