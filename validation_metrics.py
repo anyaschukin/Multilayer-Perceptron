@@ -2,12 +2,13 @@ import pandas as pd
 import numpy as np
 
 class colors:
-    BLUE = '\033[94m'
-    GREEN = '\033[92m'
+    BLUE = "\033[94m"
+    GREEN = "\033[32m"
+    LGREEN = "\033[92m"
     MAGENTA = "\033[35m"
     YELLOW = "\033[33m"
     CYAN = "\033[36m"
-    ENDC = '\033[0m'
+    ENDC = "\033[0m"
     # BOLD = '\033[1m'
     # HEADER = '\033[95m'
     # UNDERLINE = '\033[4m'

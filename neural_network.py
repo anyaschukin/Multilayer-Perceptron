@@ -145,10 +145,10 @@ def main():
             train_loss = compute_loss(nn.output[:, 0], nn.y[:, 0])
             train_losses.append(train_loss)
 
-            nn.predict(test_set)
-            
-            test_loss = compute_loss(nn.output[:, 0], nn.y[:, 0])
-            test_losses.append(test_loss)
+        nn.predict(test_set)
+        
+        test_loss = compute_loss(nn.output[:, 0], nn.y[:, 0])
+        test_losses.append(test_loss)
 
         # print("epoch {}/{}: train loss = {}, test loss = {}".format(epoch, epochs, round(train_loss, 4), round(test_loss, 4)))
     
@@ -156,7 +156,7 @@ def main():
         # save network params
         print("hello\n")
     if prediction_program == True:
-        print("colors.OKGREEN + Final loss on validation set = {}\n".format(test_loss) + colors.ENDC)
+        print(colors.LGREEN + "Final loss on validation set = {}".format(test_loss) + colors.ENDC + "\n")
     
     # plot both train and test loss
     # plt.plot(loss_values)
