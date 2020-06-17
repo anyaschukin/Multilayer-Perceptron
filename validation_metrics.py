@@ -2,17 +2,17 @@ import pandas as pd
 import numpy as np
 
 class colors:
-    # HEADER = '\033[95m'
     BLUE = '\033[94m'
     GREEN = '\033[92m'
     MAGENTA = "\033[35m"
     YELLOW = "\033[33m"
     CYAN = "\033[36m"
     ENDC = '\033[0m'
+    # BOLD = '\033[1m'
+    # HEADER = '\033[95m'
+    # UNDERLINE = '\033[4m'
     # WARNING = '\033[93m'
     # FAIL = '\033[91m'
-    # BOLD = '\033[1m'
-    # UNDERLINE = '\033[4m'
 
 # an auxiliary function that converts probability into class
 def probability_to_class(yhat):

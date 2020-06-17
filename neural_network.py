@@ -179,10 +179,3 @@ if __name__ == '__main__':
 # recall_score(y_true, y_pred, average=None)
 # Precision
 # precision_score(y_true, y_pred, average=None)
-
-# y = y.reshape(y.shape[0], 1)
-# y = y.to_numpy().shape[0]
-# X = numpy_array[:, 1:26]
-# y = numpy_array[:, 0]
-# X_train, X_test = X[:index], X[index:]
-# y_train, y_test = y[:index], y[index:]
