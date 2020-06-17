@@ -187,14 +187,6 @@ def main():
     train_set, test_set = prep.split(data)
     X, y = split_x_y(train_set)
 
-    # X, y = train_set.iloc[:, 1:], train_set.iloc[:, 0]
-
-    # # transform y into one-hot encoding vector
-    # target = np.zeros((y.shape[0], 2))
-    # target[np.arange(y.size),y] = 1
-    # # y = target.T
-    # y = target
-
     # batches = 'mini_batch'
     batches = 'whole_batch'
 
@@ -229,24 +221,6 @@ def main():
         accuracy = get_accuracy(nn.output, nn.y)
         precision, recall, specificity, F1_score = get_validation_metrics(y_pred[:, 0], nn.y.T[:, 0])
 
-
-
-
-    # for epoch in range(epochs):
-    #     # X = shuffle(X)
-    #     # y = shuffle(y)
-    #     # print("X ={}\ny= {}".format(X, y))
-    #     for i in range(0, X.shape[0], nn.batch_size):
-    #         batch_x, batch_y = X[i:i+batch_size], y[i:i+batch_size]
-    #         nn.input, nn.y = batch_x, batch_y.T
-    #         nn.feedforward()
-    #         nn.backprop()
-    #         loss = compute_loss(nn.output[:, 0], nn.y[:, 0])
-    #         loss_values.append(loss)
-    #     accuracy = get_accuracy(nn.output, nn.y)
-    #     y_pred = probability_to_class(nn.output.T)
-    #     precision, recall, specificity, F1_score = get_validation_metrics(y_pred[:, 0], nn.y.T[:, 0])
-        
     print("accuracy = {}\nprecision = {}\nrecall = {}\nspecificity = {}\nF1_score = {}\n\n".format(accuracy, precision, recall, specificity, F1_score))
 
     # print(bcolors.OKGREEN + "final loss = {}".format(loss) + bcolors.ENDC)
