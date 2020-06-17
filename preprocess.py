@@ -1,8 +1,18 @@
 import pandas as pd
-# import numpy as np
+import numpy as np
 import tools as tools
 # import plot as plot
 # import visualize as visualize
+
+def split_x_y(data):
+    X, y = data.iloc[:, 1:], data.iloc[:, 0]
+    
+    # transform y into one-hot encoding vector
+    target = np.zeros((y.shape[0], 2))
+    target[np.arange(y.size),y] = 1
+    y = target.T
+    
+    return X, y
 
 def split(data):
     # remove feature names
