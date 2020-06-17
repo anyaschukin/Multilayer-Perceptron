@@ -19,22 +19,23 @@ LAYER3_NEURONS = 16
 LAYER4_NEURONS = 2
 
 class NeuralNetwork:
-    def __init__(self, num_features, batch_size):
-        self.batch_size = batch_size
-        self.input      = None
-        self.weights1   = np.random.rand(LAYER1_NEURONS, num_features) * np.sqrt(2/num_features) ## * 0.01
-        self.weights2   = np.random.rand(LAYER2_NEURONS, LAYER1_NEURONS) * np.sqrt(2/LAYER1_NEURONS) ## * 0.01
-        self.weights3   = np.random.rand(LAYER3_NEURONS, LAYER2_NEURONS) * np.sqrt(2/LAYER2_NEURONS) ## * 0.01
-        self.weights4   = np.random.rand(2, LAYER3_NEURONS) * np.sqrt(2/LAYER3_NEURONS) ## * 0.01  # if multiple classification, it should (NUM_NEURONS, output_size(# of classes))
+    def __init__(self, num_features, batch_size, learning_rate):
+        self.batch_size     = batch_size
+        self.learning_rate  = learning_rate
+        self.input          = None
+        self.weights1       = np.random.rand(LAYER1_NEURONS, num_features) * np.sqrt(2/num_features) ## * 0.01
+        self.weights2       = np.random.rand(LAYER2_NEURONS, LAYER1_NEURONS) * np.sqrt(2/LAYER1_NEURONS) ## * 0.01
+        self.weights3       = np.random.rand(LAYER3_NEURONS, LAYER2_NEURONS) * np.sqrt(2/LAYER2_NEURONS) ## * 0.01
+        self.weights4       = np.random.rand(2, LAYER3_NEURONS) * np.sqrt(2/LAYER3_NEURONS) ## * 0.01  # if multiple classification, it should (NUM_NEURONS, output_size(# of classes))
 
-        self.bias1      = np.zeros((LAYER1_NEURONS, 1))
-        self.bias2      = np.zeros((LAYER2_NEURONS, 1))
-        self.bias3      = np.zeros((LAYER3_NEURONS, 1))
-        self.bias4      = np.zeros((2, 1)) # (num_of_classes, 1)... maybe last layer shouldn't have bias
+        self.bias1          = np.zeros((LAYER1_NEURONS, 1))
+        self.bias2          = np.zeros((LAYER2_NEURONS, 1))
+        self.bias3          = np.zeros((LAYER3_NEURONS, 1))
+        self.bias4          = np.zeros((2, 1)) # (num_of_classes, 1)... maybe last layer shouldn't have bias
        
-        self.y          = None
+        self.y              = None
         # self.output     = np.zeros((2, self.y.shape[0]))
-        self.output     = np.zeros((2, batch_size))
+        self.output         = np.zeros((2, batch_size))
 
     def feedforward(self, activation = softmax, activation_hidden = sigmoid):
         
@@ -52,7 +53,7 @@ class NeuralNetwork:
 
 
     ## application of the chain rule to find derivative of the loss function with respect to weights and bias
-    def backprop(self, d_activation = softmax_prime, d_activation_hidden = sigmoid_prime, learning_rate = 0.01):
+    def backprop(self, d_activation = softmax_prime, d_activation_hidden = sigmoid_prime):
 
         m = self.batch_size # num examples or batch size
 
@@ -80,18 +81,20 @@ class NeuralNetwork:
         d_bias1 = np.sum(d_Z2, axis = 1, keepdims=True)
        
         ## update the weights with the derivative (slope) of the loss function (SGD)
-        self.weights1 -= learning_rate * (d_weights1 / m) 
-        self.weights2 -= learning_rate * (d_weights2 / m)
-        self.weights3 -= learning_rate * (d_weights3 / m)
-        self.weights4 -= learning_rate * (d_weights4 / m)
+        self.weights1 -= self.learning_rate * (d_weights1 / m) 
+        self.weights2 -= self.learning_rate * (d_weights2 / m)
+        self.weights3 -= self.learning_rate * (d_weights3 / m)
+        self.weights4 -= self.learning_rate * (d_weights4 / m)
 
-        self.bias1 -= learning_rate * (d_bias1 / m)
-        self.bias2 -= learning_rate * (d_bias2 / m)
-        self.bias3 -= learning_rate * (d_bias3 / m)
-        self.bias4 -= learning_rate * (d_bias4 / m)
+        self.bias1 -= self.learning_rate * (d_bias1 / m)
+        self.bias2 -= self.learning_rate * (d_bias2 / m)
+        self.bias3 -= self.learning_rate * (d_bias3 / m)
+        self.bias4 -= self.learning_rate * (d_bias4 / m)
 
     def predict(self, test_set):
         num_examples = test_set.shape[0]
+
+        shuffle(test_set)
         self.input, self.y = split_x_y(test_set)
         self.output = np.zeros((2, num_examples))
 
@@ -100,28 +103,6 @@ class NeuralNetwork:
         accuracy = get_accuracy(self.output, self.y)
         print(accuracy)
         # return self.output.T
-
-        # y_pred = probability_to_class(y_pred)
-        # accuracy = get_accuracy(Y_pred, nn.y)
-
-# def predict(w,b,X):
-#     """
-#     :param w:
-#     :param b:
-#     :param X:
-#     :return:
-#     """
-#     m=X.shape[1]
-#     y_pred=np.zeros(shape=(1,m))
-#     w=w.reshape(X.shape[0],1)
-
-#     A=sigmoid(np.dot(w.T,X)+b)
-
-#     for i in range(A.shape[1]):
-#         y_pred[0,i]=1 if A[0,i]>0.5 else 0
-
-#     assert (y_pred.shape==(1,m))
-#     return y_pred
 
 def main():
 
@@ -133,15 +114,15 @@ def main():
     num_examples = train_set.shape[0]
     num_features = train_set.shape[1] - 1
     
+    learning_rate = 0.01
     batches = 'mini_batch'
-    # batches = 'whole_batch'
 
     if batches == 'SGD':
         batch_size = 1
         epochs = 40000
     elif batches == 'mini_batch':
         batch_size = 32 #64
-        epochs = 1100
+        epochs = 1500
     elif batches == 'whole_batch':         
         batch_size = num_examples
         epochs = 20000
@@ -149,7 +130,10 @@ def main():
         batch_size = num_examples
         epochs = 20000
 
-    nn = NeuralNetwork(num_features, batch_size)
+    prediction_program = True
+    training_program = True
+
+    nn = NeuralNetwork(num_features, batch_size, learning_rate)
     loss_values = []
 
     for epoch in range(epochs):
@@ -161,16 +145,15 @@ def main():
             nn.backprop()
             loss = compute_loss(nn.output[:, 0], nn.y[:, 0])
             loss_values.append(loss)
+
+    if training_program == True:
         y_pred = probability_to_class(nn.output.T)
         accuracy = get_accuracy(nn.output, nn.y)
-        precision, recall, specificity, F1_score = get_validation_metrics(y_pred[:, 0], nn.y.T[:, 0])
+        print("accuracy = {}".format(accuracy))
+        get_validation_metrics(y_pred[:, 0], nn.y.T[:, 0])
+    if prediction_program == True:
+        nn.predict(test_set)
 
-    print("accuracy = {}\nprecision = {}\nrecall = {}\nspecificity = {}\nF1_score = {}\n\n".format(accuracy, precision, recall, specificity, F1_score))
-
-    # test_x, test_y = split_x_y(test_set)
-    # nn.input, nn.y = split_x_y(test_set)
-    nn.predict(test_set)
-    # print(predictions)
 
     # print(bcolors.OKGREEN + "final loss = {}".format(loss) + bcolors.ENDC)
 
@@ -180,15 +163,7 @@ def main():
 if __name__ == '__main__':
     main()
 
-# class bcolors:
-    # HEADER = '\033[95m'
-    # OKBLUE = '\033[94m'
-    # OKGREEN = '\033[92m'
-    # WARNING = '\033[93m'
-    # FAIL = '\033[91m'
-    # ENDC = '\033[0m'
-    # BOLD = '\033[1m'
-    # UNDERLINE = '\033[4m'
+
 
 # Confusion Matrix
 # confusion_matrix(y_true, y_pred,  labels=['malignant', 'benign'])
