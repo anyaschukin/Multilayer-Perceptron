@@ -57,7 +57,7 @@ def define_validation_metrics():
     # recall
     print(colors.GREEN + "Recall" + colors.ENDC + " aka True Positive Rate, answers the question 'What proportion of actual positives was identified correctly?'\n")
     # sepcificity
-    print(colors.YELLOW + "Specificity" + colors.ENDC + " aka True Negative Rate, measures the proportion of actual negatives that are correctly identified as such.\n")
+    print(colors.YELLOW + "Specificity" + colors.ENDC + " aka True Negative Rate, answers the question 'What proportion of actual negatives was identified correctly?'\n")
     # F1_score
     print(colors.MAGENTA + "F1 Score" + colors.ENDC + " is the harmonic mean of precision and recall.\nIt can have a maximum score of 1 (perfect precision and recall) and a minimum of 0.\nOverall, it is a measure of the preciseness and robustness of your model.\n")
 
