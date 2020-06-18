@@ -51,7 +51,7 @@ class NeuralNetwork:
         self.output = activation(self.Z4) # layer = theta(weight_l * a_l-1 + b_l)
 
 
-    ## application of the chain rule to find derivative of the loss function with respect to weights and bias
+    ## application of the chain rule to find derivative of the loss function, with respect to weights and bias
     def backprop(self, d_activation = softmax_prime, d_activation_hidden = sigmoid_prime):
 
         m = self.batch_size # num examples or batch size
@@ -99,9 +99,6 @@ class NeuralNetwork:
 
         # replicate feedforward for testing
         self.feedforward()
-        # accuracy = get_accuracy(self.output, self.y)
-        # print(accuracy)
-        # return self.output.T
 
 def main():
 
@@ -145,27 +142,26 @@ def main():
             train_loss = compute_loss(nn.output[:, 0], nn.y[:, 0])
             train_losses.append(train_loss)
 
+        # test set
         nn.predict(test_set)
-        
         test_loss = compute_loss(nn.output[:, 0], nn.y[:, 0])
         test_losses.append(test_loss)
 
         # print("epoch {}/{}: train loss = {}, test loss = {}".format(epoch, epochs, round(train_loss, 4), round(test_loss, 4)))
-    
+
     if training_program == True:
         # save network params
-        print("hello\n")
+        # print("hello\n")
     if prediction_program == True:
         print(colors.LGREEN + "Final loss on validation set = {}".format(test_loss) + colors.ENDC + "\n")
     
-    # plot both train and test loss
-    # plt.plot(loss_values)
-    # plt.show()       
-
     y_pred = probability_to_class(nn.output.T)
     get_validation_metrics(y_pred[:, 0], nn.y.T[:, 0])
     define_validation_metrics()
-
+    
+    if batches == 'whole_batch':
+        plot_learning(train_losses, test_losses)
+    
 if __name__ == '__main__':
     main()
 

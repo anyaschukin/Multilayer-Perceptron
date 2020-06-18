@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 class colors:
     BLUE = "\033[94m"
@@ -61,3 +62,13 @@ def define_validation_metrics():
     # F1_score
     print(colors.MAGENTA + "F1 Score" + colors.ENDC + " is the harmonic mean of precision and recall.\nIt can have a maximum score of 1 (perfect precision and recall) and a minimum of 0.\nOverall, it is a measure of the preciseness and robustness of your model.\n")
 
+def plot_learning(train_losses, test_losses):
+
+    # Draw lines
+    plt.plot(train_losses, label="Training loss", color='c')
+    plt.plot(test_losses, label="Test/Validation loss", color='b')
+
+    plt.title("Learning Curve")
+    plt.xlabel("Epochs"), plt.ylabel("Loss"), plt.legend(loc="best")
+    plt.legend()
+    plt.show()
