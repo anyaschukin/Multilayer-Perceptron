@@ -3,6 +3,7 @@ import numpy as np
 import tools as tools
 import matplotlib.pyplot as plt
 from sklearn.utils import shuffle
+import json
 
 from preprocess import *
 from activations import *
@@ -147,13 +148,19 @@ def main():
         test_loss = compute_loss(nn.output[:, 0], nn.y[:, 0])
         test_losses.append(test_loss)
 
+        # print validation metrics 'epoch - train loss - test loss'
         # print("epoch {}/{}: train loss = {}, test loss = {}".format(epoch, epochs, round(train_loss, 4), round(test_loss, 4)))
 
     if training_program == True:
         # save network params
-        # print("hello\n")
+        W1, W2, W3, W4 = nn.weights1.tolist(), nn.weights2.tolist(), nn.weights3.tolist(), nn.weights4.tolist()
+        B1, B2, B3, B4 = nn.bias1.tolist(), nn.bias2.tolist(), nn.bias3.tolist(), nn.bias4.tolist()
+        model = dict(weights1=W1, weights2=W2, weights3=W3, weights4=W4, bias1=B1, bias2=B2, bias3=B3, bias4=B4)
+        with open("neural_network.json", "w") as f:
+            json.dump(model, f, separators=(',', ':'), indent=4)
+    
     if prediction_program == True:
-        print(colors.LGREEN + "Final loss on validation set = {}".format(test_loss) + colors.ENDC + "\n")
+        print("\n" + colors.LGREEN + "Final loss on validation set = {}".format(test_loss) + colors.ENDC + "\n")
     
     y_pred = probability_to_class(nn.output.T)
     get_validation_metrics(y_pred[:, 0], nn.y.T[:, 0])
