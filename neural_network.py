@@ -111,6 +111,7 @@ def main():
     data = preprocess(data)
     if data_visualize:
         visualize(data)
+    
     train_set, test_set = split(data)
     
     num_examples = train_set.shape[0]
@@ -122,18 +123,12 @@ def main():
     # if batches == 'SGD':
         # batch_size = 1
         # epochs = 40000
-    if batches == 'mini_batch':
+    if mini_batch:
         batch_size = 32 #64
         epochs = 1500
-    elif batches == 'whole_batch':         
-        batch_size = num_examples
-        epochs = 20000
     else:
         batch_size = num_examples
         epochs = 20000
-
-    prediction_program = True
-    training_program = True
 
     nn = NeuralNetwork(num_features, batch_size, learning_rate)
     test_losses, train_losses = [], []
@@ -156,7 +151,7 @@ def main():
         # print validation metrics 'epoch - train loss - test loss'
         # print("epoch {}/{}: train loss = {}, test loss = {}".format(epoch, epochs, round(train_loss, 4), round(test_loss, 4)))
 
-    if training_program == True:
+    if train:
         # save network params
         W1, W2, W3, W4 = nn.weights1.tolist(), nn.weights2.tolist(), nn.weights3.tolist(), nn.weights4.tolist()
         B1, B2, B3, B4 = nn.bias1.tolist(), nn.bias2.tolist(), nn.bias3.tolist(), nn.bias4.tolist()
@@ -164,13 +159,12 @@ def main():
         with open("neural_network.json", "w") as f:
             json.dump(model, f, separators=(',', ':'), indent=4)
     
-    if prediction_program == True:
+    if predict:
         print("\n" + colors.LGREEN + "Final loss on validation set = {}".format(test_loss) + colors.ENDC + "\n")
     
-    if evaluation_metrics:
+    if evaluation:
         y_pred = probability_to_class(nn.output.T)
         get_validation_metrics(y_pred[:, 0], nn.y.T[:, 0])
-        define_validation_metrics()
     
     if not mini_batch:
         plot_learning(train_losses, test_losses)
