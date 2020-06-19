@@ -5,7 +5,9 @@ import matplotlib.pyplot as plt
 from sklearn.utils import shuffle
 import json
 
+from parse import parse_args
 from preprocess import *
+from visualize import visualize
 from activations import *
 from validation_metrics import *
 
@@ -103,9 +105,12 @@ class NeuralNetwork:
 
 def main():
 
+    dataset, data_visualize, train, predict, mini_batch, evaluation, learning = parse_args()
+
     data = pd.read_csv('./data/data_labeled.csv')
     data = preprocess(data)
-    # visualize(data)
+    if data_visualize:
+        visualize(data)
     train_set, test_set = split(data)
     
     num_examples = train_set.shape[0]
@@ -114,10 +119,10 @@ def main():
     learning_rate = 0.01
     batches = 'mini_batch'
 
-    if batches == 'SGD':
-        batch_size = 1
-        epochs = 40000
-    elif batches == 'mini_batch':
+    # if batches == 'SGD':
+        # batch_size = 1
+        # epochs = 40000
+    if batches == 'mini_batch':
         batch_size = 32 #64
         epochs = 1500
     elif batches == 'whole_batch':         
@@ -162,11 +167,12 @@ def main():
     if prediction_program == True:
         print("\n" + colors.LGREEN + "Final loss on validation set = {}".format(test_loss) + colors.ENDC + "\n")
     
-    y_pred = probability_to_class(nn.output.T)
-    get_validation_metrics(y_pred[:, 0], nn.y.T[:, 0])
-    define_validation_metrics()
+    if evaluation_metrics:
+        y_pred = probability_to_class(nn.output.T)
+        get_validation_metrics(y_pred[:, 0], nn.y.T[:, 0])
+        define_validation_metrics()
     
-    if batches == 'whole_batch':
+    if not mini_batch:
         plot_learning(train_losses, test_losses)
     
 if __name__ == '__main__':
