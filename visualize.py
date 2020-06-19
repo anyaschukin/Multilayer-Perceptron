@@ -46,7 +46,11 @@ def select_feature(data):
     features = mean
     return features
 
-
+def visualize(data):
+    features = select_feature(data)
+    pair_plot(features)    # can select by feature for pairplot
+    heat_map(data)       # only mean
+    strip_plot(data)     # only mean
 
 ## To use, add the following to your main:
 ## for visualizing data
