@@ -119,11 +119,7 @@ def main():
 		num_features = train_set.shape[1] - 1
 		
 		learning_rate = 0.01
-		batches = 'mini_batch'
 
-		# if batches == 'SGD':
-			# batch_size = 1
-			# epochs = 40000
 		if mini_batch:
 			batch_size = 32 #64
 			epochs = 1500
