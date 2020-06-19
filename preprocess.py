@@ -26,11 +26,6 @@ def split(data):
     train_set = shuffled_data[:i]
     test_set = shuffled_data[i:]
 
-    # X = numpy_array[:, 1:26]
-    # y = numpy_array[:, 0]
-    # X_train, X_test = X[:index], X[index:]
-    # y_train, y_test = y[:index], y[index:]
-
     return train_set, test_set
 
 def scale(data, scaling='standardize'):
