@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from sklearn.utils import shuffle
 import json
 
-from parse import parse_args
+from tools import parse_args
 from preprocess import *
 from visualize import visualize
 from activations import *
@@ -106,9 +106,8 @@ class NeuralNetwork:
 def main():
 
 	try:
-		dataset, data_visualize, train, predict, mini_batch, evaluation, learning = parse_args()
+		dataset, data_visualize, train, predict, mini_batch, evaluation = parse_args()
 
-		# data = pd.read_csv('./data/data_labeled.csv')
 		data = pd.read_csv(dataset)
 		data = preprocess(data)
 		if data_visualize:
@@ -172,7 +171,7 @@ def main():
 			plot_learning(train_losses, test_losses)
 	
 	except:
-		print(colors.FAIL + "\nError. Dataset invalid?\n" + colors.ENDC)
+		print(colors.FAIL + "\nError. You did something wrong, maybe?\n" + colors.ENDC)
 	
 if __name__ == '__main__':
 	main()
