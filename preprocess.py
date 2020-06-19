@@ -56,6 +56,7 @@ def preprocess(data):
     data = scale(data)
     return data
 
+
 ## To use, add the following to your main:
 # data = pd.read_csv('./data/data_labeled.csv')
 
@@ -67,7 +68,3 @@ def preprocess(data):
 
 # features = visualize.select_feature(data)
 # visualize.pair_plot(features)
-
-# data = data.drop(columns=['diagnosis'])
-# train_set, test_set = split(data)
-# X, y = train_set.iloc[:, 1:], train_set.iloc[:, 0]
