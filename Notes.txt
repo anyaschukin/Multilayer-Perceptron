@@ -9,6 +9,7 @@ then you should probably normalize/standardize the data.
 
 
 ## IMPLEMENTATION (required by subject)
+{ } prepocess unlabeled data
 {x} split data into train set and validation set
 {x} at least 2 hidden layers
 {x} softmax activation function
@@ -93,11 +94,3 @@ while a NN of this architecture:
 ... performs at 98.45% accuracy
 
 - possible overfitting with 0.1% learning rate?
-
-{} visualize data
-{} run program
-	{} batch size
-	{} prediction program
-	{} training program
-	{} extra metrics ?
-	{} extra visualizers ?
