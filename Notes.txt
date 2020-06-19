@@ -48,7 +48,7 @@ TO FIX
 { } weights go to NaN after _ iterations w/ReLU
 { } leaky_ReLU and prime - RuntimeWarning: invalid value encountered in greater_equal
 {x} compute_loss - RuntimeWarning: divide by zero encountered in log
-    ^ I think due to log(0) -> nan
+	^ I think due to log(0) -> nan
 {x} softmax -  RuntimeWarning: invalid value encountered in subtract
 
 
@@ -68,7 +68,7 @@ DEBUG - vanishing/exploding gradients
 {x} try different number of iterations
 {x} try a dataset of just 2, then 5 examples
 {x} add He weight initization (for ReLU) – * np.sqrt(2/N_in), where N_in = input_neurons (or fan_in, neurons from previous layer)
-{ } add Xavier weight initization (for Tanh) – * np.sqrt(2 / (N_in + N_out))     source: keras https://github.com/keras-team/keras/blob/998efc04eefa0c14057c1fa87cab71df5b24bf7e/keras/initializations.py
+{ } add Xavier weight initization (for Tanh) – * np.sqrt(2 / (N_in + N_out))	 source: keras https://github.com/keras-team/keras/blob/998efc04eefa0c14057c1fa87cab71df5b24bf7e/keras/initializations.py
 {x} add Lecun weight initization (for efficient backprop?) – * np.sqrt(3/N_in)
 { } weight or L1/L2 regularization
 { } gradient checking
@@ -93,3 +93,11 @@ while a NN of this architecture:
 ... performs at 98.45% accuracy
 
 - possible overfitting with 0.1% learning rate?
+
+{} visualize data
+{} run program
+	{} batch size
+	{} prediction program
+	{} training program
+	{} extra metrics ?
+	{} extra visualizers ?
