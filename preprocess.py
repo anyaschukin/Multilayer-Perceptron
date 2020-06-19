@@ -1,8 +1,6 @@
 import pandas as pd
 import numpy as np
 import tools as tools
-# import plot as plot
-# import visualize as visualize
 
 def split_x_y(data):
     X, y = data.iloc[:, 1:], data.iloc[:, 0]
