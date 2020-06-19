@@ -1,6 +1,7 @@
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import time
 # import numpy as np
 import tools as tools
 
@@ -47,14 +48,12 @@ def select_feature(data):
     return features
 
 def visualize(data):
+    print(data)
+    time.sleep(3)
+    print(data.describe())
+    time.sleep(3)
+
     features = select_feature(data)
     pair_plot(features)    # can select by feature for pairplot
     heat_map(data)       # only mean
     strip_plot(data)     # only mean
-
-## To use, add the following to your main:
-## for visualizing data
-# features = select_feature(data)
-# pair_plot(features)    # can select by feature for pairplot
-# heat_map(data)       # only mean
-# strip_plot(data)     # only mean
