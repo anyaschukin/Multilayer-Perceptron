@@ -107,7 +107,8 @@ def main():
 
     dataset, data_visualize, train, predict, mini_batch, evaluation, learning = parse_args()
 
-    data = pd.read_csv('./data/data_labeled.csv')
+    # data = pd.read_csv('./data/data_labeled.csv')
+    data = pd.read_csv(dataset)
     data = preprocess(data)
     if data_visualize:
         visualize(data)
