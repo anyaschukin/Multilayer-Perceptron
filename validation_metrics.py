@@ -44,23 +44,20 @@ def get_validation_metrics(y_pred, y_true):
     specificity = tn / (tn + fp)
     F1_score = (2 * (precision * recall)) / (precision + recall)
 
-    print("accuracy = {}".format(accuracy))
-    print("precision = {}".format(precision))
-    print("recall = {}".format(recall))
-    print("specificity = {}".format(specificity))
-    print("F1_score = {}\n".format(F1_score))
-
-def define_validation_metrics():
-    # accuracy
-    print(colors.BLUE + "Accuracy" + colors.ENDC + " is the proportion of predictions that the model classified correctly.\n")
-    # precision
-    print(colors.CYAN + "Precision" + colors.ENDC + " answers the question 'What proportion of positive identifications was actually correct?'\n")
-    # recall
-    print(colors.GREEN + "Recall" + colors.ENDC + " aka True Positive Rate, answers the question 'What proportion of actual positives was identified correctly?'\n")
-    # sepcificity
-    print(colors.YELLOW + "Specificity" + colors.ENDC + " aka True Negative Rate, answers the question 'What proportion of actual negatives was identified correctly?'\n")
-    # F1_score
-    print(colors.MAGENTA + "F1 Score" + colors.ENDC + " is the harmonic mean of precision and recall.\nIt can have a maximum score of 1 (perfect precision and recall) and a minimum of 0.\nOverall, it is a measure of the preciseness and robustness of your model.\n")
+    print("\n" + colors.BLUE + "Accuracy"  + colors.ENDC + " = {}".format(accuracy))
+    print(colors.BLUE + "Accuracy is the proportion of predictions that the model classified correctly.\n" + colors.ENDC)
+    
+    print(colors.CYAN + "Precision" + colors.ENDC + " = {}".format(precision))
+    print(colors.CYAN + "Precision answers the question 'What proportion of positive identifications was actually correct?'\n" + colors.ENDC)
+    
+    print(colors.GREEN + "Recall" + colors.ENDC + " = {}".format(recall))
+    print(colors.GREEN + "Recall aka True Positive Rate, answers the question 'What proportion of actual positives was identified correctly?'\n" + colors.ENDC)
+    
+    print(colors.YELLOW + "Specificity" + colors.ENDC + " = {}".format(specificity))
+    print(colors.YELLOW + "Specificity aka True Negative Rate, answers the question 'What proportion of actual negatives was identified correctly?'\n" + colors.ENDC)
+    
+    print(colors.MAGENTA + "F1_score" + colors.ENDC + " = {}".format(F1_score))
+    print(colors.MAGENTA + "F1 Score is the harmonic mean of precision and recall.\nIt can have a maximum score of 1 (perfect precision and recall) and a minimum of 0.\nOverall, it is a measure of the preciseness and robustness of your model.\n" + colors.ENDC)
 
 def plot_learning(train_losses, test_losses):
 
