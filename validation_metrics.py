@@ -10,11 +10,6 @@ class colors:
     YELLOW = "\033[33m"
     CYAN = "\033[36m"
     ENDC = "\033[0m"
-    # BOLD = '\033[1m'
-    # HEADER = '\033[95m'
-    # UNDERLINE = '\033[4m'
-    # WARNING = '\033[93m'
-    # FAIL = '\033[91m'
 
 # an auxiliary function that converts probability into class
 def probability_to_class(yhat):
