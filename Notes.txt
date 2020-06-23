@@ -7,7 +7,6 @@ don't have more weight than others
 so that they are less extreme (normal/Gaussian distribution). If you see a large standard deviation,
 then you should probably normalize/standardize the data.
 
-
 ## IMPLEMENTATION (required by subject)
 { } prepocess unlabeled data
 {x} split data into train set and validation set
@@ -26,6 +25,13 @@ then you should probably normalize/standardize the data.
 {x} forward propagation
 {x} back propagation
 {x} cost
+
+## BONUSES
+{x} changeable batch size / minibatch vs whole batch
+{x} multiple activation functions
+{x} deep learning metrics
+{x} extensive data visualizations - accuracy, precision, recall, specificity, F1 Score
+{x} display activations
 
 ## TO DO
 { } incorporate N hidden layers
@@ -94,3 +100,4 @@ while a NN of this architecture:
 ... performs at 98.45% accuracy
 
 - possible overfitting with 0.1% learning rate?
+
