@@ -30,6 +30,7 @@ then you should probably normalize/standardize the data.
 {x} changeable batch size / minibatch vs whole batch
 {x} multiple activation functions
 {x} deep learning metrics
+{x} two learning curves on one graph
 {x} extensive data visualizations - accuracy, precision, recall, specificity, F1 Score
 {x} display activations
 
