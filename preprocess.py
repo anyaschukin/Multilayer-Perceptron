@@ -43,13 +43,18 @@ def scale(data, scaling='standardize'):
 	
 # remove [unnecessary columns] and [columns with NaN] and scale data
 def preprocess(data):
-	# see if there are any columns with missing/null data
+
+	# check if there are any columns with missing/null data
 	# print(data.isnull().sum())
+
+	data.columns = ['id','diagnosis','radius_mean','texture_mean','perimeter_mean','area_mean','smoothness_mean','compactness_mean','concavity_mean','concave points_mean','symmetry_mean','fractal_dimension_mean','radius_se','texture_se','perimeter_se','area_se','smoothness_se','compactness_se','concavity_se','concave points_se','symmetry_se','fractal_dimension_se','radius_worst','texture_worst','perimeter_worst','area_worst','smoothness_worst','compactness_worst','concavity_worst','concave points_worst','symmetry_worst','fractal_dimension_worst']
+	
 	try:
-		data = data.drop(columns=['id', 'Unnamed: 32'])
+		data = data.drop(columns=['id'])
 		data = data.dropna()
 		data['diagnosis'] = data['diagnosis'].map({'M':1, 'B':0})
 	except Exception:
 		tools.error_exit('Failed to preprocess data. Is data valid?')
 	data = scale(data)
+
 	return data
