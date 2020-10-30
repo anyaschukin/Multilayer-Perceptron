@@ -1,13 +1,11 @@
 import pandas as pd
 import numpy as np
-# import tools as tools
 import matplotlib.pyplot as plt
 from sklearn.utils import shuffle
 import json
 
 from tools import parse_args
 from preprocess import split, split_x_y
-# from visualize import visualize
 from activations import *
 from validation_metrics import *
 
@@ -29,7 +27,7 @@ class NeuralNetwork:
 		self.bias1          = np.zeros((LAYER1_NEURONS, 1))
 		self.bias2          = np.zeros((LAYER2_NEURONS, 1))
 		self.bias3          = np.zeros((LAYER3_NEURONS, 1))
-		self.bias4          = np.zeros((2, 1)) # (num_of_classes, 1)... maybe last layer shouldn't have bias
+		self.bias4          = np.zeros((2, 1)) # (num_of_classes, 1)
 	   
 		self.y              = None
 		self.output         = np.zeros((2, batch_size))
@@ -58,7 +56,7 @@ class NeuralNetwork:
 
 		# output layer
 		d_Z4 = d_A4 * d_activation(self.Z4)
-		d_weights4 = np.dot(d_Z4, self.layer3.T) # weights and d_weights should have the same dimensions
+		d_weights4 = np.dot(d_Z4, self.layer3.T)
 		d_bias4 = np.sum(d_Z4, axis = 1, keepdims=True)
 		d_A3 = np.dot(self.weights4.T, d_Z4)
 
@@ -130,7 +128,7 @@ def train_model(data, train, predict, mini_batch, evaluation):
 		test_losses.append(test_loss)
 
 		# print validation metrics 'epoch - train loss - test loss'
-		# print("epoch {}/{}: train loss = {}, test loss = {}".format(epoch, epochs, round(train_loss, 4), round(test_loss, 4)))
+		print("epoch {}/{}: train loss = {}, test loss = {}".format(epoch, epochs, round(train_loss, 4), round(test_loss, 4)))
 
 	if train:
 		# save network params
@@ -149,6 +147,3 @@ def train_model(data, train, predict, mini_batch, evaluation):
 	
 	if not mini_batch:
 		plot_learning(train_losses, test_losses)
-	
-	# except:
-		# print(colors.FAIL + "\nError. You did something wrong, maybe?\n" + colors.ENDC)
