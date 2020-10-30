@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import tools as tools
 
+# split data into X and y
 def split_x_y(data):
 	X, y = data.iloc[:, 1:], data.iloc[:, 0]
 	
@@ -12,13 +13,13 @@ def split_x_y(data):
 	
 	return X, y
 
+# shuffle and split data into train and test sets
 def split(data):
 	# remove feature names
 	new_header = data.iloc[0]
 	data = data[1:]
 	data.columns = new_header
 
-	# shuffle and split data into train and test sets
 	shuffled_data = data.sample(frac=1)
 	i = int(0.7 * len(data))
 	train_set = shuffled_data[:i]

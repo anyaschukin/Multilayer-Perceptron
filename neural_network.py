@@ -1,20 +1,15 @@
 import pandas as pd
 import numpy as np
-import tools as tools
+# import tools as tools
 import matplotlib.pyplot as plt
 from sklearn.utils import shuffle
 import json
 
 from tools import parse_args
-from preprocess import *
-from visualize import visualize
+from preprocess import split, split_x_y
+# from visualize import visualize
 from activations import *
 from validation_metrics import *
-
-# from sklearn.metrics import confusion_matrix
-# from sklearn.metrics import accuracy_score
-# from sklearn.metrics import recall_score
-# from sklearn.metrics import precision_score
 
 LAYER1_NEURONS = 16
 LAYER2_NEURONS = 16
