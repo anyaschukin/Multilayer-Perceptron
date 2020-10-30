@@ -8,7 +8,7 @@ so that they are less extreme (normal/Gaussian distribution). If you see a large
 then you should probably normalize/standardize the data.
 
 ## IMPLEMENTATION (required by subject)
-{ } prepocess unlabeled data
+{x} prepocess unlabeled data
 {x} split data into train set and validation set
 {x} at least 2 hidden layers
 {x} softmax activation function
@@ -27,6 +27,7 @@ then you should probably normalize/standardize the data.
 {x} cost
 
 ## BONUSES
+{x} 3 different methods for scaling the data
 {x} changeable batch size / minibatch vs whole batch
 {x} multiple activation functions
 {x} deep learning metrics
