@@ -143,7 +143,7 @@ def main():
 		test_losses.append(test_loss)
 
 		# print validation metrics 'epoch - train loss - test loss'
-		print("epoch {}/{}: train loss = {}, test loss = {}".format(epoch, epochs, round(train_loss, 4), round(test_loss, 4)))
+		# print("epoch {}/{}: train loss = {}, test loss = {}".format(epoch, epochs, round(train_loss, 4), round(test_loss, 4)))
 
 	if train:
 		# save network params
