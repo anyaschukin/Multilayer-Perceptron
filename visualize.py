@@ -36,7 +36,11 @@ def select_feature(data):
 		print(str(i+1) + ":", options[i])
 
 	while True:
-		choice = int(input("Enter a number: "))
+		choice = input("Enter a number: ")
+		try:
+			isinstance(choice, int)	# verfiy the input is an int
+		except:
+			print(colors.GREEN + "Invalid input! Let's try that again." + colors.ENDC)
 		try:
 			choice = options[choice-1]
 			break
