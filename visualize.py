@@ -2,8 +2,11 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import time
-# import numpy as np
 import tools as tools
+
+class colors:
+	GREEN = "\033[32m"
+	ENDC = "\033[0m"
 
 def pair_plot(feature):
 	try:
@@ -13,7 +16,6 @@ def pair_plot(feature):
 		tools.error_exit('Failed to visualize data. Is data valid?')
 
 def heat_map(feature):
-	# mean = data[['texture_mean','perimeter_mean','area_mean','smoothness_mean','compactness_mean','concavity_mean','concave points_mean','symmetry_mean','fractal_dimension_mean','diagnosis']]
 	plt.figure(figsize=(15,10))
 	heat = sns.heatmap(feature.corr(), vmax=1, square=True, annot=True, cmap="YlGnBu")
 	plt.show()
@@ -21,7 +23,6 @@ def heat_map(feature):
 def strip_plot(feature):
 	data_strip = feature.drop('diagnosis',axis=1)
 	data_strip = feature[feature.columns.tolist()]
-	# data_strip = data[['texture_mean','perimeter_mean','area_mean','smoothness_mean','compactness_mean','concavity_mean','concave points_mean','symmetry_mean','fractal_dimension_mean']]
 	for index,columns in enumerate(data_strip):
 		plt.figure(figsize=(15,10))
 		sns.stripplot(x='diagnosis', y= columns, data= feature, jitter=True, palette = 'Set1')
@@ -40,7 +41,7 @@ def select_feature(data):
 			choice = options[choice-1]
 			break
 		except:
-			print("Invalid input! Let's try that again.")
+			print(colors.GREEN + "Invalid input! Let's try that again." + colors.ENDC)
 
 	mean = data[['texture_mean','perimeter_mean','area_mean','smoothness_mean','compactness_mean','concavity_mean','concave points_mean','symmetry_mean','fractal_dimension_mean','diagnosis']]
 	se = data[['texture_se','perimeter_se','area_se','smoothness_se','compactness_se','concavity_se','concave points_se','symmetry_se','fractal_dimension_se','diagnosis']]
