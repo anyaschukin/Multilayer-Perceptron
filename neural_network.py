@@ -103,15 +103,7 @@ class NeuralNetwork:
 		# replicate feedforward for testing
 		self.feedforward()
 
-def main():
-
-	# try:
-	dataset, data_visualize, train, predict, mini_batch, evaluation = parse_args()
-
-	data = pd.read_csv(dataset)
-	data = preprocess(data)
-	if data_visualize:
-		visualize(data)
+def train_model(data, train, predict, mini_batch, evaluation):
 	
 	train_set, test_set = split(data)
 	
@@ -165,6 +157,3 @@ def main():
 	
 	# except:
 		# print(colors.FAIL + "\nError. You did something wrong, maybe?\n" + colors.ENDC)
-	
-if __name__ == '__main__':
-	main()
