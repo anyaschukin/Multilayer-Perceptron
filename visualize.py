@@ -74,11 +74,3 @@ def visualize(data):
 	pair_plot(feature)
 	heat_map(feature)
 	strip_plot(feature)
-
-def main():
-	data = pd.read_csv(dataset)
-	data = preprocess(data)
-	visualize(data)
-
-if __name__ == '__main__':
-	main()
