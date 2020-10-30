@@ -37,6 +37,12 @@ then you should probably normalize/standardize the data.
 {x} deep learning metrics - accuracy, precision, recall, specificity, F1 Score
 
 ## TO DO
+{ } author file
+{ } load trained model
+{ } include cross-entropy loss in predict
+{ } uncomment epochs
+
+
 { } incorporate N hidden layers
 {x} restructure NN architecture
 {x} change sigmoid -> ReLU (intermediary layers) and softmax (output layer)
