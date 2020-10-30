@@ -27,14 +27,14 @@ then you should probably normalize/standardize the data.
 {x} cost
 
 ## BONUSES
+{x} extensive data visualizations
 {x} 3 different methods for scaling the data
 {x} changeable batch size / minibatch vs whole batch
 {x} multiple activation functions
-{x} deep learning metrics
-{x} two learning curves on one graph
-{x} extensive data visualizations - accuracy, precision, recall, specificity, F1 Score
 {x} display activations
 {x} He weight initization
+{x} two learning curves on one graph
+{x} deep learning metrics - accuracy, precision, recall, specificity, F1 Score
 
 ## TO DO
 { } incorporate N hidden layers
