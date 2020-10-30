@@ -1,22 +1,17 @@
 import pandas as pd
 import numpy as np
 
-# The ReLufunction performs a threshold operation to each input element 
-# where values less than zero are set to zero.
 def ReLU(z):
 	return np.maximum(0, z)
 
 def ReLU_prime(z):
 	return 1 * (z > 0)
-	# return 1 if z > 0 else 0
 
 def leaky_ReLU(z, alpha = 0.1):
 	return np.where(z >= 0, z, z * alpha)
-	# return max(alpha * z, z)
 
 def leaky_ReLU_prime(z, alpha = 0.1):
 	return np.where(z >= 0, 1, alpha)
-	# return 1 if x > 0 else alpha
 
 def sigmoid(z):
 	return 1/(1+np.exp(-z))
