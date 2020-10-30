@@ -33,6 +33,7 @@ then you should probably normalize/standardize the data.
 {x} two learning curves on one graph
 {x} extensive data visualizations - accuracy, precision, recall, specificity, F1 Score
 {x} display activations
+{x} He weight initization
 
 ## TO DO
 { } incorporate N hidden layers
@@ -47,8 +48,9 @@ then you should probably normalize/standardize the data.
 {x} accuracy, precision, recall, specificity, F1 Score
 { } PCA and Tsne? https://www.kaggle.com/djokester/visualising-the-breast-cancer-wisconsin-data-set
 
-{ } make a prediction after __ epochs, then refine our parameters (gradient descent/learning)
-{ } create function which calculates cost after each iteration
+{x} make a prediction after __ epochs, then refine our parameters (gradient descent/learning)
+{x} create function which calculates cost after each iteration
+{x} add requirements.txt
 
 TO FIX
 {x} NN gives same output for every example / NN doesn't learn
