@@ -37,10 +37,15 @@ then you should probably normalize/standardize the data.
 {x} deep learning metrics - accuracy, precision, recall, specificity, F1 Score
 
 ## TO DO
+{x} flags or args object
+{x} handle flag behavior (defaults, various flags on or off)
+{x} predict function
+{x} train and test curves not plotting
 { } author file
-{ } load trained model
-{ } include cross-entropy loss in predict
-{ } uncomment epochs
+{x} load trained model
+{x} include cross-entropy loss in predict
+{x} uncomment epochs
+{x} check if column label exists (doesn't work for labeled data)
 
 
 { } incorporate N hidden layers
