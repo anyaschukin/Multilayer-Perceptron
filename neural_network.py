@@ -146,57 +146,57 @@ class NeuralNetwork:
 		test_loss = compute_loss(self.output[:, 0], self.y[:, 0])
 		print("\n" + colors.LGREEN + "Final loss on validation set = {}".format(test_loss) + colors.ENDC + "\n")
 
-def trainnnnn(data, args):
+# def trainnnnn(data, args):
 	
-	train_set, test_set = split(data)
+# 	train_set, test_set = split(data)
 	
-	num_examples = train_set.shape[0]
-	num_features = train_set.shape[1] - 1
-	if args.mini_batch:
-		batch_size = 32		# or 64
-		epochs = 1500
-	else:
-		batch_size = num_examples
-		epochs = 20000
+# 	num_examples = train_set.shape[0]
+# 	num_features = train_set.shape[1] - 1
+# 	if args.mini_batch:
+# 		batch_size = 32		# or 64
+# 		epochs = 1500
+# 	else:
+# 		batch_size = num_examples
+# 		epochs = 20000
 
-	nn = NeuralNetwork(num_features, batch_size)
-	test_losses, train_losses = [], []
+# 	nn = NeuralNetwork(num_features, batch_size)
+# 	test_losses, train_losses = [], []
 
-	for epoch in range(epochs):
-		shuffle(train_set)
-		for i in range(0, num_examples, nn.batch_size):
-			nn.input, nn.y = split_x_y(train_set[i:i+batch_size])
-			nn.feedforward()
-			nn.backprop()
+# 	for epoch in range(epochs):
+# 		shuffle(train_set)
+# 		for i in range(0, num_examples, nn.batch_size):
+# 			nn.input, nn.y = split_x_y(train_set[i:i+batch_size])
+# 			nn.feedforward()
+# 			nn.backprop()
 			
-			train_loss = compute_loss(nn.output[:, 0], nn.y[:, 0])
-			train_losses.append(train_loss)
+# 			train_loss = compute_loss(nn.output[:, 0], nn.y[:, 0])
+# 			train_losses.append(train_loss)
 
 		# test set
 		# nn.predict(test_set)
-		test_loss = compute_loss(nn.output[:, 0], nn.y[:, 0])
-		test_losses.append(test_loss)
+		# test_loss = compute_loss(nn.output[:, 0], nn.y[:, 0])
+		# test_losses.append(test_loss)
 
 		# print validation metrics 'epoch - train loss - test loss'
 		# print("epoch {}/{}: train loss = {}, test loss = {}".format(epoch, epochs, round(train_loss, 4), round(test_loss, 4)))
 
-	if args.train_model:
-		# save network params
-		W1, W2, W3, W4 = nn.weights1.tolist(), nn.weights2.tolist(), nn.weights3.tolist(), nn.weights4.tolist()
-		B1, B2, B3, B4 = nn.bias1.tolist(), nn.bias2.tolist(), nn.bias3.tolist(), nn.bias4.tolist()
-		model = dict(weights1=W1, weights2=W2, weights3=W3, weights4=W4, bias1=B1, bias2=B2, bias3=B3, bias4=B4)
-		with open("neural_network.json", "w") as f:
-			json.dump(model, f, separators=(',', ':'), indent=4)
+	# if args.train_model:
+	# 	# save network params
+	# 	W1, W2, W3, W4 = nn.weights1.tolist(), nn.weights2.tolist(), nn.weights3.tolist(), nn.weights4.tolist()
+	# 	B1, B2, B3, B4 = nn.bias1.tolist(), nn.bias2.tolist(), nn.bias3.tolist(), nn.bias4.tolist()
+	# 	model = dict(weights1=W1, weights2=W2, weights3=W3, weights4=W4, bias1=B1, bias2=B2, bias3=B3, bias4=B4)
+	# 	with open("neural_network.json", "w") as f:
+	# 		json.dump(model, f, separators=(',', ':'), indent=4)
 	
 	# if predict:
 		# print("\n" + colors.LGREEN + "Final loss on validation set = {}".format(test_loss) + colors.ENDC + "\n")
 	
-	if args.evaluation:
-		y_pred = probability_to_class(nn.output.T)
-		get_validation_metrics(y_pred[:, 0], nn.y.T[:, 0])
+	# if args.evaluation:
+	# 	y_pred = probability_to_class(nn.output.T)
+	# 	get_validation_metrics(y_pred[:, 0], nn.y.T[:, 0])
 	
-	if not args.mini_batch:
-		plot_learning(train_losses, test_losses)
+	# if not args.mini_batch:
+	# 	plot_learning(train_losses, test_losses)
 
 # def predict_model():
 	# load model
