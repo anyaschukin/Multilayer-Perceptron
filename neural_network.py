@@ -15,8 +15,9 @@ LAYER3_NEURONS = 16
 LAYER4_NEURONS = 2
 
 class NeuralNetwork:
-	def __init__(self, num_features, batch_size, learning_rate = 0.01):
+	def __init__(self, num_features, batch_size, epochs, learning_rate = 0.01):
 		self.batch_size	 	= batch_size
+		self.epochs			= epochs
 		self.learning_rate  = learning_rate
 		self.input          = None
 		self.weights1       = np.random.rand(LAYER1_NEURONS, num_features) * np.sqrt(2/num_features) ## * 0.01
@@ -31,6 +32,17 @@ class NeuralNetwork:
 	   
 		self.y              = None
 		self.output         = np.zeros((2, batch_size))
+
+	def load_model(self, model):
+		self.weights1       = np.array(model['weights1'])
+		self.weights2       = np.array(model['weights2'])
+		self.weights3       = np.array(model['weights3'])
+		self.weights4       = np.array(model['weights4'])
+
+		self.bias1          = np.array(model['bias1'])
+		self.bias2          = np.array(model['bias2'])
+		self.bias3          = np.array(model['bias3'])
+		self.bias4          = np.array(model['bias4'])
 
 	def feedforward(self, activation = softmax, activation_hidden = sigmoid):
 		
@@ -86,6 +98,42 @@ class NeuralNetwork:
 		self.bias3 -= self.learning_rate * (d_bias3 / m)
 		self.bias4 -= self.learning_rate * (d_bias4 / m)
 
+
+	def train(self, data, args, train_set, test_set, num_examples):
+		# train_set, test_set = split(data)
+		train_losses, test_losses = [], []
+		for epoch in range(self.epochs):
+			shuffle(train_set)
+			for i in range(0, num_examples, self.batch_size):
+				self.input, self.y = split_x_y(train_set[i:i+self.batch_size]) ######### batch_size or self.batch_size?
+				self.feedforward()
+				self.backprop()
+				
+				train_loss = compute_loss(self.output[:, 0], self.y[:, 0])
+				train_losses.append(train_loss)
+
+			test_loss = compute_loss(self.output[:, 0], self.y[:, 0])
+			test_losses.append(test_loss)
+
+			# print validation metrics 'epoch - train loss - test loss'
+			# print("epoch {}/{}: train loss = {}, test loss = {}".format(epoch, self.epochs, round(train_loss, 4), round(test_loss, 4)))
+
+		if args.evaluation:
+			y_pred = probability_to_class(self.output.T)
+			get_validation_metrics(y_pred[:, 0], self.y.T[:, 0])
+
+		if not args.mini_batch:
+			plot_learning(train_losses, test_losses)
+
+		if args.save_model:
+			# save network params
+			W1, W2, W3, W4 = self.weights1.tolist(), self.weights2.tolist(), self.weights3.tolist(), self.weights4.tolist()
+			B1, B2, B3, B4 = self.bias1.tolist(), self.bias2.tolist(), self.bias3.tolist(), self.bias4.tolist()
+			model = dict(weights1=W1, weights2=W2, weights3=W3, weights4=W4, bias1=B1, bias2=B2, bias3=B3, bias4=B4)
+			with open("neural_network.json", "w") as f:
+				json.dump(model, f, separators=(',', ':'), indent=4)
+
+
 	def predict(self, test_set):
 		num_examples = test_set.shape[0]
 
@@ -95,11 +143,10 @@ class NeuralNetwork:
 
 		# replicate feedforward for testing
 		self.feedforward()
+		test_loss = compute_loss(self.output[:, 0], self.y[:, 0])
+		print("\n" + colors.LGREEN + "Final loss on validation set = {}".format(test_loss) + colors.ENDC + "\n")
 
-
-
-
-def train_model(data, args):
+def trainnnnn(data, args):
 	
 	train_set, test_set = split(data)
 	
@@ -133,7 +180,7 @@ def train_model(data, args):
 		# print validation metrics 'epoch - train loss - test loss'
 		# print("epoch {}/{}: train loss = {}, test loss = {}".format(epoch, epochs, round(train_loss, 4), round(test_loss, 4)))
 
-	if args.train:
+	if args.train_model:
 		# save network params
 		W1, W2, W3, W4 = nn.weights1.tolist(), nn.weights2.tolist(), nn.weights3.tolist(), nn.weights4.tolist()
 		B1, B2, B3, B4 = nn.bias1.tolist(), nn.bias2.tolist(), nn.bias3.tolist(), nn.bias4.tolist()

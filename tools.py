@@ -25,19 +25,7 @@ def get_args():
 					   metavar='dataset',
 					   type=str,
 					   help='provide a valid dataset.')
-	parser.add_argument('-d',
-						'--data_visualize',
-						action='store_true',
-						help='display data with graphs')
-	parser.add_argument('-t',
-						'--train',
-						action='store_true',
-						help='use backpropagation and gradient descent to learn on the training dataset and save the model')
-	parser.add_argument('-p',
-						'--predict',
-						action='store_true',
-						help='perform a prediction on a given set')
-	parser.add_argument('-m',
+	parser.add_argument('-b',
 						'--mini_batch',
 						action='store_true',
 						help='train neural network on mini-batch, of size 32')
@@ -45,6 +33,27 @@ def get_args():
 						'--evaluation',
 						action='store_true',
 						help='display in-depth learning evaluation metrics')
+	parser.add_argument('-model',
+					   metavar='model',
+					   type=str,
+					   help='provide a valid model.')
+	parser.add_argument('-p',
+						'--predict',
+						action='store_true',
+						help='load a saved model and perform a prediction on a given dataset')
+	parser.add_argument('-s',
+						'--save_model',
+						action='store_true',
+						help='save a trained model')
+	parser.add_argument('-t',
+						'--train',
+						action='store_true',
+						help='use backpropagation and gradient descent to learn on the training dataset and save the model')
+	parser.add_argument('-v',
+						'--visualize_data',
+						action='store_true',
+						help='display data with graphs')
+
 	args = parser.parse_args()
 	# arguments = parser.parse_args()
 	# args = Args(arguments)
