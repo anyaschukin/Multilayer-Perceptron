@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from sklearn.utils import shuffle
 import json
 
-from tools import parse_args
+# from tools import parse_args
 from preprocess import split, split_x_y
 from activations import *
 from validation_metrics import *
@@ -16,7 +16,7 @@ LAYER4_NEURONS = 2
 
 class NeuralNetwork:
 	def __init__(self, num_features, batch_size, learning_rate = 0.01):
-		self.batch_size	 = batch_size
+		self.batch_size	 	= batch_size
 		self.learning_rate  = learning_rate
 		self.input          = None
 		self.weights1       = np.random.rand(LAYER1_NEURONS, num_features) * np.sqrt(2/num_features) ## * 0.01
@@ -96,13 +96,16 @@ class NeuralNetwork:
 		# replicate feedforward for testing
 		self.feedforward()
 
-def train_model(data, train, predict, mini_batch, evaluation):
+
+
+
+def train_model(data, args):
 	
 	train_set, test_set = split(data)
 	
 	num_examples = train_set.shape[0]
 	num_features = train_set.shape[1] - 1
-	if mini_batch:
+	if args.mini_batch:
 		batch_size = 32		# or 64
 		epochs = 1500
 	else:
@@ -123,14 +126,14 @@ def train_model(data, train, predict, mini_batch, evaluation):
 			train_losses.append(train_loss)
 
 		# test set
-		nn.predict(test_set)
+		# nn.predict(test_set)
 		test_loss = compute_loss(nn.output[:, 0], nn.y[:, 0])
 		test_losses.append(test_loss)
 
 		# print validation metrics 'epoch - train loss - test loss'
-		print("epoch {}/{}: train loss = {}, test loss = {}".format(epoch, epochs, round(train_loss, 4), round(test_loss, 4)))
+		# print("epoch {}/{}: train loss = {}, test loss = {}".format(epoch, epochs, round(train_loss, 4), round(test_loss, 4)))
 
-	if train:
+	if args.train:
 		# save network params
 		W1, W2, W3, W4 = nn.weights1.tolist(), nn.weights2.tolist(), nn.weights3.tolist(), nn.weights4.tolist()
 		B1, B2, B3, B4 = nn.bias1.tolist(), nn.bias2.tolist(), nn.bias3.tolist(), nn.bias4.tolist()
@@ -138,12 +141,16 @@ def train_model(data, train, predict, mini_batch, evaluation):
 		with open("neural_network.json", "w") as f:
 			json.dump(model, f, separators=(',', ':'), indent=4)
 	
-	if predict:
-		print("\n" + colors.LGREEN + "Final loss on validation set = {}".format(test_loss) + colors.ENDC + "\n")
+	# if predict:
+		# print("\n" + colors.LGREEN + "Final loss on validation set = {}".format(test_loss) + colors.ENDC + "\n")
 	
-	if evaluation:
+	if args.evaluation:
 		y_pred = probability_to_class(nn.output.T)
 		get_validation_metrics(y_pred[:, 0], nn.y.T[:, 0])
 	
-	if not mini_batch:
+	if not args.mini_batch:
 		plot_learning(train_losses, test_losses)
+
+# def predict_model():
+	# load model
+	# predict
