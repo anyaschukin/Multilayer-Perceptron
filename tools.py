@@ -25,6 +25,18 @@ def get_args():
 					   metavar='dataset',
 					   type=str,
 					   help='provide a valid dataset.')
+	parser.add_argument('-v',
+						'--visualize_data',
+						action='store_true',
+						help='display data with graphs')
+	parser.add_argument('-t',
+						'--train',
+						action='store_true',
+						help='use backpropagation and gradient descent to learn on the training dataset and save the model')
+	parser.add_argument('-p',
+						'--predict',
+						type=str,
+						help='load a saved model and perform a prediction on a given dataset')
 	parser.add_argument('-b',
 						'--mini_batch',
 						action='store_true',
@@ -33,26 +45,10 @@ def get_args():
 						'--evaluation',
 						action='store_true',
 						help='display in-depth learning evaluation metrics')
-	parser.add_argument('-model',
-					   metavar='model',
-					   type=str,
-					   help='provide a valid model.')
-	parser.add_argument('-p',
-						'--predict',
-						action='store_true',
-						help='load a saved model and perform a prediction on a given dataset')
 	parser.add_argument('-s',
 						'--save_model',
 						action='store_true',
 						help='save a trained model')
-	parser.add_argument('-t',
-						'--train',
-						action='store_true',
-						help='use backpropagation and gradient descent to learn on the training dataset and save the model')
-	parser.add_argument('-v',
-						'--visualize_data',
-						action='store_true',
-						help='display data with graphs')
 	parser.add_argument('-q',
 						'--quiet',
 						action='store_true',
@@ -60,11 +56,13 @@ def get_args():
 
 	args = parser.parse_args()
 
+	if args.train and args.predict:
+		error_exit("Must use either train' OR 'predict' option.")
+
 	if not (args.visualize_data or args.train or args.predict):
 		error_exit("Must use either 'visualize' or 'train' or 'predict' option.")
 
 	if args.visualize_data and (args.train or args.predict):
 		error_exit("Cannot use 'visualize' with 'train' or 'predict' option.")
-		# parser.error("Error: cannot use 'visualize' with 'train' or 'predict' option.")
 
 	return args
