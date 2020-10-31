@@ -62,3 +62,9 @@ def main():
 
 if __name__ == '__main__':
 	main()
+
+# to train the model:
+# python3 main.py data.csv -t -s {optional -b -e -q}
+
+# to load a trained model and test:
+# python3 main.py data.csv -p model.json
