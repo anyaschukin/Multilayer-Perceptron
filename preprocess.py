@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import tools as tools
+from tools import error_exit
 
 # split data into X and y
 def split_x_y(data):
@@ -55,7 +55,7 @@ def preprocess(args):
 		data = data.dropna()
 		data['diagnosis'] = data['diagnosis'].map({'M':1, 'B':0})
 	except Exception:
-		tools.error_exit('Failed to preprocess data. Is data valid?')
+		error_exit('Failed to preprocess data. Is data valid?')
 	data = scale(data)
 
 	return data

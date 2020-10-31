@@ -53,10 +53,18 @@ def get_args():
 						'--visualize_data',
 						action='store_true',
 						help='display data with graphs')
+	parser.add_argument('-q',
+						'--quiet',
+						action='store_true',
+						help='do not display validation metrics after each epoch.')
 
 	args = parser.parse_args()
 
 	if not (args.visualize_data or args.train or args.predict):
-		parser.error("Error: must use either 'visualize' or 'train' or 'predict' option.")
+		error_exit("Must use either 'visualize' or 'train' or 'predict' option.")
+
+	if args.visualize_data and (args.train or args.predict):
+		error_exit("Cannot use 'visualize' with 'train' or 'predict' option.")
+		# parser.error("Error: cannot use 'visualize' with 'train' or 'predict' option.")
 
 	return args

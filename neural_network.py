@@ -33,6 +33,9 @@ class NeuralNetwork:
 		self.y              = None
 		self.output         = np.zeros((2, batch_size))
 
+		self.train_losses	= []
+		self.test_losses	= []
+
 	def load_model(self, model):
 		self.weights1       = np.array(model['weights1'])
 		self.weights2       = np.array(model['weights2'])
@@ -99,9 +102,8 @@ class NeuralNetwork:
 		self.bias4 -= self.learning_rate * (d_bias4 / m)
 
 
-	def train(self, data, args, train_set, test_set, num_examples):
-		# train_set, test_set = split(data)
-		train_losses, test_losses = [], []
+	def train(self, data, train_set, test_set, num_examples, quiet):
+
 		for epoch in range(self.epochs):
 			shuffle(train_set)
 			for i in range(0, num_examples, self.batch_size):
@@ -110,38 +112,26 @@ class NeuralNetwork:
 				self.backprop()
 				
 				train_loss = compute_loss(self.output[:, 0], self.y[:, 0])
-				train_losses.append(train_loss)
+				self.train_losses.append(train_loss)
 
+			self.predict(test_set, epoch)
 			test_loss = compute_loss(self.output[:, 0], self.y[:, 0])
-			test_losses.append(test_loss)
+			self.test_losses.append(test_loss)
 
 			# print validation metrics 'epoch - train loss - test loss'
-			# print("epoch {}/{}: train loss = {}, test loss = {}".format(epoch, self.epochs, round(train_loss, 4), round(test_loss, 4)))
-
-		if args.evaluation:
-			y_pred = probability_to_class(self.output.T)
-			get_validation_metrics(y_pred[:, 0], self.y.T[:, 0])
-
-		if not args.mini_batch:
-			plot_learning(train_losses, test_losses)
-
-		if args.save_model:
-			# save network params
-			W1, W2, W3, W4 = self.weights1.tolist(), self.weights2.tolist(), self.weights3.tolist(), self.weights4.tolist()
-			B1, B2, B3, B4 = self.bias1.tolist(), self.bias2.tolist(), self.bias3.tolist(), self.bias4.tolist()
-			model = dict(weights1=W1, weights2=W2, weights3=W3, weights4=W4, bias1=B1, bias2=B2, bias3=B3, bias4=B4)
-			with open("neural_network.json", "w") as f:
-				json.dump(model, f, separators=(',', ':'), indent=4)
+			if not quiet:
+				print("epoch {}/{}: train loss = {}, test loss = {}".format(epoch, self.epochs, round(train_loss, 4), round(test_loss, 4)))
 
 
-	def predict(self, test_set):
+	def predict(self, test_set, epoch):
 		num_examples = test_set.shape[0]
 
+		# replicate feedforward with test set
 		shuffle(test_set)
 		self.input, self.y = split_x_y(test_set)
 		self.output = np.zeros((2, num_examples))
-
-		# replicate feedforward for testing
 		self.feedforward()
-		test_loss = compute_loss(self.output[:, 0], self.y[:, 0])
-		print("\n" + colors.LGREEN + "Final loss on validation set = {}".format(test_loss) + colors.ENDC + "\n")
+		
+		if epoch == self.epochs:
+			test_loss = compute_loss(self.output[:, 0], self.y[:, 0])
+			print("\n" + colors.LGREEN + "Final loss on validation set = {}".format(test_loss) + colors.ENDC + "\n")
