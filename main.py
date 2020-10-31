@@ -9,7 +9,6 @@ def main():
 	# try:
 	args = get_args()
 
-	# data = pd.read_csv(args.Dataset)
 	data = preprocess(args)
 
 	if args.visualize_data:

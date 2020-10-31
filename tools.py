@@ -58,13 +58,5 @@ def get_args():
 
 	if not (args.visualize_data or args.train or args.predict):
 		parser.error("Error: must use either 'visualize' or 'train' or 'predict' option.")
-	# arguments = parser.parse_args()
-	# args = Args(arguments)
-	# dataset = args.Dataset
-	# data_visualize = args.data_visualize
-	# train = args.train
-	# predict = args.predict
-	# mini_batch = args.mini_batch
-	# evaluation = args.evaluation
-	# return dataset, data_visualize, train, predict, mini_batch, evaluation
+
 	return args
