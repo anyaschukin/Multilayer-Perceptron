@@ -55,6 +55,9 @@ def get_args():
 						help='display data with graphs')
 
 	args = parser.parse_args()
+
+	if not (args.visualize_data or args.train or args.predict):
+		parser.error("Error: must use either 'visualize' or 'train' or 'predict' option.")
 	# arguments = parser.parse_args()
 	# args = Args(arguments)
 	# dataset = args.Dataset
