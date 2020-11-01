@@ -38,14 +38,16 @@ def select_feature(data):
 	while True:
 		choice = input("Enter a number: ")
 		try:
-			isinstance(choice, int)	# verfiy the input is an int
+			choice = int(choice)
+			if choice > 0 and choice < 14:
+				choice = options[int(choice)]
+				break
+			else:
+				print(colors.GREEN + "Invalid input! Let's try that again." + colors.ENDC)
+				pass
 		except:
 			print(colors.GREEN + "Invalid input! Let's try that again." + colors.ENDC)
-		try:
-			choice = options[choice-1]
-			break
-		except:
-			print(colors.GREEN + "Invalid input! Let's try that again." + colors.ENDC)
+			pass	
 
 	mean = data[['texture_mean','perimeter_mean','area_mean','smoothness_mean','compactness_mean','concavity_mean','concave points_mean','symmetry_mean','fractal_dimension_mean','diagnosis']]
 	se = data[['texture_se','perimeter_se','area_se','smoothness_se','compactness_se','concavity_se','concave points_se','symmetry_se','fractal_dimension_se','diagnosis']]
