@@ -63,6 +63,10 @@ def main():
 if __name__ == '__main__':
 	main()
 
+
+# to visualize the data:
+# python3 main.py data.csv -v
+
 # to train the model:
 # python3 main.py data.csv -t -s {optional -b -e -q}
 
