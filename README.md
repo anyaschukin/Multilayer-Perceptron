@@ -10,7 +10,12 @@ A multilayer perceptron is a feedforward natural network (meaning the data flows
 
 ### Requirements:
 * the network should consist of at least 4 dense layers
-* gradient descent, the softmax function, feedforward, backpropagation, and binary cross-entropy error should all be implemented from scratch
+* the following must be implemented from scratch (using only numpy):
+	-  gradient descent
+	-  the softmax function
+	-  feedforward
+	-  backpropagation
+	-  binary cross-entropy error
 * the final loss should be below 0.08
 
 #### Final Score: 125/100
