@@ -28,7 +28,7 @@ Based on the Wisconsin breast cancer diagnosis dataset.
 - the two fundamental equations of a neural network: gradient descent and the activation function
 
 - backpropagation <br>
-backprop is an application (the Chain rule)[https://youtu.be/YG15m2VwSjA] to find the derivatives of cost with respect to any variable in the nested equation. This simple technique allows us to precisely pinpoint the exact impact each variable has on the total output.
+backprop is an application [the Chain rule](https://youtu.be/YG15m2VwSjA) to find the derivatives of cost with respect to any variable in the nested equation. This simple technique allows us to precisely pinpoint the exact impact each variable has on the total output.
 
 - chain rule <br>
 helps us identify how much each weight contributes to our overall error and the direction to update each weight to reduce our error.
