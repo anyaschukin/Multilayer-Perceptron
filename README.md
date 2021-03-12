@@ -71,10 +71,10 @@ He weight initialization - the weights are still random but differ in range depe
 
 It’s good practice to shuffle the data while training a neural network, ideally before every epoch. 
 
-	•	it helps the training converge fast
-	•	it prevents any bias during the training
-	•	it prevents the model from learning the order of the training
-	•	Shuffling mini-batches makes the gradients more variable, which can help convergence because it increases the likelihood of hitting a good direction (or at least that is how I understand it).
+* it helps the training converge fast
+* it prevents any bias during the training
+* it prevents the model from learning the order of the training
+* Shuffling mini-batches makes the gradients more variable, which can help convergence because it increases the likelihood of hitting a good direction (or at least that is how I understand it).
 
 
 ## Usage
