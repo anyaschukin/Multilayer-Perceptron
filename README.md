@@ -4,10 +4,6 @@
 Implement a multilayer perceptron (a type of deep neural network), that predicts whether a cancer is malignant or benign. <br>
 Based on the Wisconsin breast cancer diagnosis dataset.
 
-## The Project
-
-A multilayer perceptron is a feedforward natural network (meaning the data flows from the input layer to the output layer), defined by the presence of one or more hidden layers as well as an interconnection of all the neurons of one layer to the next.
-
 ### Requirements:
 * the network should consist of at least 4 dense layers
 * the following must be implemented from scratch (using only numpy):
@@ -27,12 +23,12 @@ A multilayer perceptron is a feedforward natural network (meaning the data flows
 
 - data processing and visualization
 
-- feedforward
+- feedforward: meaning the data flows from the input layer to the output layer
 
 - the two fundamental equations of a neural network: gradient descent and the activation function
 
 - backpropagation <br>
-backprop is an application the Chain rule to find the derivatives of cost with respect to any variable in the nested equation. This simple technique allows us to precisely pinpoint the exact impact each variable has on the total output.
+backprop is an application (the Chain rule)[https://youtu.be/YG15m2VwSjA] to find the derivatives of cost with respect to any variable in the nested equation. This simple technique allows us to precisely pinpoint the exact impact each variable has on the total output.
 
 - chain rule <br>
 helps us identify how much each weight contributes to our overall error and the direction to update each weight to reduce our error.
@@ -58,6 +54,7 @@ Vanishing gradients are a problem where the gradient will decrease exponentially
 
 - optimization (through weight initialization, regularization, etc)
 
+- A multilayer perceptron is a feedforward natural network (meaning the data flows from the input layer to the output layer), defined by the presence of one or more hidden layers as well as an interconnection of all the neurons of one layer to the next.
 
 ## Approach
 
