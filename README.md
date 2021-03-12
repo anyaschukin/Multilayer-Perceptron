@@ -1,13 +1,12 @@
 
 # Multilayer-Perceptron
 
-Implement a multilayer perceptron (a type of deep neural network), that predicts whether a cancer is malignant or benign. 
+Implement a multilayer perceptron (a type of deep neural network), that predicts whether a cancer is malignant or benign. <br>
 Based on the Wisconsin breast cancer diagnosis dataset.
 
 ## The Project
 
-A multilayer perceptron is a feedforward natural network (meaning the data flows from the input layer to the output layer), defined by the presence of one or more
-hidden layers as well as an interconnection of all the neurons of one layer to the next.
+A multilayer perceptron is a feedforward natural network (meaning the data flows from the input layer to the output layer), defined by the presence of one or more hidden layers as well as an interconnection of all the neurons of one layer to the next.
 
 ### Requirements:
 * the network should consist of at least 4 dense layers
@@ -27,21 +26,21 @@ hidden layers as well as an interconnection of all the neurons of one layer to t
 
 - the two fundamental equations of a neural network: gradient descent and the activation function
 
-- backpropagation
+- backpropagation <br>
 backprop is an application the Chain rule to find the derivatives of cost with respect to any variable in the nested equation. This simple technique allows us to precisely pinpoint the exact impact each variable has on the total output.
 
-- chain rule
+- chain rule <br>
 helps us identify how much each weight contributes to our overall error and the direction to update each weight to reduce our error.
 
-- loss function
-We use the loss function to evaluate the “goodness” of our model’s weights.
-High loss means our classifier’s predictions are mostly wrong, so our model is bad. 
-Low loss means our classifier’s predictions are mostly correct, so our model is good!
+- loss function <br>
+We use the loss function to evaluate the “goodness” of our model’s weights. <br>
+High loss means our classifier’s predictions are mostly wrong, so our model is bad.  <br>
+Low loss means our classifier’s predictions are mostly correct, so our model is good! <br>
 
-- gradient descent
+- gradient descent <br>
 We use gradient descent to update the parameters (weights) of our model. The gradient (or derivative) of the loss function tells us the direction we need to adjust our weights in order to achieve the lowest loss (or smallest number of bad classifications). 
 
-- vanishing/exploding gradients
+- vanishing/exploding gradients <br>
 Exploding gradients are a problem where large error gradients accumulate and result in very large updates to neural network model weights during training. This has the effect of your model being unstable and unable to learn from your training data.
 
 Vanishing gradients are a problem where the gradient will decrease exponentially as we propagate through the model until it eventually vanishes, making it impossible to update your weights and continue training your model.
