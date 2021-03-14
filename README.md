@@ -112,9 +112,7 @@ to visualize the data:
 ```python3 main.py data.csv -v```
 
 to train the model:
-```python3 main.py data.csv -t {optional -b -e -s -q} ```
-
-``` python3 main.py data.csv -t -b -e -q```
+```python3 main.py data.csv -t {optional -b -e -s -q}```
 
 to load a trained model and test:
 ```python3 main.py data.csv -p model.json```
