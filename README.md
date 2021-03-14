@@ -29,7 +29,14 @@ Download dependencies.
 
 Then simply run main.py with your choice of flags.
 
-```python3 main.py -q dataset```
+To visualize the data:
+```python3 main.py data.csv -v```
+
+To train the model:
+```python3 main.py data.csv -t -s {optional -b -e -q}```
+
+To load a trained model and test:
+```python3 main.py data.csv -p model.json```
 
 ### Usage
 
