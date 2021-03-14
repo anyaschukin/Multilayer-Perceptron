@@ -33,13 +33,14 @@ def select_feature(data):
 	options = ["mean", "se", "worst", "radius", "texture", "perimeter", "area", "smoothness","compactness", "concavity", "concave points", "symmetry", "fractal dimension"]
 
 	for i in range(len(options)):
-		print(str(i+1) + ":", options[i])
+		print(str(i) + ":", options[i])
+		# print(str(i+1) + ":", options[i])
 
 	while True:
 		choice = input("Enter a number: ")
 		try:
 			choice = int(choice)
-			if choice > 0 and choice < 14:
+			if choice > -1 and choice < 13:
 				choice = options[int(choice)]
 				break
 			else:
