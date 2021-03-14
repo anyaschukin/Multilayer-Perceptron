@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import sys
+sys.path.extend(["./src/"])
 import tools as tools
 import matplotlib.pyplot as plt
 import preprocess as prep
