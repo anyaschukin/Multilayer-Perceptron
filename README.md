@@ -2,6 +2,7 @@
 # Multilayer-Perceptron
 
 A deep neural network that predicts whether a cancer is malignant or benign. <br>
+
 Based on the Wisconsin breast cancer diagnosis dataset.
 
 ### Requirements:
@@ -96,3 +97,14 @@ to load a trained model and test:
 
 ## Dependencies
 
+Thankfully, running the following command should take care of dependencies for you.
+
+```pip install -r requirements.txt```
+
+Python 3.9.1
+
+matplotlib==3.2.2
+numpy==1.19.0
+pandas==1.0.5
+seaborn==0.10.0
+scikit-learn==0.23.1
