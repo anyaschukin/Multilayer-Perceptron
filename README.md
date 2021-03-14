@@ -42,6 +42,17 @@ To load a trained model and test:
 
 ![usage](https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/usage.png)
 
+### Flags
+
+-v (--visualize_data) displays pair plots, heat maps, and strip plots chosen from an array of 13 features. 
+
+Here is the original dataset visualized:
+
+![dataset](https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/dataset.png)
+
+Here is a simple example with radius displayed as a strip plot:
+<img src="https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/radius_strip_plot.png" width="650">
+
 ## Concepts
 
 - matrix multiplication, including this handy link http://matrixmultiplication.xyz/
