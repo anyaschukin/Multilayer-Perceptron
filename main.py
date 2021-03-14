@@ -1,9 +1,11 @@
 import sys
 import json
+sys.path.extend(["./src/"])
 from tools import get_args, error_exit
 from preprocess import preprocess
 from visualize import visualize
 from neural_network import *
+# from validation_metrics import *
 
 def main():
 	
