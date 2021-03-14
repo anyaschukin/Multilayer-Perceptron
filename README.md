@@ -51,7 +51,6 @@ Here is the original dataset visualized:
 ![dataset](https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/dataset.png)
 
 Here is a simple example with radius displayed as a strip plot:
-
 <img src="https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/radius_strip_plot.png" width="650">
 
 ## Concepts
