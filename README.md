@@ -17,6 +17,23 @@ Based on the Wisconsin breast cancer diagnosis dataset.
 
 #### Final Score: 125/100
 
+## Getting Started
+
+First clone this repo.
+
+```git clone https://github.com/anyashuka/Multilayer-Perceptron.git; cd Multilayer-Perceptron```
+
+Download dependencies.
+
+```pip3 install -r requirements.txt```
+
+Then simply run main.py with your choice of flags.
+
+```python3 main.py -q dataset```
+
+### Usage
+
+![usage](https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/usage.png)
 
 ## Concepts
 
