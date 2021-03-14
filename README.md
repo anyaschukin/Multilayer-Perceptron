@@ -1,11 +1,11 @@
 
 # Multilayer-Perceptron
 
-Implement a multilayer perceptron (a type of deep neural network), that predicts whether a cancer is malignant or benign. <br>
+A deep neural network that predicts whether a cancer is malignant or benign. <br>
 Based on the Wisconsin breast cancer diagnosis dataset.
 
 ### Requirements:
-* the network should consist of at least 4 dense layers
+* the network should consist of at least 4 dense layers 
 * the following must be implemented from scratch (using only numpy):
 	-  gradient descent
 	-  the softmax function
