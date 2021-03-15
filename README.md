@@ -2,6 +2,7 @@
 # Multilayer-Perceptron
 
 A deep neural network that predicts whether a cancer is malignant or benign. <br>
+Built from scratch, using python numpy. 
 
 Based on the Wisconsin breast cancer diagnosis dataset.
 
@@ -45,6 +46,7 @@ To load a trained model and test:
 ### Flags
 
 -v (--visualize_data) displays pair plots, heat maps, and strip plots chosen from an array of 13 features. 
+Built using scikit-learn.
 
 Here is the original dataset visualized:
 
@@ -55,34 +57,47 @@ Here is a simple example with radius displayed as a strip plot:
 
 ## Concepts
 
-- matrix multiplication, including this handy link http://matrixmultiplication.xyz/
+#### Data Processing
+Have you cleaned your data? Typically, this means:
+- getting rid of useless data (like patient ids)
+- cleaning your dataset of erroneous or invalid data points (NaNs)
+- standardizing your data: centering all data points around the mean (zero) with a unit standard deviation (min, max)
 
-- data processing and visualization
+#### Matrix Multiplication
+Click [here](http://matrixmultiplication.xyz/) for a handy little refresher. 
 
-- feedforward: meaning the data flows from the input layer to the output layer
+#### Feedforward
+This means the data flows from the input layer to the output layer.
 
-- the two fundamental equations of a neural network: gradient descent and the activation function
+#### Backpropagation <br>
+Backpropagation is an application [the Chain rule](https://www.youtube.com/watch?v=tIeHLnjs5U8&t=38s) to find the derivatives of cost with respect to any variable in the nested equation. This simple technique allows us to precisely pinpoint the exact impact each variable has on the total output.
 
-- backpropagation <br>
-backprop is an application [the Chain rule](https://youtu.be/YG15m2VwSjA) to find the derivatives of cost with respect to any variable in the nested equation. This simple technique allows us to precisely pinpoint the exact impact each variable has on the total output.
+#### The Chain Rule <br>
+This helps us identify how much each weight contributes to our overall error, as well as the direction to update each weight to reduce our error.
 
-- chain rule <br>
-helps us identify how much each weight contributes to our overall error and the direction to update each weight to reduce our error.
+#### The two Fundamental Equations of a Neural Network
+gradient descent and the activation function
 
-- loss function <br>
+#### Gradient Descent <br>
+We use gradient descent to update the parameters (weights) of our model. The gradient (or derivative) of the loss function tells us the direction we need to adjust our weights in order to achieve the lowest loss (or smallest number of bad classifications). 
+
+#### Activation Function <br>
+
+
+#### Loss Function <br>
 We use the loss function to evaluate the “goodness” of our model’s weights. <br>
 High loss means our classifier’s predictions are mostly wrong, so our model is bad.  <br>
 Low loss means our classifier’s predictions are mostly correct, so our model is good! <br>
 
-- gradient descent <br>
-We use gradient descent to update the parameters (weights) of our model. The gradient (or derivative) of the loss function tells us the direction we need to adjust our weights in order to achieve the lowest loss (or smallest number of bad classifications). 
+#### Learning Rate  <br>  
+The size of step we take when applying Gradient Descent to update the parameters (weights and biases) of our model. 
 
-- vanishing/exploding gradients <br>
-Exploding gradients are a problem where large error gradients accumulate and result in very large updates to neural network model weights during training. This has the effect of your model being unstable and unable to learn from your training data.
+#### Vanishing/Exploding Gradients <br>
+Vanishing gradients is a problem where the gradient will decrease exponentially as we propagate through the model until it eventually vanishes, making it impossible to update your weights and continue training your model.
 
-Vanishing gradients are a problem where the gradient will decrease exponentially as we propagate through the model until it eventually vanishes, making it impossible to update your weights and continue training your model.
+Exploding gradients is a problem where large error gradients accumulate and result in very large updates to neural network model weights during training. This has the effect of your model being unstable and unable to learn from your training data.
 
-- mini batching
+#### Mini Batching
 
 
 - overfitting, undercutting
@@ -100,7 +115,7 @@ Vanishing gradients are a problem where the gradient will decrease exponentially
 
 He weight initialization - the weights are still random but differ in range depending on the size of the previous layer of neurons. This provides a controlled initialization hence the faster and more efficient gradient descent.
 
-3 different methods to standardize the data. My model had 98% accuracy when the data was standardized, but hovered around ~60% accuracy when it was normalized. 
+3 different methods to standardize the data. I observed the model had 98% accuracy when the data was standardized, but hovered around ~60% accuracy when it was normalized. 
 
 
 ## Tips/Considerations
