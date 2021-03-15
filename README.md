@@ -82,6 +82,9 @@ gradient descent and the activation function
 We use gradient descent to update the parameters (weights) of our model. The gradient (or derivative) of the loss function tells us the direction we need to adjust our weights in order to achieve the lowest loss (or smallest number of bad classifications). 
 
 #### Activation Function <br>
+This is what allows neural networks to {}.
+An Activation function decides whether a neuron should be activated or not by calculating the weighted sum of its inputs and adding bias to it. 
+Activation functions are non-linear, and different activation functions are best suited 
 
 
 #### Loss Function <br>
@@ -94,6 +97,7 @@ The size of step we take when applying Gradient Descent to update the parameters
 
 #### Vanishing/Exploding Gradients <br>
 Vanishing gradients is a problem where the gradient will decrease exponentially as we propagate through the model until it eventually vanishes, making it impossible to update your weights and continue training your model.
+If the local gradient is very small, it will effectively "kill" the gradient and almost no signal will flow through the neuron to its weights and recursively to its data.
 
 Exploding gradients is a problem where large error gradients accumulate and result in very large updates to neural network model weights during training. This has the effect of your model being unstable and unable to learn from your training data.
 
