@@ -163,8 +163,8 @@ Thankfully, running the following command should take care of dependencies for y
 
 Python 3.9.1
 
-matplotlib==3.2.2
-numpy==1.19.0
-pandas==1.0.5
-seaborn==0.10.0
-scikit-learn==0.23.1
+matplotlib==3.2.2 <br>  
+numpy==1.19.0 <br>  
+pandas==1.0.5 <br>  
+seaborn==0.10.0 <br>  
+scikit-learn==0.23.1 <br>  
