@@ -52,8 +52,24 @@ Here is the original dataset visualized:
 
 ![dataset](https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/dataset.png)
 
-Here is a simple example with radius displayed as a strip plot:
+Here is a simple example with radius displayed as a strip plot, showing that radius_mean can potentially help differentiate between malignant and benign tumors.
+
 <img src="https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/radius_strip_plot.png" width="650">
+
+-t train
+
+The training loss at every epoch is outputted, allowing us to verify that the loss is in fact going down. 
+[gif of streaming loss]
+
+Picture of learning curve
+
+-b mini_batch
+
+Explain why mini-batch is important / affects the learning. 
+
+-e evaluation
+
+![evaluation metrics](https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/evaluation_metrics.png)
 
 ## Concepts
 
@@ -135,21 +151,6 @@ It’s good practice to shuffle the data while training a neural network, ideall
 * it prevents the model from learning the order of the training
 * Shuffling mini-batches makes the gradients more variable, which can help convergence because it increases the likelihood of hitting a good direction (or at least that is how I understand it).
 
-
-## Usage
-
-Installation: Python 3.7 and the models in requirements.txt
-
-To run the project:
-
-to visualize the data:
-```python3 main.py data.csv -v```
-
-to train the model:
-```python3 main.py data.csv -t {optional -b -e -s -q}```
-
-to load a trained model and test:
-```python3 main.py data.csv -p model.json```
 
 ## Dependencies
 
