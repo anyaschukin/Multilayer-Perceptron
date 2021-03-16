@@ -54,14 +54,17 @@ Here is the original dataset visualized:
 
 Here is a simple example with radius displayed as a strip plot, showing that radius_mean can potentially help differentiate between malignant and benign tumors.
 
-<img src="https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/radius_strip_plot.png" width="650">
+<img src="https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/radius_strip_plot.png" width="500">
 
 -t train
 
 The training loss at every epoch is outputted, allowing us to verify that the loss is in fact going down. 
-[gif of streaming loss]
+
+![streaming loss](https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/streaming_loss.gif)
 
 Picture of learning curve
+
+<img src="https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/learning_curve.png" width="500">
 
 -b mini_batch
 
