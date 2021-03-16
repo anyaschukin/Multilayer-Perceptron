@@ -66,6 +66,8 @@ Have you cleaned your data? Typically, this means:
 #### Matrix Multiplication
 Click [here](http://matrixmultiplication.xyz/) for a handy little refresher. 
 
+![Matrix Multiplication](https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/matrix_multiplication.gif)
+
 #### Feedforward
 This means the data flows from the input layer to the output layer.
 
@@ -80,6 +82,7 @@ gradient descent and the activation function
 
 #### Gradient Descent <br>
 We use gradient descent to update the parameters (weights) of our model. The gradient (or derivative) of the loss function tells us the direction we need to adjust our weights in order to achieve the lowest loss (i.e. the smallest number of bad classifications). 
+Imagine you're at the top of a hill gazing down at a valley. Gradient descent will help you find the quickest path to the bottom of the valley. 
 
 #### Activation Function <br>
 This is what allows neural networks to {}.
