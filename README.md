@@ -79,18 +79,19 @@ This helps us identify how much each weight contributes to our overall error, as
 gradient descent and the activation function
 
 #### Gradient Descent <br>
-We use gradient descent to update the parameters (weights) of our model. The gradient (or derivative) of the loss function tells us the direction we need to adjust our weights in order to achieve the lowest loss (or smallest number of bad classifications). 
+We use gradient descent to update the parameters (weights) of our model. The gradient (or derivative) of the loss function tells us the direction we need to adjust our weights in order to achieve the lowest loss (i.e. the smallest number of bad classifications). 
 
 #### Activation Function <br>
 This is what allows neural networks to {}.
 An Activation function decides whether a neuron should be activated or not by calculating the weighted sum of its inputs and adding bias to it. 
-Activation functions are non-linear, and different activation functions are best suited 
+Activation functions are non-linear, and different activation functions are best suited to certain tasks. 
 
 
 #### Loss Function <br>
-We use the loss function to evaluate the “goodness” of our model’s weights. <br>
+The loss function outputs a value that represents how well (or badly) our model is doing. <br>
 High loss means our classifier’s predictions are mostly wrong, so our model is bad.  <br>
 Low loss means our classifier’s predictions are mostly correct, so our model is good! <br>
+We use the loss function to evaluate the “goodness” of our model’s weights. <br>
 
 #### Learning Rate  <br>  
 The size of step we take when applying Gradient Descent to update the parameters (weights and biases) of our model. 
