@@ -66,6 +66,8 @@ Have you cleaned your data? Typically, this means:
 #### Matrix Multiplication
 Click [here](http://matrixmultiplication.xyz/) for a handy little refresher. 
 
+![Matrix Multiplication](https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/matrix_multiplication.gif)
+
 #### Feedforward
 This means the data flows from the input layer to the output layer.
 
