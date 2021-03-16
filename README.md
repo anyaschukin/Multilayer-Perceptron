@@ -20,23 +20,21 @@ Based on the Wisconsin breast cancer diagnosis dataset.
 
 ## Getting Started
 
-First clone this repo.
-
+First clone this repo. <br>
 ```git clone https://github.com/anyashuka/Multilayer-Perceptron.git; cd Multilayer-Perceptron```
 
-Download dependencies.
-
+Download dependencies. <br>
 ```pip3 install -r requirements.txt```
 
 Then simply run main.py with your choice of flags.
 
-To visualize the data:
+To visualize the data: <br>
 ```python3 main.py data.csv -v```
 
-To train the model:
+To train the model: <br>
 ```python3 main.py data.csv -t -s {optional -b -e -q}```
 
-To load a trained model and test:
+To load a trained model and test: <br>
 ```python3 main.py data.csv -p model.json```
 
 ### Usage
