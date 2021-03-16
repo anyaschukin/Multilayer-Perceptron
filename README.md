@@ -109,7 +109,7 @@ Activation functions are non-linear, as seen below.
 <img src="https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/sigmoid.png" width="300"> <img src="https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/softmax.png" width="300"> <br>
 <img src="https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/ReLU.png" width="300"> <img src=https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/leaky_ReLU.png width="300">
 
-Choosing an activation function depends on your application and on the architecture of your neural network. I implemented the above activations from scratch, using numpy. My neural network uses sigmoid in the hidden layers and softmax in the output layer. Unfortunately, 
+Choosing an activation function depends on your application and on the architecture of your neural network. I implemented the above activations from scratch, using numpy. My neural network uses sigmoid in the hidden layers and softmax in the output layer. Unfortunately, I found that both ReLU and leakyReLU units (in the hidden layers) would die off during training. (see "Vanishing/Exploding Gradients below)
 
 #### Loss Function <br>
 The loss function outputs a value that represents how well (or badly) our model is doing. <br>
