@@ -7,7 +7,7 @@ Built from scratch, using python numpy.
 Based on the Wisconsin breast cancer diagnosis dataset.
 
 ### Requirements:
-* the network should consist of at least 4 dense layers 
+* the network should consist of at least 4 fully-connected (dense) layers 
 * the following must be implemented from scratch (using only numpy):
 	-  gradient descent
 	-  the softmax function
@@ -45,7 +45,7 @@ To load a trained model and test:
 
 ### Flags
 
--v (--visualize_data) displays pair plots, heat maps, and strip plots chosen from an array of 13 features. 
+####-v (--visualize_data)#### displays pair plots, heat maps, and strip plots chosen from an array of 13 features. 
 Built using scikit-learn.
 
 Here is the original dataset visualized:
@@ -56,17 +56,15 @@ Here is a simple example with radius displayed as a strip plot, showing that rad
 
 <img src="https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/radius_strip_plot.png" width="500">
 
--t train
-
-The training loss at every epoch is outputted, allowing us to verify that the loss is in fact going down. 
+####-t (--train)#### outputs the loss at every epoch, allowing us to verify that the loss is in fact going down. 
 
 ![streaming loss](https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/streaming_loss.gif)
 
-Picture of learning curve
+Once the model is finished training, we get a visual of the learning curve. This helps us verify that our loss has reached a global minimum. 
 
 <img src="https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/learning_curve.png" width="500">
 
--b mini_batch
+####-b (--mini_batch) #### 
 
 Explain why mini-batch is important / affects the learning. 
 
@@ -106,8 +104,12 @@ Imagine you're at the top of a hill gazing down at a valley. Gradient descent wi
 #### Activation Function <br>
 This is what allows neural networks to {}.
 An Activation function decides whether a neuron should be activated or not by calculating the weighted sum of its inputs and adding bias to it. 
-Activation functions are non-linear, and different activation functions are best suited to certain tasks. 
+Activation functions are non-linear, as seen below. 
 
+<img src="https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/sigmoid.png" width="300"> <img src="https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/softmax.png" width="300"> <br>
+<img src="https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/ReLU.png" width="300"> <img src=https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/leaky_ReLU.png width="300">
+
+Choosing an activation function depends on your application and on the architecture of your neural network. I implemented the above activations from scratch, using numpy. My neural network uses sigmoid in the hidden layers and softmax in the output layer. Unfortunately, 
 
 #### Loss Function <br>
 The loss function outputs a value that represents how well (or badly) our model is doing. <br>
