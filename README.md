@@ -86,8 +86,12 @@ Click [here](http://matrixmultiplication.xyz/) for a handy little refresher.
 #### Feedforward
 This means the data flows from the input layer to the output layer.
 
+[include img of forward pass]... maybe explain the equation?
+
 #### Backpropagation <br>
 Backpropagation is an application [the Chain rule](https://www.youtube.com/watch?v=tIeHLnjs5U8&t=38s) to find the derivatives of cost with respect to any variable in the nested equation. This simple technique allows us to precisely pinpoint the exact impact each variable has on the total output.
+
+[include img of backpropagation]... maybe explain the equation?
 
 #### The Chain Rule <br>
 This helps us identify how much each weight contributes to our overall error, as well as the direction to update each weight to reduce our error.
