@@ -63,7 +63,7 @@ Once the model is finished training, we get a visual of the learning curve. This
 <img src="https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/learning_curve.png" width="500">
 
 **-b (--mini_batch)** <br>
-Trains the neural network on mini-batches of size 32. 
+Trains the neural network on mini-batches of size 32. <br> 
 The advantage here is it introduces enough noise in each gradient update to avoid getting trapped in local minima, while allowing a fast convergence (as opposed to batch or SGD).
 
 **-e evaluation** <br>
@@ -122,47 +122,7 @@ If the local gradient is very small, it will effectively "kill" the gradient and
 
 Exploding gradients is a problem where large error gradients accumulate and result in very large updates to neural network model weights during training. This has the effect of your model being unstable and unable to learn from your training data.
 
-**Mini Batching**
+**Optimizations** <br>
+- He weight initialization: the weights are still random but differ in range depending on the size of the previous layer of neurons. This provides a controlled initialization hence the faster and more efficient gradient descent.
 
-
-- overfitting, undercutting
-
-
-- optimization (through weight initialization, regularization, etc)
-
-- A multilayer perceptron is a feedforward natural network (meaning the data flows from the input layer to the output layer), defined by the presence of one or more hidden layers as well as an interconnection of all the neurons of one layer to the next.
-
-## Approach
-
-
-
-
-
-He weight initialization - the weights are still random but differ in range depending on the size of the previous layer of neurons. This provides a controlled initialization hence the faster and more efficient gradient descent.
-
-3 different methods to standardize the data. I observed the model had 98% accuracy when the data was standardized, but hovered around ~60% accuracy when it was normalized. 
-
-
-## Tips/Considerations
-
-It’s good practice to shuffle the data while training a neural network, ideally before every epoch. 
-
-* it helps the training converge fast
-* it prevents any bias during the training
-* it prevents the model from learning the order of the training
-* Shuffling mini-batches makes the gradients more variable, which can help convergence because it increases the likelihood of hitting a good direction (or at least that is how I understand it).
-
-
-## Dependencies
-
-Thankfully, running the following command should take care of dependencies for you.
-
-```pip install -r requirements.txt```
-
-Python 3.9.1
-
-matplotlib==3.2.2 <br>  
-numpy==1.19.0 <br>  
-pandas==1.0.5 <br>  
-seaborn==0.10.0 <br>  
-scikit-learn==0.23.1 <br>  
+- I observed the model had 98% accuracy when the data was standardized, but hovered around ~60% accuracy when it was normalized. 
