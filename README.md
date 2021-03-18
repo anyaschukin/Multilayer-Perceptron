@@ -113,7 +113,7 @@ High loss means our classifier’s predictions are mostly wrong, so our model is
 Low loss means our classifier’s predictions are mostly correct, so our model is good! <br>
 We use the loss function to evaluate the “goodness” of our model’s weights. <br>
 
-**Learning Rate**<br>  
+**Learning Rate**
 The size of step we take when applying Gradient Descent to update the parameters (weights and biases) of our model. 
 
 **Vanishing/Exploding Gradients**<br>
@@ -122,7 +122,7 @@ If the local gradient is very small, it will effectively "kill" the gradient and
 
 Exploding gradients is a problem where large error gradients accumulate and result in very large updates to neural network model weights during training. This has the effect of your model being unstable and unable to learn from your training data.
 
-**Optimizations**<br>
+**Optimizations**
 - He weight initialization: the weights are still random but differ in range depending on the size of the previous layer of neurons. This provides a controlled initialization hence the faster and more efficient gradient descent.
 
 - I observed the model had 98% accuracy when the data was standardized, but hovered around ~60% accuracy when it was normalized. 
