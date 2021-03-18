@@ -113,7 +113,7 @@ High loss means our classifier’s predictions are mostly wrong, so our model is
 Low loss means our classifier’s predictions are mostly correct, so our model is good! <br>
 We use the loss function to evaluate the “goodness” of our model’s weights. <br>
 
-**Learning Rate**
+**Learning Rate**<br>
 The size of step we take when applying Gradient Descent to update the parameters (weights and biases) of our model. 
 
 **Vanishing/Exploding Gradients**<br>
