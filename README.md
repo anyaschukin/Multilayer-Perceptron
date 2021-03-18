@@ -62,12 +62,9 @@ Once the model is finished training, we get a visual of the learning curve. This
 
 <img src="https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/learning_curve.png" width="500">
 
-**-b (--mini_batch)** 
+**-b (--mini_batch)** trains the neural network on mini-batches of size 32. The advantage here is it introduces enough noise in each gradient update to avoid getting trapped in local minima, while allowing a fast convergence (as opposed to batch or SGD).
 
-Explain why mini-batch is important / affects the learning. 
-For each epoch, rather than passing all of the data at once, we break it down into mini batches of size 32. This allows the neural network to train faster. 
-
--e evaluation
+**-e evaluation** outputs metrics which give us a deeper look into the model's performance.  
 
 ![evaluation metrics](https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/evaluation_metrics.png)
 
