@@ -65,7 +65,7 @@ class NeuralNetwork:
 	## application of the chain rule to find derivative of the loss function, with respect to weights and bias
 	def backprop(self, d_activation = softmax_prime, d_activation_hidden = sigmoid_prime):
 
-		m = self.batch_size # num examples or batch size
+		m = self.batch_size
 
 		d_A4 = compute_loss_prime(self.output, self.y)
 
