@@ -43,7 +43,7 @@ To load a trained model and test: <br>
 
 ### Flags
 
-####-v (--visualize_data)#### displays pair plots, heat maps, and strip plots chosen from an array of 13 features. 
+**-v (--visualize_data)** displays pair plots, heat maps, and strip plots chosen from an array of 13 features. 
 Built using scikit-learn.
 
 Here is the original dataset visualized:
@@ -54,7 +54,7 @@ Here is a simple example with radius displayed as a strip plot, showing that rad
 
 <img src="https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/radius_strip_plot.png" width="500">
 
-####-t (--train)#### outputs the loss at every epoch, allowing us to verify that the loss is in fact going down. 
+**-t (--train)** outputs the loss at every epoch, allowing us to verify that the loss is in fact going down. 
 
 ![streaming loss](https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/streaming_loss.gif)
 
@@ -62,9 +62,10 @@ Once the model is finished training, we get a visual of the learning curve. This
 
 <img src="https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/learning_curve.png" width="500">
 
-####-b (--mini_batch) #### 
+**-b (--mini_batch)** 
 
 Explain why mini-batch is important / affects the learning. 
+For each epoch, rather than passing all of the data at once, we break it down into mini batches of size 32. This allows the neural network to train faster. 
 
 -e evaluation
 
@@ -72,38 +73,31 @@ Explain why mini-batch is important / affects the learning.
 
 ## Concepts
 
-#### Data Processing
+**Data Processing**
 Have you cleaned your data? Typically, this means:
 - getting rid of useless data (like patient ids)
 - cleaning your dataset of erroneous or invalid data points (NaNs)
 - standardizing your data: centering all data points around the mean (zero) with a unit standard deviation (min, max)
 
-#### Matrix Multiplication
+**Matrix Multiplication**
 Click [here](http://matrixmultiplication.xyz/) for a handy little refresher. 
 
 ![Matrix Multiplication](https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/matrix_multiplication.gif)
 
-#### Feedforward
+**Feedforward**
 This means the data flows from the input layer to the output layer.
 
-[include img of forward pass]... maybe explain the equation?
-
-#### Backpropagation <br>
+**Backpropagation** <br>
 Backpropagation is an application [the Chain rule](https://www.youtube.com/watch?v=tIeHLnjs5U8&t=38s) to find the derivatives of cost with respect to any variable in the nested equation. This simple technique allows us to precisely pinpoint the exact impact each variable has on the total output.
 
-[include img of backpropagation]... maybe explain the equation?
-
-#### The Chain Rule <br>
+**The Chain Rule** <br>
 This helps us identify how much each weight contributes to our overall error, as well as the direction to update each weight to reduce our error.
 
-#### The two Fundamental Equations of a Neural Network
-gradient descent and the activation function
-
-#### Gradient Descent <br>
+**Gradient Descent** <br>
 We use gradient descent to update the parameters (weights) of our model. The gradient (or derivative) of the loss function tells us the direction we need to adjust our weights in order to achieve the lowest loss (i.e. the smallest number of bad classifications). 
 Imagine you're at the top of a hill gazing down at a valley. Gradient descent will help you find the quickest path to the bottom of the valley. 
 
-#### Activation Function <br>
+**Activation Function** <br>
 This is what allows neural networks to {}.
 An Activation function decides whether a neuron should be activated or not by calculating the weighted sum of its inputs and adding bias to it. 
 Activation functions are non-linear, as seen below. 
@@ -113,22 +107,22 @@ Activation functions are non-linear, as seen below.
 
 Choosing an activation function depends on your application and on the architecture of your neural network. I implemented the above activations from scratch, using numpy. My neural network uses sigmoid in the hidden layers and softmax in the output layer. Unfortunately, I found that both ReLU and leakyReLU units (in the hidden layers) would die off during training. (see "Vanishing/Exploding Gradients below)
 
-#### Loss Function <br>
+**Loss Function** <br>
 The loss function outputs a value that represents how well (or badly) our model is doing. <br>
 High loss means our classifier’s predictions are mostly wrong, so our model is bad.  <br>
 Low loss means our classifier’s predictions are mostly correct, so our model is good! <br>
 We use the loss function to evaluate the “goodness” of our model’s weights. <br>
 
-#### Learning Rate  <br>  
+**Learning Rate**  <br>  
 The size of step we take when applying Gradient Descent to update the parameters (weights and biases) of our model. 
 
-#### Vanishing/Exploding Gradients <br>
+**Vanishing/Exploding Gradients** <br>
 Vanishing gradients is a problem where the gradient will decrease exponentially as we propagate through the model until it eventually vanishes, making it impossible to update your weights and continue training your model.
 If the local gradient is very small, it will effectively "kill" the gradient and almost no signal will flow through the neuron to its weights and recursively to its data.
 
 Exploding gradients is a problem where large error gradients accumulate and result in very large updates to neural network model weights during training. This has the effect of your model being unstable and unable to learn from your training data.
 
-#### Mini Batching
+**Mini Batching**
 
 
 - overfitting, undercutting
