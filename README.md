@@ -123,13 +123,15 @@ I implemented binary cross-entropy loss for this model.
 
 ### Obstacles
 **Preprocessing**<br>
-My model had 98% accuracy when the data was standardized, but hovered around ~60% accuracy when it was normalized. 
+My model hovered around ~60% accuracy when the data was normalized, but rose to 98% accuracy when standardized.
 
 **Shuffling Data**<br>
-I shuffle the data during training. This prevents any bias during training and helps the model to converge fast. 
+I shuffle the data during training, which prevents any bias and helps the model to converge quickly. 
 
 **Vanishing/Exploding Gradients**<br>
 Vanishing gradients is a problem where the gradient will decrease exponentially as we propagate through the model until it eventually vanishes, making it impossible to update your weights and continue training your model.
 If the local gradient is very small, it will effectively "kill" the gradient and almost no signal will flow through the neuron to its weights and recursively to its data.
 
 Exploding gradients is a problem where large error gradients accumulate and result in very large updates to neural network model weights during training. This has the effect of your model being unstable and unable to learn from your training data.
+
+I experienced these problems during training, and found that a combination of sigmoid in the hidden layer and softmax in the output layer solved both these problems. 
