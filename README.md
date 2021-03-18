@@ -43,9 +43,9 @@ To load a trained model and test: <br>
 
 ### Flags
 
-**-v (--visualize_data)** displays pair plots, heat maps, and strip plots chosen from an array of 13 features. 
+#### -v (--visualize_data)
+Displays pair plots, heat maps, and strip plots chosen from an array of 13 features. 
 Built using scikit-learn.
-
 Here is the original dataset visualized:
 
 ![dataset](https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/dataset.png)
@@ -54,7 +54,8 @@ Here is a simple example with radius displayed as a strip plot, showing that rad
 
 <img src="https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/radius_strip_plot.png" width="500">
 
-**-t (--train)** outputs the loss at every epoch, allowing us to verify that the loss is in fact going down. 
+#### -t (--train)
+Outputs the loss at every epoch, allowing us to verify that the loss is in fact going down. 
 
 ![streaming loss](https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/streaming_loss.gif)
 
@@ -62,9 +63,12 @@ Once the model is finished training, we get a visual of the learning curve. This
 
 <img src="https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/learning_curve.png" width="500">
 
-**-b (--mini_batch)** trains the neural network on mini-batches of size 32. The advantage here is it introduces enough noise in each gradient update to avoid getting trapped in local minima, while allowing a fast convergence (as opposed to batch or SGD).
+#### -b (--mini_batch)
+Trains the neural network on mini-batches of size 32. 
+The advantage here is it introduces enough noise in each gradient update to avoid getting trapped in local minima, while allowing a fast convergence (as opposed to batch or SGD).
 
-**-e evaluation** outputs metrics which give us a deeper look into the model's performance.  
+#### -e evaluation
+Outputs metrics which give us a deeper look into the model's performance.  
 
 ![evaluation metrics](https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/evaluation_metrics.png)
 
