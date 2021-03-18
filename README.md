@@ -121,7 +121,7 @@ We use the loss function to evaluate the “goodness” of our model’s weights
 
 I implemented binary cross-entropy loss for this model. 
 
-### Obstacles
+## Obstacles
 **Preprocessing**<br>
 My model hovered around ~60% accuracy when the data was normalized, but rose to 98% accuracy when standardized.
 
