@@ -107,22 +107,22 @@ Activation functions are non-linear, as seen below.
 
 Choosing an activation function depends on your application and on the architecture of your neural network. I implemented the above activations from scratch, using numpy. My neural network uses sigmoid in the hidden layers and softmax in the output layer. Unfortunately, I found that both ReLU and leakyReLU units (in the hidden layers) would die off during training. (see "Vanishing/Exploding Gradients below)
 
-**Loss Function** <br>
+**Loss Function**<br>
 The loss function outputs a value that represents how well (or badly) our model is doing. <br>
 High loss means our classifier’s predictions are mostly wrong, so our model is bad.  <br>
 Low loss means our classifier’s predictions are mostly correct, so our model is good! <br>
 We use the loss function to evaluate the “goodness” of our model’s weights. <br>
 
-**Learning Rate**  <br>  
+**Learning Rate**<br>  
 The size of step we take when applying Gradient Descent to update the parameters (weights and biases) of our model. 
 
-**Vanishing/Exploding Gradients** <br>
+**Vanishing/Exploding Gradients**<br>
 Vanishing gradients is a problem where the gradient will decrease exponentially as we propagate through the model until it eventually vanishes, making it impossible to update your weights and continue training your model.
 If the local gradient is very small, it will effectively "kill" the gradient and almost no signal will flow through the neuron to its weights and recursively to its data.
 
 Exploding gradients is a problem where large error gradients accumulate and result in very large updates to neural network model weights during training. This has the effect of your model being unstable and unable to learn from your training data.
 
-**Optimizations** <br>
+**Optimizations**<br>
 - He weight initialization: the weights are still random but differ in range depending on the size of the previous layer of neurons. This provides a controlled initialization hence the faster and more efficient gradient descent.
 
 - I observed the model had 98% accuracy when the data was standardized, but hovered around ~60% accuracy when it was normalized. 
