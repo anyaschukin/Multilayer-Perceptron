@@ -2,18 +2,19 @@
 # Multilayer-Perceptron
 
 A deep neural network that predicts whether a cancer is malignant or benign. <br>
-Built from scratch, using python numpy. 
+Built from scratch, using NumPy. 
 
 Based on the Wisconsin breast cancer diagnosis dataset.
 
 ### Requirements:
 * the network should consist of at least 4 fully-connected (dense) layers 
-* the following must be implemented from scratch (using only numpy):
+* the following must be implemented from scratch (using only NumPy):
 	-  gradient descent
-	-  the softmax function
+	-  sigmoid activation function in the hidden layers
+	-  softmax activation function in the output layer
 	-  feedforward
 	-  backpropagation
-	-  binary cross-entropy error
+	-  binary cross-entropy loss
 * the final loss should be below 0.08
 
 #### Final Score: 125/100
@@ -64,27 +65,30 @@ Once the model is finished training, we get a visual of the learning curve. This
 
 **-b (--mini_batch)** <br>
 Trains the neural network on mini-batches of size 32. <br> 
-The advantage here is it introduces enough noise in each gradient update to avoid getting trapped in local minima, while allowing a fast convergence (as opposed to batch or SGD).
+We can achieve convergence with mini-batch in 1500 epochs vs. 30,000 for batch. 
 
 **-e evaluation** <br>
-Outputs metrics which give us a deeper look into the model's performance.  
+Outputs performance metrics.
 
 ![evaluation metrics](https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/evaluation_metrics.png)
 
-## Concepts
+## Underpinning concepts I coded for this project
 
-**Data Processing**
+**Data Processing**<br>
 Have you cleaned your data? Typically, this means:
 - getting rid of useless data (like patient ids)
 - cleaning your dataset of erroneous or invalid data points (NaNs)
 - standardizing your data: centering all data points around the mean (zero) with a unit standard deviation (min, max)
-
-**Matrix Multiplication**
+ 
+**Matrix Multiplication**<br>
 Click [here](http://matrixmultiplication.xyz/) for a handy little refresher. 
 
 ![Matrix Multiplication](https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/matrix_multiplication.gif)
 
-**Feedforward**
+**Initialization**<br>
+He weight initialization: the weights are still random but differ in range depending on the size of the previous layer of neurons. This provides a controlled initialization hence the faster and more efficient gradient descent.
+
+**Feedforward**<br>
 This means the data flows from the input layer to the output layer.
 
 **Backpropagation** <br>
@@ -97,15 +101,17 @@ This helps us identify how much each weight contributes to our overall error, as
 We use gradient descent to update the parameters (weights) of our model. The gradient (or derivative) of the loss function tells us the direction we need to adjust our weights in order to achieve the lowest loss (i.e. the smallest number of bad classifications). 
 Imagine you're at the top of a hill gazing down at a valley. Gradient descent will help you find the quickest path to the bottom of the valley. 
 
+**Learning Rate**<br>
+The size of step we take when applying Gradient Descent to update the parameters (weights and biases) of our model. 
+
 **Activation Function** <br>
-This is what allows neural networks to {}.
 An Activation function decides whether a neuron should be activated or not by calculating the weighted sum of its inputs and adding bias to it. 
-Activation functions are non-linear, as seen below. 
+Activation functions are non-linear. I implemented the following activations from scratch, here is the output:
 
 <img src="https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/sigmoid.png" width="300"> <img src="https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/softmax.png" width="300"> <br>
 <img src="https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/ReLU.png" width="300"> <img src=https://github.com/anyashuka/Multilayer-Perceptron/blob/master/img/leaky_ReLU.png width="300">
 
-Choosing an activation function depends on your application and on the architecture of your neural network. I implemented the above activations from scratch, using numpy. My neural network uses sigmoid in the hidden layers and softmax in the output layer. Unfortunately, I found that both ReLU and leakyReLU units (in the hidden layers) would die off during training. (see "Vanishing/Exploding Gradients below)
+Choosing an activation function depends on your application and the architecture of your neural network.  My neural network uses sigmoid in the hidden layers and softmax in the output layer. Unfortunately, I found that both ReLU and leakyReLU units (in the hidden layers) would die off during training. (see "Vanishing/Exploding Gradients below)
 
 **Loss Function**<br>
 The loss function outputs a value that represents how well (or badly) our model is doing. <br>
@@ -113,16 +119,17 @@ High loss means our classifier’s predictions are mostly wrong, so our model is
 Low loss means our classifier’s predictions are mostly correct, so our model is good! <br>
 We use the loss function to evaluate the “goodness” of our model’s weights. <br>
 
-**Learning Rate**<br>
-The size of step we take when applying Gradient Descent to update the parameters (weights and biases) of our model. 
+I implemented binary cross-entropy loss for this model. 
+
+### Obstacles
+**Preprocessing**<br>
+My model had 98% accuracy when the data was standardized, but hovered around ~60% accuracy when it was normalized. 
+
+**Shuffling Data**<br>
+I shuffle the data during training. This prevents any bias during training and helps the model to converge fast. 
 
 **Vanishing/Exploding Gradients**<br>
 Vanishing gradients is a problem where the gradient will decrease exponentially as we propagate through the model until it eventually vanishes, making it impossible to update your weights and continue training your model.
 If the local gradient is very small, it will effectively "kill" the gradient and almost no signal will flow through the neuron to its weights and recursively to its data.
 
 Exploding gradients is a problem where large error gradients accumulate and result in very large updates to neural network model weights during training. This has the effect of your model being unstable and unable to learn from your training data.
-
-**Optimizations**
-- He weight initialization: the weights are still random but differ in range depending on the size of the previous layer of neurons. This provides a controlled initialization hence the faster and more efficient gradient descent.
-
-- I observed the model had 98% accuracy when the data was standardized, but hovered around ~60% accuracy when it was normalized. 
